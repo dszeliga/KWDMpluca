@@ -5,8 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KWDMpluca"
         mc:Ignorable="d"
-        Title="FindPatient" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="Wyszukaj pacjenta" Height="450" Width="800">
+    <Grid Background="#FFDEEBF7">
+        <Button x:Name="B_Close" Background="{x:Null}" BorderBrush="{x:Null}" Content="X" HorizontalAlignment="Left" Height="35" Margin="748,10,0,0" VerticalAlignment="Top" Width="35" Click="B_Close_Click"/>
+        <Button x:Name="B_Select" Content="Wybierz" HorizontalAlignment="Left" Height="45" Margin="157,345,0,0" VerticalAlignment="Top" Width="99"/>
+        <Label Content="Szczegółowe informacje" HorizontalAlignment="Left" Height="28" Margin="510,52,0,0" VerticalAlignment="Top" Width="140"/>
+        <ListBox x:Name="L_Patient" HorizontalAlignment="Left" Height="109" Margin="52,177,0,0" VerticalAlignment="Top" Width="204" SelectionChanged="L_Patient_SelectionChanged"/>
+        <Button x:Name="B_IDSearch" Content="Wyszukaj po ID" HorizontalAlignment="Left" Height="39" Margin="52,89,0,0" VerticalAlignment="Top" Width="99" Click="B_IDSearch_Click"/>
+        <Button x:Name="B_PatientNameSearch" Content="Wyszukaj po Imieniu i Nazwisku" HorizontalAlignment="Left" Height="39" Margin="52,133,0,0" VerticalAlignment="Top" Width="181" Click="B_PatientNameSearch_Click"/>
+        <Label x:Name="L_SelectedID" Content="w" HorizontalAlignment="Left" Height="28" Margin="573,89,0,0" VerticalAlignment="Top" Width="131"/>
+        <Label x:Name="L_SelectedName" Content="a" HorizontalAlignment="Left" Height="28" Margin="573,122,0,0" VerticalAlignment="Top" Width="131"/>
+        <Label x:Name="L_SelectedDateB" Content="b" HorizontalAlignment="Left" Height="28" Margin="573,159,0,0" VerticalAlignment="Top" Width="131"/>
+        <Label Content="Szczegółowe informacje" HorizontalAlignment="Left" Height="28" Margin="510,52,0,0" VerticalAlignment="Top" Width="140"/>
+            <Label Content="ID Pacjenta:" HorizontalAlignment="Left" Height="28" Margin="438,94,0,0" VerticalAlignment="Top" Width="130"/>
+            <Label Content="Imię i Nazwisko:" HorizontalAlignment="Left" Height="28" Margin="438,122,0,0" VerticalAlignment="Top" Width="130"/>
+            <Label Content="Data urodzenia:" HorizontalAlignment="Left" Height="28" Margin="438,159,0,0" VerticalAlignment="Top" Width="130"/>
+
+      </Grid>
 </Window>

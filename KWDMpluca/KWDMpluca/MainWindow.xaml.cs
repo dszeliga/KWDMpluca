@@ -75,5 +75,21 @@ namespace KWDMpluca
             Settings win2 = new Settings();
             win2.Show();
         }
+
+        private void BSearch_Click(object sender, RoutedEventArgs e)
+        {
+            FindPatient win2 = new FindPatient();
+            win2.Show();
+        }
+
+        private void BPrint_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BAdd_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
