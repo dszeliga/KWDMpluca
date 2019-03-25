@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace KWDMpluca.Helpers
 {
@@ -24,7 +25,7 @@ namespace KWDMpluca.Helpers
 
             gdcm.DataSetArrayType dataArray = new gdcm.DataSetArrayType();
 
-            //bool status = gdcm.CompositeNetworkFunctions.CFind(ip, port, query, dataArray, aet, call);
+            bool status = gdcm.CompositeNetworkFunctions.CFind(ip, port, query, dataArray, aet, call);
 
             foreach (gdcm.DataSet x in dataArray)
             {
