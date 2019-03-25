@@ -16,6 +16,7 @@ using System.Diagnostics;
 using System.Windows.Threading;
 using sitk = itk.simple;
 using System.IO;
+using KWDMpluca.Helpers;
 
 namespace KWDMpluca
 {
@@ -34,7 +35,8 @@ namespace KWDMpluca
             InsertImage("image/Search.png", BSearch);
             InsertImage("image/Settings.png", BSettings);
             InsertImage("image/print.png", BPrint);
-            
+
+            patientsListBox.ItemsSource = PatientHelper.GetPatients("127.0.0.0.1", 10010, "KLIENTL", "ARCHIWUM");
         }
         public void InsertImage(string path, Button buttonName)
         {
