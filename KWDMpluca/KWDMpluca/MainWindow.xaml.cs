@@ -36,7 +36,7 @@ namespace KWDMpluca
             InsertImage("image/Settings.png", BSettings);
             InsertImage("image/print.png", BPrint);
 
-            patientsListBox.ItemsSource = PatientHelper.GetPatients("127.0.0.0.1", 10010, "KLIENTL", "ARCHIWUM");
+            patientsListBox.ItemsSource = PatientHelper.GetPatients("127.0.0.1", 10010, "KLIENTL", "ARCHIWUM");
         }
         public void InsertImage(string path, Button buttonName)
         {

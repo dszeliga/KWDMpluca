@@ -17,7 +17,7 @@ namespace KWDMpluca.Helpers
             gdcm.EQueryLevel level = gdcm.EQueryLevel.ePatient;
 
             gdcm.KeyValuePairArrayType keys = new gdcm.KeyValuePairArrayType();
-            gdcm.KeyValuePairType key = new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0010), "*");
+            gdcm.KeyValuePairType key = new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0010), "");
             keys.Add(key);
 
             gdcm.BaseRootQuery query = gdcm.CompositeNetworkFunctions.ConstructQuery(type, level, keys);

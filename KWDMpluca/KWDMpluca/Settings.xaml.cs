@@ -32,11 +32,49 @@ namespace KWDMpluca
             img.Stretch = Stretch.Fill;
             img.Source = bitimg;
             B_Close.Content = img;
+
+            T_AET.Text = Properties.Settings.Default.AET;
+            T_AEC.Text = Properties.Settings.Default.AEC;
+            T_IP.Text = Properties.Settings.Default.IP;
+            T_PORT.Text = Properties.Settings.Default.Port;
         }
 
         private void B_Close_Click(object sender, RoutedEventArgs e)
         {
+            Properties.Settings.Default.AET = T_AET.Text;
+            Properties.Settings.Default.AEC = T_AEC.Text;
+            Properties.Settings.Default.IP = T_IP.Text;
+            Properties.Settings.Default.Port = T_PORT.Text;
+            Properties.Settings.Default.Save();
             this.Close();
+        }
+
+        private void BSaveSettings_Click(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.AET = T_AET.Text;
+            Properties.Settings.Default.AEC = T_AEC.Text;
+            Properties.Settings.Default.IP = T_IP.Text;
+            Properties.Settings.Default.Port = T_PORT.Text;
+            Properties.Settings.Default.Save();
+            LInfo.Content = "Zapisano dane";
+        }
+
+        private void BCancel_Click(object sender, RoutedEventArgs e)
+        {
+            T_AET.Text = Properties.Settings.Default.AET;
+            T_AEC.Text = Properties.Settings.Default.AEC;
+            T_IP.Text = Properties.Settings.Default.IP;
+            T_PORT.Text = Properties.Settings.Default.Port;
+        }
+
+        private void BCheck_Click(object sender, RoutedEventArgs e)
+        {
+
+            bool stan = gdcm.CompositeNetworkFunctions.CEcho(T_IP.Text, ushort.Parse(T_PORT.Text), T_AET.Text, T_AEC.Text);
+            if (stan)
+                EConnect.Fill = Brushes.Green;
+            else
+                EConnect.Fill = Brushes.Red;
         }
     }
 }
