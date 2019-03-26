@@ -7,19 +7,22 @@
         mc:Ignorable="d"
         Title="Wyszukaj pacjenta" Height="450" Width="800">
     <Grid Background="#FFDEEBF7">
+        <Border BorderBrush="#FF4472C4" BorderThickness="1" HorizontalAlignment="Left" Height="142" Margin="413,52,0,0" VerticalAlignment="Top" Width="334">
+            <Image HorizontalAlignment="Left" Height="35" Stretch="Fill" Source="image/infoIcon.png" VerticalAlignment="Top" Width="35" Margin="-19.333,-16.333,0,0"/>
+        </Border>
         <Button x:Name="B_Close" Background="{x:Null}" BorderBrush="{x:Null}" Content="X" HorizontalAlignment="Left" Height="35" Margin="748,10,0,0" VerticalAlignment="Top" Width="35" Click="B_Close_Click"/>
-        <Button x:Name="B_Select" Content="Wybierz" HorizontalAlignment="Left" Height="45" Margin="157,345,0,0" VerticalAlignment="Top" Width="99"/>
-        <Label Content="Szczegółowe informacje" HorizontalAlignment="Left" Height="28" Margin="510,52,0,0" VerticalAlignment="Top" Width="140"/>
-        <ListBox x:Name="L_Patient" HorizontalAlignment="Left" Height="109" Margin="52,177,0,0" VerticalAlignment="Top" Width="204" SelectionChanged="L_Patient_SelectionChanged"/>
-        <Button x:Name="B_IDSearch" Content="Wyszukaj po ID" HorizontalAlignment="Left" Height="39" Margin="52,89,0,0" VerticalAlignment="Top" Width="99" Click="B_IDSearch_Click"/>
-        <Button x:Name="B_PatientNameSearch" Content="Wyszukaj po Imieniu i Nazwisku" HorizontalAlignment="Left" Height="39" Margin="52,133,0,0" VerticalAlignment="Top" Width="181" Click="B_PatientNameSearch_Click"/>
-        <Label x:Name="L_SelectedID" Content="w" HorizontalAlignment="Left" Height="28" Margin="573,89,0,0" VerticalAlignment="Top" Width="131"/>
-        <Label x:Name="L_SelectedName" Content="a" HorizontalAlignment="Left" Height="28" Margin="573,122,0,0" VerticalAlignment="Top" Width="131"/>
-        <Label x:Name="L_SelectedDateB" Content="b" HorizontalAlignment="Left" Height="28" Margin="573,159,0,0" VerticalAlignment="Top" Width="131"/>
-        <Label Content="Szczegółowe informacje" HorizontalAlignment="Left" Height="28" Margin="510,52,0,0" VerticalAlignment="Top" Width="140"/>
-            <Label Content="ID Pacjenta:" HorizontalAlignment="Left" Height="28" Margin="438,94,0,0" VerticalAlignment="Top" Width="130"/>
-            <Label Content="Imię i Nazwisko:" HorizontalAlignment="Left" Height="28" Margin="438,122,0,0" VerticalAlignment="Top" Width="130"/>
-            <Label Content="Data urodzenia:" HorizontalAlignment="Left" Height="28" Margin="438,159,0,0" VerticalAlignment="Top" Width="130"/>
+        <Button x:Name="B_Select" Content="Wybierz" HorizontalAlignment="Left" Height="45" Margin="157,345,0,0" VerticalAlignment="Top" Width="99" Click="B_Select_Click"/>
+        <ListBox x:Name="L_Patient" BorderThickness="1" HorizontalAlignment="Left" Height="136" Margin="52,204,0,0" VerticalAlignment="Top" Width="258" SelectionChanged="L_Patient_SelectionChanged" BorderBrush="#FF4472C4"/>
+        <Button x:Name="B_IDSearch" Background="{x:Null}" BorderBrush="{x:Null}" Content="ID" HorizontalAlignment="Left" Height="50" Margin="52,89,0,0" VerticalAlignment="Top" Width="153" Click="B_IDSearch_Click"/>
+        <Button x:Name="B_PatientNameSearch" Background="{x:Null}" BorderBrush="{x:Null}" Content="N" HorizontalAlignment="Left" Height="50" Margin="52,144,0,0" VerticalAlignment="Top" Width="153" Click="B_PatientNameSearch_Click"/>
+        <Label x:Name="L_SelectedID" Content="" HorizontalAlignment="Left" Height="28" Margin="573,94,0,0" VerticalAlignment="Top" Width="131"/>
+        <Label x:Name="L_SelectedName" Content="" HorizontalAlignment="Left" Height="28" Margin="573,122,0,0" VerticalAlignment="Top" Width="131"/>
+        <Label x:Name="L_SelectedDateB" Content="" HorizontalAlignment="Left" Height="28" Margin="573,150,0,0" VerticalAlignment="Top" Width="131"/>
+        <Label Content="Informacje o wybranym pacjencie" HorizontalAlignment="Left" Height="28" Margin="485,52,0,0" VerticalAlignment="Top" Width="200" FontWeight="Bold"/>
+        <Label Content="ID Pacjenta:" HorizontalAlignment="Left" Height="28" Margin="438,94,0,0" VerticalAlignment="Top" Width="130"/>
+        <Label Content="Imię i Nazwisko:" HorizontalAlignment="Left" Height="28" Margin="438,122,0,0" VerticalAlignment="Top" Width="130"/>
+        <Label Content="Data urodzenia:" HorizontalAlignment="Left" Height="28" Margin="438,150,0,0" VerticalAlignment="Top" Width="130"/>
+        <Image HorizontalAlignment="Left" Height="35" Margin="10,10,0,0" Stretch="Fill" Source="image/SearchIcon.png" VerticalAlignment="Top" Width="35"/>
 
-      </Grid>
+    </Grid>
 </Window>

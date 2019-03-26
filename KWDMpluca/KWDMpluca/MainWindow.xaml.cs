@@ -35,8 +35,8 @@ namespace KWDMpluca
             InsertImage("image/Search.png", BSearch);
             InsertImage("image/Settings.png", BSettings);
             InsertImage("image/print.png", BPrint);
-
-            patientsListBox.ItemsSource = PatientHelper.GetPatients(Properties.Settings.Default.IP, ushort.Parse(Properties.Settings.Default.Port), Properties.Settings.Default.AET, Properties.Settings.Default.AEC);
+            InsertImage("image/RefreshIcon.png", BReload);
+            //patientsListBox.ItemsSource = PatientHelper.GetPatients(Properties.Settings.Default.IP, ushort.Parse(Properties.Settings.Default.Port), Properties.Settings.Default.AET, Properties.Settings.Default.AEC);
         }
         public void InsertImage(string path, Button buttonName)
         {
@@ -53,25 +53,6 @@ namespace KWDMpluca
 
         private void BSettings_Click(object sender, RoutedEventArgs e)
         {
-            //string serwerIP = "127.0.0.0.1";
-            //ushort serwerPort = 10010;
-            //string klientAET = "KLIENTL";
-            //string serwerAET = "ARCHIWUM";
-            //bool stan = gdcm.CompositeNetworkFunctions.CEcho(serwerIP, serwerPort, klientAET, serwerAET);
-            //string pathToSeries = "C:/Users/chmur/Desktop/BazaKWDM/RIDERLungCT/RIDER-1286684383/02-26-2007-85682/100-45297";
-
-            //// Wczytanie serii obrazow
-            //LCheck.Content = "Wczytanie obrazu... czekaj";
-            ////... TODO
-            //var seriesIDs = sitk.ImageSeriesReader.GetGDCMSeriesIDs(pathToSeries);
-
-            //foreach (var item in seriesIDs)
-            //{
-            //    Console.WriteLine(item);
-            //}
-            //sitk.VectorString fnames1 = sitk.ImageSeriesReader.GetGDCMSeriesFileNames(pathToSeries, seriesIDs[0]);
-
-            //LCheck.Content = "Przeszło";
             Settings win2 = new Settings();
             win2.Show();
         }
@@ -90,6 +71,35 @@ namespace KWDMpluca
         private void BAdd_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void BReload_Click(object sender, RoutedEventArgs e)
+        {
+            //LCheck.Content = Properties.Settings.Default.SelectedPatientID;
+            List<string> patientList = new List<string>();
+            gdcm.ERootType type = gdcm.ERootType.ePatientRootType;
+
+            gdcm.EQueryLevel level = gdcm.EQueryLevel.ePatient;
+
+            gdcm.KeyValuePairArrayType keys = new gdcm.KeyValuePairArrayType();
+            gdcm.KeyValuePairType key = new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0010), "");
+            keys.Add(key);
+            keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0020), Properties.Settings.Default.SelectedPatientID));
+            keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0030), ""));
+            keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0040), ""));
+
+            gdcm.BaseRootQuery query = gdcm.CompositeNetworkFunctions.ConstructQuery(type, level, keys);
+
+            gdcm.DataSetArrayType dataArray = new gdcm.DataSetArrayType();
+
+            bool status = gdcm.CompositeNetworkFunctions.CFind(Properties.Settings.Default.IP, ushort.Parse(Properties.Settings.Default.Port), query, dataArray, Properties.Settings.Default.AET, Properties.Settings.Default.AEC);
+            int i = 0;
+            foreach (gdcm.DataSet x in dataArray)
+            {
+                L_SelectedID.Content = x.GetDataElement(new gdcm.Tag(0x0010, 0x0020)).GetValue().toString();
+                L_SelectedName.Content = x.GetDataElement(new gdcm.Tag(0x0010, 0x0010)).GetValue().toString();
+                L_SelectedDateB.Content = x.GetDataElement(new gdcm.Tag(0x0010, 0x0030)).GetValue().toString();
+            }
         }
     }
 }

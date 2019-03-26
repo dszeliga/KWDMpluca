@@ -138,5 +138,19 @@
   <ItemGroup>
     <Resource Include="image\Close.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\SearchIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\RefreshIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\InfoIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\SearchID.png" />
+    <Resource Include="image\SearchName.png" />
+    <Resource Include="image\SearchOther.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

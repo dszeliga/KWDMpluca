@@ -23,15 +23,24 @@ namespace KWDMpluca
         {
             InitializeComponent();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            InsertImage("image/Close.png", B_Close);
+            InsertImage("image/SearchName.png", B_PatientNameSearch);
+            InsertImage("image/SearchID.png", B_IDSearch);
+        }
+
+        public void InsertImage(string path, Button buttonName)
+        {
+            // Wyświetlenie obrazka o określonej ścieżce na określonym przycisku
             BitmapImage bitimg = new BitmapImage();
             bitimg.BeginInit();
-            bitimg.UriSource = new Uri("image/Close.png", UriKind.RelativeOrAbsolute);
+            bitimg.UriSource = new Uri(path, UriKind.RelativeOrAbsolute);
             bitimg.EndInit();
             Image img = new Image();
-            img.Stretch = Stretch.Fill;
+            img.Stretch = Stretch.Uniform;
             img.Source = bitimg;
-            B_Close.Content = img;
+            buttonName.Content = img;
         }
+
         private void B_Close_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
@@ -91,15 +100,24 @@ namespace KWDMpluca
         private void L_Patient_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // Zapobieganie sprawdzenia wyboru podczas zmiany wyświetlanej listy.
-            try
+            if (L_Patient.SelectedIndex >= 0)
             {
-                string text = L_Patient.SelectedItem.ToString();
                 int number = L_Patient.SelectedIndex;
                 L_SelectedID.Content = PatientInfo[number, 0];
                 L_SelectedName.Content = PatientInfo[number, 1];
                 L_SelectedDateB.Content = PatientInfo[number, 2];
             }
-            catch { }
+            
+        }
+
+        private void B_Select_Click(object sender, RoutedEventArgs e)
+        {
+            if(L_Patient.SelectedIndex>=0)
+            {
+                int number = L_Patient.SelectedIndex;
+                Properties.Settings.Default.SelectedPatientID = PatientInfo[number, 0];
+                Properties.Settings.Default.Save();
+            }
         }
     }
 }
