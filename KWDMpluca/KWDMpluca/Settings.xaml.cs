@@ -61,10 +61,7 @@ namespace KWDMpluca
 
         private void BCancel_Click(object sender, RoutedEventArgs e)
         {
-            T_AET.Text = Properties.Settings.Default.AET;
-            T_AEC.Text = Properties.Settings.Default.AEC;
-            T_IP.Text = Properties.Settings.Default.IP;
-            T_PORT.Text = Properties.Settings.Default.Port;
+            this.Close();
         }
 
         private void BCheck_Click(object sender, RoutedEventArgs e)

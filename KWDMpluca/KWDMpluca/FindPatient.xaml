@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KWDMpluca"
         mc:Ignorable="d"
-        Title="Wyszukaj pacjenta" Height="450" Width="800">
+        Title="Wyszukaj pacjenta" Height="450" Width="800" ResizeMode="NoResize">
     <Grid Background="#FFDEEBF7">
         <Border BorderBrush="#FF4472C4" BorderThickness="1" HorizontalAlignment="Left" Height="142" Margin="413,52,0,0" VerticalAlignment="Top" Width="334">
             <Image HorizontalAlignment="Left" Height="35" Stretch="Fill" Source="image/infoIcon.png" VerticalAlignment="Top" Width="35" Margin="-19.333,-16.333,0,0"/>
