@@ -13,10 +13,10 @@
         <Button x:Name="BSaveSettings" Content="Zapisz Ustawienia" HorizontalAlignment="Left" Height="26" Margin="23,192,0,0" VerticalAlignment="Top" Width="150" Click="BSaveSettings_Click" />
         <Button x:Name="BCancel" Content="Anuluj" HorizontalAlignment="Left" Height="26" Margin="222,192,0,0" VerticalAlignment="Top" Width="120" Click="BCancel_Click"/>
         <Button x:Name="BCheck" Content="Sprawdź połączenie" HorizontalAlignment="Left" Height="26" Margin="23,230,0,0" VerticalAlignment="Top" Width="150" Click="BCheck_Click"/>
-        <TextBox x:Name="T_AET" HorizontalAlignment="Left" Height="26" Margin="50,58,0,0" TextWrapping="Wrap" Text="KLIENTL" VerticalAlignment="Top" Width="105"/>
-        <TextBox x:Name="T_AEC" HorizontalAlignment="Left" Height="26" Margin="50,128,0,0" TextWrapping="Wrap" Text="ARCHIWUM" VerticalAlignment="Top" Width="105"/>
-        <TextBox x:Name="T_PORT" HorizontalAlignment="Left" Height="26" Margin="193,128,0,0" TextWrapping="Wrap" Text="10100" VerticalAlignment="Top" Width="105"/>
-        <TextBox x:Name="T_IP" HorizontalAlignment="Left" Height="26" Margin="194,58,0,0" TextWrapping="Wrap" Text="127.0.0.1" VerticalAlignment="Top" Width="105"/>
+        <TextBox x:Name="T_AET" HorizontalAlignment="Left" VerticalContentAlignment="Center" Height="26" Margin="50,58,0,0" TextWrapping="Wrap" Text="KLIENTL" VerticalAlignment="Top" Width="105"/>
+        <TextBox x:Name="T_AEC" HorizontalAlignment="Left" VerticalContentAlignment="Center" Height="26" Margin="50,128,0,0" TextWrapping="Wrap" Text="ARCHIWUM" VerticalAlignment="Top" Width="105"/>
+        <TextBox x:Name="T_PORT" HorizontalAlignment="Left" VerticalContentAlignment="Center" Height="26" Margin="193,128,0,0" TextWrapping="Wrap" Text="10100" VerticalAlignment="Top" Width="105"/>
+        <TextBox x:Name="T_IP" HorizontalAlignment="Left" VerticalContentAlignment="Center" Height="26" Margin="194,58,0,0" TextWrapping="Wrap" Text="127.0.0.1" VerticalAlignment="Top" Width="105"/>
         <Button x:Name="B_Close" Background="{x:Null}" BorderBrush="{x:Null}" Content="X" HorizontalAlignment="Left" Height="35" Margin="348,0,0,0" VerticalAlignment="Top" Width="35" Click="B_Close_Click"/>
         <Label Content="AET" HorizontalAlignment="Left" Height="26" Margin="50,32,0,0" VerticalAlignment="Top" Width="73"/>
         <Label Content="AEC" HorizontalAlignment="Left" Height="26" Margin="50,102,0,0" VerticalAlignment="Top" Width="73"/>

@@ -7,22 +7,35 @@
         mc:Ignorable="d"
         Title="Wyszukaj pacjenta" Height="450" Width="800" ResizeMode="NoResize">
     <Grid Background="#FFDEEBF7">
-        <Border BorderBrush="#FF4472C4" BorderThickness="1" HorizontalAlignment="Left" Height="142" Margin="413,52,0,0" VerticalAlignment="Top" Width="334">
+        <Border BorderBrush="#FF4472C4" BorderThickness="1" HorizontalAlignment="Left" Height="142" Margin="420,235,0,0" VerticalAlignment="Top" Width="334">
             <Image HorizontalAlignment="Left" Height="35" Stretch="Fill" Source="image/infoIcon.png" VerticalAlignment="Top" Width="35" Margin="-19.333,-16.333,0,0"/>
         </Border>
         <Button x:Name="B_Close" Background="{x:Null}" BorderBrush="{x:Null}" Content="X" HorizontalAlignment="Left" Height="35" Margin="748,10,0,0" VerticalAlignment="Top" Width="35" Click="B_Close_Click"/>
-        <Button x:Name="B_Select" Content="Wybierz" HorizontalAlignment="Left" Height="45" Margin="157,345,0,0" VerticalAlignment="Top" Width="99" Click="B_Select_Click"/>
-        <ListBox x:Name="L_Patient" BorderThickness="1" HorizontalAlignment="Left" Height="136" Margin="52,204,0,0" VerticalAlignment="Top" Width="258" SelectionChanged="L_Patient_SelectionChanged" BorderBrush="#FF4472C4"/>
-        <Button x:Name="B_IDSearch" Background="{x:Null}" BorderBrush="{x:Null}" Content="ID" HorizontalAlignment="Left" Height="50" Margin="52,89,0,0" VerticalAlignment="Top" Width="153" Click="B_IDSearch_Click"/>
-        <Button x:Name="B_PatientNameSearch" Background="{x:Null}" BorderBrush="{x:Null}" Content="N" HorizontalAlignment="Left" Height="50" Margin="52,144,0,0" VerticalAlignment="Top" Width="153" Click="B_PatientNameSearch_Click"/>
-        <Label x:Name="L_SelectedID" Content="" HorizontalAlignment="Left" Height="28" Margin="573,94,0,0" VerticalAlignment="Top" Width="131"/>
-        <Label x:Name="L_SelectedName" Content="" HorizontalAlignment="Left" Height="28" Margin="573,122,0,0" VerticalAlignment="Top" Width="131"/>
-        <Label x:Name="L_SelectedDateB" Content="" HorizontalAlignment="Left" Height="28" Margin="573,150,0,0" VerticalAlignment="Top" Width="131"/>
-        <Label Content="Informacje o wybranym pacjencie" HorizontalAlignment="Left" Height="28" Margin="485,52,0,0" VerticalAlignment="Top" Width="200" FontWeight="Bold"/>
-        <Label Content="ID Pacjenta:" HorizontalAlignment="Left" Height="28" Margin="438,94,0,0" VerticalAlignment="Top" Width="130"/>
-        <Label Content="Imię i Nazwisko:" HorizontalAlignment="Left" Height="28" Margin="438,122,0,0" VerticalAlignment="Top" Width="130"/>
-        <Label Content="Data urodzenia:" HorizontalAlignment="Left" Height="28" Margin="438,150,0,0" VerticalAlignment="Top" Width="130"/>
+        <Button x:Name="B_Select" Background="{x:Null}" BorderBrush="{x:Null}" Content="Wybierz" HorizontalAlignment="Left" Height="50" Margin="114,349,0,0" VerticalAlignment="Top" Width="133" Click="B_Select_Click"/>
+        <ListBox x:Name="L_Patient" BorderThickness="1" HorizontalAlignment="Left" Height="136" Margin="445,58,0,0" VerticalAlignment="Top" Width="266" SelectionChanged="L_Patient_SelectionChanged" BorderBrush="#FF4472C4"/>
+        <Button x:Name="B_Search" Background="{x:Null}" BorderBrush="{x:Null}" Content="N" HorizontalAlignment="Left" Height="50" Margin="114,294,0,0" VerticalAlignment="Top" Width="133" Click="B_Search_Click"/>
+        <Label x:Name="L_SelectedID" Content="" HorizontalAlignment="Left" Height="28" Margin="580,277,0,0" VerticalAlignment="Top" Width="131"/>
+        <Label x:Name="L_SelectedName" Content="" HorizontalAlignment="Left" Height="28" Margin="580,305,0,0" VerticalAlignment="Top" Width="131"/>
+        <Label x:Name="L_SelectedDateB" Content="" HorizontalAlignment="Left" Height="28" Margin="580,333,0,0" VerticalAlignment="Top" Width="131"/>
+        <Label Content="Informacje o wybranym pacjencie" HorizontalAlignment="Left" Height="28" Margin="492,235,0,0" VerticalAlignment="Top" Width="200" FontWeight="Bold"/>
+        <Label Content="ID Pacjenta:" HorizontalAlignment="Left" Height="28" Margin="445,277,0,0" VerticalAlignment="Top" Width="130"/>
+        <Label Content="Imię i Nazwisko:" HorizontalAlignment="Left" Height="28" Margin="445,305,0,0" VerticalAlignment="Top" Width="130"/>
+        <Label Content="Data urodzenia:" HorizontalAlignment="Left" Height="28" Margin="445,333,0,0" VerticalAlignment="Top" Width="130"/>
         <Image HorizontalAlignment="Left" Height="35" Margin="10,10,0,0" Stretch="Fill" Source="image/SearchIcon.png" VerticalAlignment="Top" Width="35"/>
+        <Label Content="Frazę:" HorizontalAlignment="Left" Margin="114,186,0,0" VerticalAlignment="Top" Width="50" Height="29"/>
+        <TextBox x:Name="T_OtherSearchValue" MaxLines="1" HorizontalAlignment="Left" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Height="29" Margin="169,186,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="97"/>
+        <CheckBox x:Name="CB_Before" VerticalContentAlignment="Center" Content="Na końcu" HorizontalAlignment="Left" Height="16" Margin="169,256,0,0" VerticalAlignment="Top" Width="78" Checked="CB_Before_Checked"/>
+        <CheckBox x:Name="CB_After" VerticalContentAlignment="Center" Content="Na początku" HorizontalAlignment="Left" Height="19" Margin="169,240,0,0" VerticalAlignment="Top" Width="97" Checked="CB_After_Checked"/>
+        <CheckBox x:Name="CB_IDSearch" VerticalContentAlignment="Center" Content="ID pacjenta" HorizontalAlignment="Left" Height="23" Margin="70,83,0,0" VerticalAlignment="Top" Width="94" Checked="CB_ID_Checked"/>
+        <CheckBox x:Name="CB_NameSearch" VerticalContentAlignment="Center" Content="Nazwisko pacjenta" HorizontalAlignment="Left" Height="21" Margin="70,99,0,0" VerticalAlignment="Top" Width="138" Checked="CB_Name_Checked"/>
+        <CheckBox x:Name="CB_All" Content="Wszystkich" VerticalContentAlignment="Center" HorizontalAlignment="Left" Height="16" Margin="70,149,0,0" VerticalAlignment="Top" Width="138" Checked="CB_All_Checked"/>
+        <CheckBox x:Name="CB_Other" Content="Zawierających:" VerticalContentAlignment="Center" HorizontalAlignment="Left" Height="21" Margin="70,165,0,0" VerticalAlignment="Top" Width="196" Checked="CB_Other_Checked"/>
+        <Label Content="Wyszukaj wykorzystując:" HorizontalAlignment="Left" Margin="50,57,0,0" VerticalAlignment="Top" Width="173" Height="28" FontSize="14" FontWeight="Bold"/>
+        <Label Content="Kryteria wyszukiwania" HorizontalAlignment="Left" Margin="50,22,0,0" VerticalAlignment="Top" Width="229" Height="56" FontSize="20" FontWeight="Bold"/>
+        <Label Content="Pacjenci spełniający kryteria:" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="420,18,0,0" VerticalAlignment="Top" Width="315" Height="40" FontSize="20" FontWeight="Bold"/>
+        <Label Content="Znajdź pacjentów:" HorizontalAlignment="Left" Margin="50,121,0,0" VerticalAlignment="Top" Width="144" Height="28" FontSize="14" FontWeight="Bold"/>
+        <Label Content="Inne znaki:" HorizontalAlignment="Left" Margin="114,215,0,0" VerticalAlignment="Top" Width="80" Height="29"/>
+        <Label x:Name="L_Info" Content="Określ warunki wyszukiwania" Visibility="Hidden"  HorizontalAlignment="Left" Margin="84,277,0,0" VerticalAlignment="Top" Width="182" Height="29"/>
 
     </Grid>
 </Window>

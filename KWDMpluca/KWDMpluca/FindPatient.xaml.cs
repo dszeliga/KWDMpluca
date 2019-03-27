@@ -19,13 +19,17 @@ namespace KWDMpluca
     /// </summary>
     public partial class FindPatient : Window
     {
+
         public FindPatient()
         {
             InitializeComponent();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
             InsertImage("image/Close.png", B_Close);
-            InsertImage("image/SearchName.png", B_PatientNameSearch);
-            InsertImage("image/SearchID.png", B_IDSearch);
+            InsertImage("image/SaveSearch.png", B_Select);
+            InsertImage("image/Search2.png", B_Search);
+            CB_Before.IsEnabled = false;
+            CB_After.IsEnabled = false;
+            T_OtherSearchValue.IsEnabled = false;
         }
 
         public void InsertImage(string path, Button buttonName)
@@ -46,31 +50,56 @@ namespace KWDMpluca
             this.Close();
         }
 
-        private void B_PatientNameSearch_Click(object sender, RoutedEventArgs e)
+        private void B_Search_Click(object sender, RoutedEventArgs e)
         {
-            SearchPatient(0x0010, 0x0010,"");
-        }
+            if ((CB_IDSearch.IsChecked == false && CB_NameSearch.IsChecked == false) ||
+                (CB_All.IsChecked == false && CB_Other.IsChecked == false))
+            {
+                L_Info.Visibility = Visibility.Visible;
+                return;
+            }
+            else
+                L_Info.Visibility = Visibility.Hidden; 
+            string searchValue = "";
+            ushort searchType;
+            if (CB_IDSearch.IsChecked == true)
+                searchType = 0x0020;
+            else
+                searchType = 0x0010;
 
-        private void B_IDSearch_Click(object sender, RoutedEventArgs e)
-        {
-            SearchPatient(0x0010, 0x0020,"");
+            if (CB_All.IsChecked == false)
+            {
+                searchValue = T_OtherSearchValue.Text;
+                if (CB_Before.IsChecked == true)
+                    searchValue = "*" + searchValue;
+                if(CB_After.IsChecked == true)
+                    searchValue = searchValue + "*";
+            }
+            SearchPatient(0x0010, searchType, searchValue);
         }
 
         public string[,] PatientInfo;
         private void SearchPatient(ushort a, ushort b, string searchValue)
         {
-
+            
             List<string> patientList = new List<string>();
             gdcm.ERootType type = gdcm.ERootType.ePatientRootType;
 
             gdcm.EQueryLevel level = gdcm.EQueryLevel.ePatient;
 
             gdcm.KeyValuePairArrayType keys = new gdcm.KeyValuePairArrayType();
-            gdcm.KeyValuePairType key = new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0010), searchValue);
-            keys.Add(key);
-            keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0020), searchValue));
-            keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0030), searchValue));
-            keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0040), searchValue));
+            if (b == 0x0020)
+            {
+                keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0020), searchValue));
+                keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0010), ""));
+            }
+            else
+            {
+                keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0010), searchValue));
+                keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0020), ""));
+            }
+            keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0030), ""));
+            keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0040), ""));
 
             gdcm.BaseRootQuery query = gdcm.CompositeNetworkFunctions.ConstructQuery(type, level, keys);
 
@@ -119,5 +148,42 @@ namespace KWDMpluca
                 Properties.Settings.Default.Save();
             }
         }
+
+        private void CB_After_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void CB_Before_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void CB_ID_Checked(object sender, RoutedEventArgs e)
+        {
+            CB_NameSearch.IsChecked = false;
+        }
+
+        private void CB_Name_Checked(object sender, RoutedEventArgs e)
+        {
+            CB_IDSearch.IsChecked = false;
+        }
+
+        private void CB_All_Checked(object sender, RoutedEventArgs e)
+        {
+            CB_Other.IsChecked = false;
+            CB_Before.IsEnabled = false;
+            CB_After.IsEnabled = false;
+            T_OtherSearchValue.IsEnabled = false;
+        }
+
+        private void CB_Other_Checked(object sender, RoutedEventArgs e)
+        {
+            CB_All.IsChecked = false;
+            CB_Before.IsEnabled = true;
+            CB_After.IsEnabled = true;
+            T_OtherSearchValue.IsEnabled = true;
+        }
+
     }
 }
