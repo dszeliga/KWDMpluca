@@ -50,6 +50,9 @@ namespace TestSegmentacja
             thresholder.SetOutsideValue(0);
             labelImage = thresholder.Execute(labelImage);
 
+            sitk.GeodesicActiveContourLevelSetImageFilter geodesicActiveContourLevelSetImageFilter = new sitk.GeodesicActiveContourLevelSetImageFilter();
+
+
             SaveImage(imageDicom, "labelImage.vtk");
         }
 
