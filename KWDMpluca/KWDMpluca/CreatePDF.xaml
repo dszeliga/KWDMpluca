@@ -1,0 +1,42 @@
+﻿<Window x:Class="KWDMpluca.CreatePDF"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:KWDMpluca"
+        mc:Ignorable="d"
+        Title="Stwórz raport z badania" Height="600" Width="800" ResizeMode="NoResize">
+    <Grid Background="#FFDEEBF7">
+        <Border x:Name="listBoxPatients" BorderBrush="#FF4472C4" BorderThickness="1" HorizontalAlignment="Left" Height="149" Margin="28,27,0,0" VerticalAlignment="Top" Width="247">
+            <Image x:Name="IInfo" HorizontalAlignment="Right" Height="35" VerticalAlignment="Top" Width="35" Stretch="Fill" Source="image/info.png" RenderTransformOrigin="-6.171,0.076" Margin="-17.333,-18,226,0"/>
+        </Border>
+        <Label Content="Informacje o wybranym pacjencie" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Height="28" Margin="48,27,0,0" VerticalAlignment="Top" Width="220" FontWeight="Bold"/>
+        <Label Content="ID Pacjenta:" HorizontalAlignment="Left" Height="28" Margin="28,52,0,0" VerticalAlignment="Top" Width="111"/>
+        <Label Content="Imię i Nazwisko:" HorizontalAlignment="Left" Height="28" Margin="28,80,0,0" VerticalAlignment="Top" Width="111"/>
+        <Label Content="Data urodzenia:" HorizontalAlignment="Left" Height="28" Margin="28,108,0,0" VerticalAlignment="Top" Width="111"/>
+        <Label x:Name="L_SelectedID" Content="" HorizontalAlignment="Left" Height="28" Margin="144,52,0,0" VerticalAlignment="Top" Width="124"/>
+        <TextBox x:Name="T_SelectedName" Text="" HorizontalAlignment="Left" Height="28" Margin="144,80,0,0" VerticalAlignment="Top" Width="124"/>
+        <TextBox x:Name="T_SelectedDateB" Text="" HorizontalAlignment="Left" Height="28" Margin="145,108,0,0" VerticalAlignment="Top" Width="124"/>
+
+        <Border BorderBrush="#FF4472C4" BorderThickness="1" HorizontalAlignment="Left" Height="280" Margin="28,212,0,0" VerticalAlignment="Top" Width="247" RenderTransformOrigin="0.524,0.754">
+            <Image x:Name="INote" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="35" Stretch="Fill" Source="image/note.png" RenderTransformOrigin="-6.171,0.076" Margin="-20.333,-18.333,0,0"/>
+        </Border>
+        <TextBox x:Name="T_Description" TextWrapping="Wrap" Text="" Margin="48,235,547.6,98.4" RenderTransformOrigin="0.46,0.485" AcceptsReturn="True" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto"/>
+        <Border x:Name="listBoxPatients_Copy" BorderBrush="#FF4472C4" BorderThickness="1" HorizontalAlignment="Left" Height="129" Margin="351,27,0,0" VerticalAlignment="Top" Width="247">
+            <Image x:Name="IInfo1" HorizontalAlignment="Right" Height="35" VerticalAlignment="Top" Width="35" Stretch="Fill" Source="image/info.png" RenderTransformOrigin="-6.171,0.076" Margin="-17.333,-18,226,0"/>
+        </Border>
+        <Label Content="Informacje o lekarzu" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Height="28" Margin="371,27,0,0" VerticalAlignment="Top" Width="220" FontWeight="Bold"/>
+        <Label Content="ID lekarza:" HorizontalAlignment="Left" Height="28" Margin="351,52,0,0" VerticalAlignment="Top" Width="111"/>
+        <Label Content="Imię i Nazwisko:" HorizontalAlignment="Left" Height="28" Margin="351,80,0,0" VerticalAlignment="Top" Width="111"/>
+        <Label Content="Specjalność:" HorizontalAlignment="Left" Height="28" Margin="351,108,0,0" VerticalAlignment="Top" Width="111"/>
+        <TextBox x:Name="T_IDdoctor" Text="" HorizontalAlignment="Left" Height="28" Margin="467,52,0,0" VerticalAlignment="Top" Width="124"/>
+        <TextBox x:Name="T_DoctorName" Text="" HorizontalAlignment="Left" Height="28" Margin="467,80,0,0" VerticalAlignment="Top" Width="124"/>
+        <TextBox x:Name="T_DoctorSpeciality" Text="" HorizontalAlignment="Left" Height="28" Margin="468,108,0,0" VerticalAlignment="Top" Width="124"/>
+        <Label Content="Płeć:" HorizontalAlignment="Left" Height="28" Margin="28,141,0,0" VerticalAlignment="Top" Width="111"/>
+        <TextBox x:Name="T_Sex" Text="" HorizontalAlignment="Left" Height="28" Margin="145,141,0,0" VerticalAlignment="Top" Width="124"/>
+        <Button x:Name="B_AddImage" Background="{x:Null}" BorderBrush="{x:Null}" Content="Dołącz zdjęcie" HorizontalAlignment="Left" Height="50" Margin="410,181,0,0" VerticalAlignment="Top" Width="133" Click="B_AddImage_Click" FontSize="16"/>
+        <Image x:Name="IImage" HorizontalAlignment="Left" Height="172" Margin="387,255,0,0" VerticalAlignment="Top" Width="179"/>
+        <Button x:Name="B_Generate" Background="{x:Null}" BorderBrush="{x:Null}" Content="Generuj raport" HorizontalAlignment="Left" Height="50" Margin="410,432,0,0" VerticalAlignment="Top" Width="133" Click="B_Generate_Click" FontSize="16"/>
+
+    </Grid>
+</Window>

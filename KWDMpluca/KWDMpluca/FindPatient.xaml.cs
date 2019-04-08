@@ -118,7 +118,7 @@ namespace KWDMpluca
             {
                 PatientInfo[j, 0] = x.GetDataElement(new gdcm.Tag(0x0010, 0x0020)).GetValue().toString();
                 PatientInfo[j, 1] = x.GetDataElement(new gdcm.Tag(0x0010, 0x0010)).GetValue().toString();
-                PatientInfo[j, 2] = x.GetDataElement(new gdcm.Tag(0x0010, 0x0030)).GetValue().toString(); // Data urodzenia
+                //PatientInfo[j, 2] = x.GetDataElement(new gdcm.Tag(0x0010, 0x0030)).GetValue().toString(); // Data urodzenia
                 //PatientInfo[j, 3] = x.GetDataElement(new gdcm.Tag(0x0010, 0x0040)).GetValue().toString(); // Płeć
                 j++;
             }
