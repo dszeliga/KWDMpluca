@@ -17,6 +17,7 @@ using System.Windows.Threading;
 using sitk = itk.simple;
 using System.IO;
 using KWDMpluca.Helpers;
+using System.Drawing.Drawing2D;
 
 namespace KWDMpluca
 {
@@ -104,56 +105,81 @@ namespace KWDMpluca
                 L_SelectedDateB.Content = x.GetDataElement(new gdcm.Tag(0x0010, 0x0030)).GetValue().toString();
             }
 
-            gdcm.KeyValuePairArrayType keys_new = new gdcm.KeyValuePairArrayType();
-            keys_new.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0010), L_SelectedName.Content.ToString()));
+            #region Załadowanie obrazu
+            //gdcm.KeyValuePairArrayType keys_new = new gdcm.KeyValuePairArrayType();
+            //keys_new.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0010), L_SelectedName.Content.ToString()));
 
-            gdcm.BaseRootQuery query_new = gdcm.CompositeNetworkFunctions.ConstructQuery(type, level, keys_new, true);
+            //gdcm.BaseRootQuery query_new = gdcm.CompositeNetworkFunctions.ConstructQuery(type, level, keys_new, true);
 
-            String received = System.IO.Path.Combine(".", "odebrane");
+            //String received = System.IO.Path.Combine(".", "odebrane");
 
-            if (!System.IO.Directory.Exists(received))
-                System.IO.Directory.CreateDirectory(received);
+            //if (!System.IO.Directory.Exists(received))
+            //    System.IO.Directory.CreateDirectory(received);
 
-            String data = System.IO.Path.Combine(received, System.IO.Path.GetRandomFileName());
-            System.IO.Directory.CreateDirectory(data);
+            //String data = System.IO.Path.Combine(received, System.IO.Path.GetRandomFileName());
+            //System.IO.Directory.CreateDirectory(data);
 
-            status = gdcm.CompositeNetworkFunctions.CMove(Properties.Settings.Default.IP, ushort.Parse(Properties.Settings.Default.Port), query_new, 10104, Properties.Settings.Default.AET, Properties.Settings.Default.AEC, data);
+            //status = gdcm.CompositeNetworkFunctions.CMove(Properties.Settings.Default.IP, ushort.Parse(Properties.Settings.Default.Port), query_new, 10104, Properties.Settings.Default.AET, Properties.Settings.Default.AEC, data);
 
-            if (!status)
-            {
-                MessageBox.Show("Pobieranie obrazów nie powodło się");
-                return;
-            }
+            //if (!status)
+            //{
+            //    MessageBox.Show("Pobieranie obrazów nie powodło się");
+            //    return;
+            //}
 
-            List<string> files = new List<string>(System.IO.Directory.EnumerateFiles(data));
-            foreach (String file in files)
-            {
-                gdcm.PixmapReader reader = new gdcm.PixmapReader();
-                reader.SetFileName(file);
-                if (!reader.Read())
-                {
-                    MessageBox.Show("Opuszczam plik {0}", file);
-                    continue;
-                }
+            //List<string> files = new List<string>(System.IO.Directory.EnumerateFiles(data));
+            //foreach (String file in files)
+            //{
+            //    gdcm.PixmapReader reader = new gdcm.PixmapReader();
+            //    reader.SetFileName(file);
+            //    if (!reader.Read())
+            //    {
+            //        MessageBox.Show("Opuszczam plik {0}", file);
+            //        continue;
+            //    }
 
-                gdcm.Bitmap bmjpeg2000 = BitmapHelper.pxmap2jpeg2000(reader.GetPixmap());
-                System.Drawing.Bitmap[] X = BitmapHelper.gdcmBitmap2Bitmap(bmjpeg2000);
+            //    gdcm.Bitmap bmjpeg2000 = BitmapHelper.pxmap2jpeg2000(reader.GetPixmap());
+            //    System.Drawing.Bitmap[] X = BitmapHelper.gdcmBitmap2Bitmap(bmjpeg2000);
 
-                for (int j = 0; j < X.Length; j++)
-                {
-                    String name = String.Format("{0}_warstwa{1}.jpg", file, j);
-                    X[j].Save(name);
-                }
-            }
+            //    for (int j = 0; j < X.Length; j++)
+            //    {
+            //        String name = String.Format("{0}_warstwa{1}.jpg", file, j);
+            //        X[j].Save(name);
+            //    }
+            //}
 
-            bitmapList.AddRange(System.IO.Directory.EnumerateFiles(data, "*.jpg"));
+            //bitmapList.AddRange(System.IO.Directory.EnumerateFiles(data, "*.jpg"));
 
-            ImageDicom.Source = BitmapHelper.LoadBitmapImage(0, bitmapList);
+            //ImageDicom.Source = BitmapHelper.LoadBitmapImage(0, bitmapList);
+            #endregion
+
+            FileStream file = new FileStream("lena.bmp", FileMode.Open);
+            ImageDicom.Source = BitmapFrame.Create(file, BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
         }
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             ImageDicom.Source = BitmapHelper.LoadBitmapImage(Convert.ToInt32(e.NewValue), bitmapList);
         }
+
+        //GraphicsPath GP = null;
+        //List<Point> points = new List<Point>();
+
+        //private void ImageDicom_MouseDown(object sender, MouseEventArgs e)
+        //{
+        //    points.Clear();
+        ////    points.Add(e.Lo);
+        ////}
+
+        //private void ImageDicom_MouseUp(object sender, MouseEventArgs e)
+        //{
+        //    GP = new GraphicsPath();
+        //    //GP.AddClosedCurve(points.ToArray());
+        //}
+
+        //private void ImageDicom_MouseMove(object sender, MouseEventArgs e)
+        //{
+        //    points.Add(e.Location);
+        //}
     }
 }

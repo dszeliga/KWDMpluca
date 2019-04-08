@@ -30,8 +30,15 @@ namespace TestSegmentacja
             binthr.SetInsideValue(1);
             sitk.Image imageDicom = binthr.Execute(imageDicomOrg);
 
+            // wygładzanie 
+            //sitk.CurvatureAnisotropicDiffusionImageFilter curvatureAnisotropic = new sitk.CurvatureAnisotropicDiffusionImageFilter();
+            //curvatureAnisotropic.SetTimeStep(0.005);
+            //curvatureAnisotropic.SetNumberOfIterations(5);
+            //curvatureAnisotropic.SetConductanceParameter(9.0);
+            //imageDicom = curvatureAnisotropic.Execute(imageDicom);
+
             sitk.VotingBinaryIterativeHoleFillingImageFilter holeFiller = new sitk.VotingBinaryIterativeHoleFillingImageFilter();
-            holeFiller.SetRadius(2);
+            holeFiller.SetRadius(5);
             holeFiller.SetForegroundValue(1);
             holeFiller.SetBackgroundValue(0);
             imageDicom = holeFiller.Execute(imageDicom);
@@ -50,7 +57,7 @@ namespace TestSegmentacja
             thresholder.SetOutsideValue(0);
             labelImage = thresholder.Execute(labelImage);
 
-            sitk.GeodesicActiveContourLevelSetImageFilter geodesicActiveContourLevelSetImageFilter = new sitk.GeodesicActiveContourLevelSetImageFilter();
+            //sitk.GeodesicActiveContourLevelSetImageFilter geodesicActiveContourLevelSetImageFilter = new sitk.GeodesicActiveContourLevelSetImageFilter();
 
 
             SaveImage(imageDicom, "labelImage.vtk");
