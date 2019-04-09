@@ -34,7 +34,7 @@ namespace KWDMpluca.Helpers
                     for (int c = 0; c < columns; c++)
                     {
                         int j = ((int)(l * rows * columns) + (int)(r * columns) + (int)c) * 2;
-                        Y[r, c] = (double)bufor[j + 1] * 256 + (double)bufor[j];
+                        Y[r, c] = (double)bufor[j + 1] * 1 + (double)bufor[j];
                         if (Y[r, c] > m)
                         {
                             m = Y[r, c];
@@ -45,6 +45,7 @@ namespace KWDMpluca.Helpers
                     for (int c = 0; c < columns; c++)
                     {
                         int f = (int)(255 * (Y[r, c] / m));
+                        
                         X.SetPixel(c, r, System.Drawing.Color.FromArgb(f, f, f));
                     }
                 ret[l] = X;

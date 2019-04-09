@@ -64,11 +64,14 @@ namespace KWDMpluca
             //if (op.ShowDialog() == true)
             //{
             //    //IImage.Source = new BitmapImage(new Uri(op.FileName));
-               
+
             //}
 
             //wczytanie z podglądu 
             IImage.Source = imageDicom;
+
+                       
+
         }
 
         private void B_Generate_Click(object sender, RoutedEventArgs e)
@@ -186,7 +189,7 @@ namespace KWDMpluca
 
             if (imagePath != "")
             {
-                imagePath = imagePath.Remove(0, 8);
+                //imagePath = imagePath.Remove(0, 8);
                 imagePath = imagePath.Replace('/', '\\');
                 var headImage = new Paragraph("2a. Analizowane zdjęcie", header);
                 var image = Image.GetInstance(System.Drawing.Image.FromFile(imagePath), ImageFormat.Jpeg);
