@@ -69,7 +69,8 @@ namespace KWDMpluca
 
         private void BPrint_Click(object sender, RoutedEventArgs e)
         {
-            CreatePDF winPDF = new CreatePDF();
+            ImageSource dcm = ImageDicom.Source;
+            CreatePDF winPDF = new CreatePDF(dcm);
             winPDF.Show();
         }
 
