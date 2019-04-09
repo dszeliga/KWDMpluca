@@ -27,6 +27,7 @@ namespace KWDMpluca
     public partial class MainWindow : Window
     {
         List<string> bitmapList = new List<string>();
+        Point currentPoint = new Point();
 
         public MainWindow()
         {
@@ -154,12 +155,45 @@ namespace KWDMpluca
             #endregion
 
             FileStream file = new FileStream("lena.bmp", FileMode.Open);
-            ImageDicom.Source = BitmapFrame.Create(file, BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
+            //ImageDicom.Source = BitmapFrame.Create(file, BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
+            //ImageBrush ib = new ImageBrush();
+            //ib.ImageSource = new BitmapImage(new Uri(, UriKind.RelativeOrAbsolute));
+            Image MyImg = new Image();
+            MyImg.Source = BitmapFrame.Create(file, BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
+
+            MyImg.Width = 370;
+            MyImg.Height = 370;
+
+            canvas.Children.Add(MyImg);
         }
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            ImageDicom.Source = BitmapHelper.LoadBitmapImage(Convert.ToInt32(e.NewValue), bitmapList);
+            //ImageDicom.Source = BitmapHelper.LoadBitmapImage(Convert.ToInt32(e.NewValue), bitmapList);
+        }
+
+        private void Canvas_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ButtonState == MouseButtonState.Pressed)
+                currentPoint = e.GetPosition(this);
+        }
+
+        private void Canvas_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                Line line = new Line();
+
+                line.Stroke = SystemColors.WindowFrameBrush;
+                line.X1 = currentPoint.X;
+                line.Y1 = currentPoint.Y;
+                line.X2 = e.GetPosition(this).X;
+                line.Y2 = e.GetPosition(this).Y;
+
+                currentPoint = e.GetPosition(this);
+
+                canvas.Children.Add(line);
+            }
         }
 
         //GraphicsPath GP = null;

@@ -25,7 +25,7 @@
             <Image x:Name="ICalc" HorizontalAlignment="Left" Height="35" VerticalAlignment="Bottom" Width="35" Stretch="Fill" Source="image/calc.png" Margin="-18.333,-20.333,0,160"/>
         </Border>
         <Border BorderBrush="#FF4472C4" BorderThickness="1" HorizontalAlignment="Left" Height="439" Margin="356,89,0,0" VerticalAlignment="Top" Width="522">
-            <Image x:Name="IXRay" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="35" Stretch="Fill" Source="image/Xray.png" RenderTransformOrigin="-0.457,-0.076" Margin="-18.333,-19.333,0,0"/>
+            <Canvas Name="canvas" Margin="44.2,38.2,43.8,31.6" MouseDown="Canvas_MouseDown" MouseMove="Canvas_MouseMove"/>
         </Border>
         <Border BorderBrush="#FF4472C4" BorderThickness="1" HorizontalAlignment="Left" Height="202" Margin="936,89,0,0" VerticalAlignment="Top" Width="224">
             <Image x:Name="ITool" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="35" Stretch="Fill" Source="image/tool.png" RenderTransformOrigin="0.419,0.095" Margin="-18.333,-17.333,0,0"/>
@@ -40,7 +40,6 @@
         <Image x:Name="AppName" HorizontalAlignment="Left" Height="46" Margin="419,10,0,0" VerticalAlignment="Top" Width="344" Stretch="Fill" Source="image/AppName.png" />
         <Button x:Name="BReload" Content="R" Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Left" Height="30" Margin="269,193,0,0" VerticalAlignment="Top" Width="30" Click="BReload_Click"/>
         <Slider HorizontalAlignment="Left" Margin="356,549,0,0" VerticalAlignment="Top" Width="522" ValueChanged="Slider_ValueChanged"/>
-        <Image x:Name="ImageDicom" HorizontalAlignment="Left" Height="368" Margin="390,119,0,0" VerticalAlignment="Top" Width="457"/>
 
 
 
