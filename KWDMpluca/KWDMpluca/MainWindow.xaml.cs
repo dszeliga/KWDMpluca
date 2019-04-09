@@ -28,6 +28,8 @@ namespace KWDMpluca
     {
         List<string> bitmapList = new List<string>();
         Point currentPoint = new Point();
+        Point startPoint = new Point();
+        List<Point> points = new List<Point>();
 
         public MainWindow()
         {
@@ -175,7 +177,13 @@ namespace KWDMpluca
         private void Canvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ButtonState == MouseButtonState.Pressed)
-                currentPoint = e.GetPosition(this);
+            {
+                startPoint = e.GetPosition(canvas);
+                currentPoint = startPoint;
+                points.Add(currentPoint);
+            }
+                //currentPoint = e.GetPosition(this);
+                //currentPoint = e.GetPosition(canvas);
         }
 
         private void Canvas_MouseMove(object sender, MouseEventArgs e)
@@ -187,12 +195,35 @@ namespace KWDMpluca
                 line.Stroke = SystemColors.WindowFrameBrush;
                 line.X1 = currentPoint.X;
                 line.Y1 = currentPoint.Y;
-                line.X2 = e.GetPosition(this).X;
-                line.Y2 = e.GetPosition(this).Y;
+                line.X2 = e.GetPosition(canvas).X;
+                line.Y2 = e.GetPosition(canvas).Y;
 
-                currentPoint = e.GetPosition(this);
+                currentPoint = e.GetPosition(canvas);
+
+                points.Add(currentPoint);
 
                 canvas.Children.Add(line);
+            }
+        }
+
+        private void Canvas_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Released)
+            {
+                if (currentPoint != startPoint)
+                {
+                    Line line = new Line();
+
+                    line.Stroke = SystemColors.WindowFrameBrush;
+                    line.X1 = currentPoint.X;
+                    line.Y1 = currentPoint.Y;
+                    line.X2 = startPoint.X;
+                    line.Y2 = startPoint.Y;
+
+                    canvas.Children.Add(line);
+                }
+
+                var area = Math.Abs(points.Take(points.Count - 1).Select((p, i) => (points[i + 1].X - p.X) * (points[i + 1].Y + p.Y)).Sum() / 2);
             }
         }
 

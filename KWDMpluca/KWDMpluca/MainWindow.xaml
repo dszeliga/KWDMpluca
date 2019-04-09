@@ -25,7 +25,7 @@
             <Image x:Name="ICalc" HorizontalAlignment="Left" Height="35" VerticalAlignment="Bottom" Width="35" Stretch="Fill" Source="image/calc.png" Margin="-18.333,-20.333,0,160"/>
         </Border>
         <Border BorderBrush="#FF4472C4" BorderThickness="1" HorizontalAlignment="Left" Height="439" Margin="356,89,0,0" VerticalAlignment="Top" Width="522">
-            <Canvas Name="canvas" Margin="44.2,38.2,43.8,31.6" MouseDown="Canvas_MouseDown" MouseMove="Canvas_MouseMove"/>
+            <Canvas Name="canvas" Margin="44.2,38.2,43.8,31.6" MouseDown="Canvas_MouseDown" MouseMove="Canvas_MouseMove" MouseUp="Canvas_MouseUp"/>
         </Border>
         <Border BorderBrush="#FF4472C4" BorderThickness="1" HorizontalAlignment="Left" Height="202" Margin="936,89,0,0" VerticalAlignment="Top" Width="224">
             <Image x:Name="ITool" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="35" Stretch="Fill" Source="image/tool.png" RenderTransformOrigin="0.419,0.095" Margin="-18.333,-17.333,0,0"/>
