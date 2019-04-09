@@ -28,6 +28,7 @@ namespace KWDMpluca
     {
         List<string> bitmapList = new List<string>();
         Point currentPoint = new Point();
+        Image MyImg = new Image();
         Point startPoint = new Point();
         List<Point> points = new List<Point>();
 
@@ -71,7 +72,8 @@ namespace KWDMpluca
 
         private void BPrint_Click(object sender, RoutedEventArgs e)
         {
-            CreatePDF winPDF = new CreatePDF();
+            ImageSource dcm = MyImg.Source;
+            CreatePDF winPDF = new CreatePDF(dcm);
             winPDF.Show();
         }
 
@@ -160,7 +162,7 @@ namespace KWDMpluca
             //ImageDicom.Source = BitmapFrame.Create(file, BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
             //ImageBrush ib = new ImageBrush();
             //ib.ImageSource = new BitmapImage(new Uri(, UriKind.RelativeOrAbsolute));
-            Image MyImg = new Image();
+            
             MyImg.Source = BitmapFrame.Create(file, BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
 
             MyImg.Width = 370;
