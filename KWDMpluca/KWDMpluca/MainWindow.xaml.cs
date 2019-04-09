@@ -200,8 +200,13 @@ namespace KWDMpluca
                 line.X2 = e.GetPosition(canvas).X;
                 line.Y2 = e.GetPosition(canvas).Y;
 
-                currentPoint = e.GetPosition(canvas);
+                SolidColorBrush redBrush = new SolidColorBrush();
+                redBrush.Color = Colors.Red;
 
+                line.Stroke = redBrush;
+
+                currentPoint = e.GetPosition(canvas);
+                
                 points.Add(currentPoint);
 
                 canvas.Children.Add(line);
