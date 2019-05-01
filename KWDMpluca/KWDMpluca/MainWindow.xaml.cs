@@ -72,7 +72,9 @@ namespace KWDMpluca
 
         private void BPrint_Click(object sender, RoutedEventArgs e)
         {
-            ImageSource dcm = MyImg.Source;
+            CreateSaveBitmap(canvas, "image.bmp");
+
+            ImageSource dcm = new BitmapImage(new Uri("image.bmp", UriKind.Relative));
             CreatePDF winPDF = new CreatePDF(dcm);
             winPDF.Show();
         }
@@ -229,8 +231,30 @@ namespace KWDMpluca
 
                     canvas.Children.Add(line);
                 }
-
+                
                 var area = Math.Abs(points.Take(points.Count - 1).Select((p, i) => (points[i + 1].X - p.X) * (points[i + 1].Y + p.Y)).Sum() / 2);
+                
+            }
+        }
+
+        private void CreateSaveBitmap(Canvas canvas, string filename)
+        {
+            RenderTargetBitmap renderBitmap = new RenderTargetBitmap(
+             (int)MyImg.Width, (int)MyImg.Height,
+             96d, 96d, PixelFormats.Pbgra32);
+            // needed otherwise the image output is black
+            canvas.Measure(new Size((int)MyImg.Width, (int)MyImg.Height));
+            canvas.Arrange(new Rect(new Size((int)MyImg.Width, (int)MyImg.Height)));
+
+            renderBitmap.Render(canvas);
+
+            //JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+            PngBitmapEncoder encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(renderBitmap));
+            
+            using (FileStream file = File.Create(filename))
+            {
+                encoder.Save(file);
             }
         }
 

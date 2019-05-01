@@ -68,9 +68,8 @@ namespace KWDMpluca
             //}
 
             //wczytanie z podglądu 
-            IImage.Source = imageDicom;
-
-                       
+            var uri = new Uri("image.bmp", UriKind.Relative);
+            IImage.Source = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "image.bmp", UriKind.Absolute));                     
 
         }
 
@@ -189,10 +188,11 @@ namespace KWDMpluca
 
             if (imagePath != "")
             {
-                //imagePath = imagePath.Remove(0, 8);
+                imagePath = imagePath.Remove(0, 8);
                 imagePath = imagePath.Replace('/', '\\');
                 var headImage = new Paragraph("2a. Analizowane zdjęcie", header);
-                var image = Image.GetInstance(System.Drawing.Image.FromFile(imagePath), ImageFormat.Jpeg);
+                var image = Image.GetInstance(System.Drawing.Image.FromFile(AppDomain.CurrentDomain.BaseDirectory + "image.bmp"), ImageFormat.Bmp);
+
                 image.ScalePercent(40);
                 image.Alignment = iTextSharp.text.Image.ALIGN_CENTER;
                 pdf.Add(headAttachment);
