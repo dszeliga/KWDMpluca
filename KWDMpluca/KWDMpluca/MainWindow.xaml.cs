@@ -1,23 +1,15 @@
-﻿using System;
+﻿using KWDMpluca.Helpers;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Diagnostics;
-using System.Windows.Threading;
-using sitk = itk.simple;
-using System.IO;
-using KWDMpluca.Helpers;
-using System.Drawing.Drawing2D;
 
 namespace KWDMpluca
 {
@@ -31,6 +23,7 @@ namespace KWDMpluca
         Image MyImg = new Image();
         Point startPoint = new Point();
         List<Point> points = new List<Point>();
+        gdcm.DataSetArrayType dataArray;
 
         public MainWindow()
         {
@@ -101,7 +94,7 @@ namespace KWDMpluca
 
             gdcm.BaseRootQuery query = gdcm.CompositeNetworkFunctions.ConstructQuery(type, level, keys);
 
-            gdcm.DataSetArrayType dataArray = new gdcm.DataSetArrayType();
+            dataArray = new gdcm.DataSetArrayType();
 
             bool status = gdcm.CompositeNetworkFunctions.CFind(Properties.Settings.Default.IP, ushort.Parse(Properties.Settings.Default.Port), query, dataArray, Properties.Settings.Default.AET, Properties.Settings.Default.AEC);
             int i = 0;
@@ -110,6 +103,11 @@ namespace KWDMpluca
                 L_SelectedID.Content = x.GetDataElement(new gdcm.Tag(0x0010, 0x0020)).GetValue().toString();
                 L_SelectedName.Content = x.GetDataElement(new gdcm.Tag(0x0010, 0x0010)).GetValue().toString();
                 L_SelectedDateB.Content = x.GetDataElement(new gdcm.Tag(0x0010, 0x0030)).GetValue().toString();
+
+                if (x.FindDataElement(new gdcm.Tag(0x0010, 0x0030))) //0008, 103E - opis 
+                    T_Description.Text = x.GetDataElement(new gdcm.Tag(0x0010, 0x0030)).GetValue().toString();
+                else
+                    T_Description.Text = "";
             }
 
             #region Załadowanie obrazu
@@ -164,7 +162,7 @@ namespace KWDMpluca
             //ImageDicom.Source = BitmapFrame.Create(file, BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
             //ImageBrush ib = new ImageBrush();
             //ib.ImageSource = new BitmapImage(new Uri(, UriKind.RelativeOrAbsolute));
-            
+
             //MyImg.Source = BitmapFrame.Create(file, BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
 
             MyImg.Width = 370;
@@ -175,7 +173,7 @@ namespace KWDMpluca
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            //ImageDicom.Source = BitmapHelper.LoadBitmapImage(Convert.ToInt32(e.NewValue), bitmapList);
+            MyImg.Source = BitmapHelper.LoadBitmapImage(Convert.ToInt32(e.NewValue), bitmapList);
         }
 
         private void Canvas_MouseDown(object sender, MouseButtonEventArgs e)
@@ -186,8 +184,8 @@ namespace KWDMpluca
                 currentPoint = startPoint;
                 points.Add(currentPoint);
             }
-                //currentPoint = e.GetPosition(this);
-                //currentPoint = e.GetPosition(canvas);
+            //currentPoint = e.GetPosition(this);
+            //currentPoint = e.GetPosition(canvas);
         }
 
         private void Canvas_MouseMove(object sender, MouseEventArgs e)
@@ -208,7 +206,7 @@ namespace KWDMpluca
                 line.Stroke = redBrush;
 
                 currentPoint = e.GetPosition(canvas);
-                
+
                 points.Add(currentPoint);
 
                 canvas.Children.Add(line);
@@ -231,9 +229,9 @@ namespace KWDMpluca
 
                     canvas.Children.Add(line);
                 }
-                
+
                 var area = Math.Abs(points.Take(points.Count - 1).Select((p, i) => (points[i + 1].X - p.X) * (points[i + 1].Y + p.Y)).Sum() / 2);
-                
+
             }
         }
 
@@ -251,11 +249,40 @@ namespace KWDMpluca
             //JpegBitmapEncoder encoder = new JpegBitmapEncoder();
             PngBitmapEncoder encoder = new PngBitmapEncoder();
             encoder.Frames.Add(BitmapFrame.Create(renderBitmap));
-            
+
             using (FileStream file = File.Create(filename))
             {
                 encoder.Save(file);
             }
+        }
+
+        private void BEditDescription_Click(object sender, RoutedEventArgs e)
+        {
+            T_Description.IsReadOnly = false;
+            BEditDescription.Visibility = Visibility.Hidden;
+            BDescriptionAnuluj.Visibility = Visibility.Visible;
+            BDescriptionOK.Visibility = Visibility.Visible;
+        }
+
+        private void BDescriptionOK_Click(object sender, RoutedEventArgs e)
+        {
+            T_Description.IsReadOnly = true;
+            BEditDescription.Visibility = Visibility.Visible;
+            BDescriptionAnuluj.Visibility = Visibility.Hidden;
+            BDescriptionOK.Visibility = Visibility.Hidden;
+
+            // byte[] decription = Encoding.ASCII.GetBytes(T_Description.Text);
+            //tu skopiowac to cos z gory z foreachem
+            // x.GetDataElement(new gdcm.Tag(0x0008, 0x103E)).SetByteValue(decription, new gdcm.VL((uint)decription.Length));
+            // x.GetDataElement(new gdcm.Tag(0x0008, 0x103E)).SetTag(new gdcm.Tag(0x0008, 0x103E).SetElementTag(0x0008, 0x103E));
+        }
+
+        private void BDescriptionAnuluj_Click(object sender, RoutedEventArgs e)
+        {
+            T_Description.IsReadOnly = true;
+            BEditDescription.Visibility = Visibility.Visible;
+            BDescriptionAnuluj.Visibility = Visibility.Hidden;
+            BDescriptionOK.Visibility = Visibility.Hidden;
         }
 
         //GraphicsPath GP = null;

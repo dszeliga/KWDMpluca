@@ -40,6 +40,10 @@
         <Image x:Name="AppName" HorizontalAlignment="Left" Height="46" Margin="419,10,0,0" VerticalAlignment="Top" Width="344" Stretch="Fill" Source="image/AppName.png" />
         <Button x:Name="BReload" Content="R" Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Left" Height="30" Margin="269,193,0,0" VerticalAlignment="Top" Width="30" Click="BReload_Click"/>
         <Slider HorizontalAlignment="Left" Margin="356,549,0,0" VerticalAlignment="Top" Width="522" ValueChanged="Slider_ValueChanged"/>
+        <TextBox x:Name="T_Description" IsReadOnly="True" TextWrapping="Wrap" Text="" Margin="65,260,910,132" RenderTransformOrigin="0.46,0.485" AcceptsReturn="True" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto"/>
+        <Button x:Name="BEditDescription" Content="Dodaj/edytuj opis" HorizontalAlignment="Left" Margin="108,490,0,0" VerticalAlignment="Top" Width="121" Height="30" Click="BEditDescription_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
+        <Button x:Name="BDescriptionAnuluj" Visibility="Hidden" Content="Anuluj" HorizontalAlignment="Left" Margin="200,493,0,0" VerticalAlignment="Top" Width="69" Height="30" Click="BDescriptionAnuluj_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
+        <Button x:Name="BDescriptionOK" Visibility="Hidden" Content="OK" HorizontalAlignment="Left" Margin="72,493,0,0" VerticalAlignment="Top" Width="69" Height="30" Click="BDescriptionOK_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
 
 
 

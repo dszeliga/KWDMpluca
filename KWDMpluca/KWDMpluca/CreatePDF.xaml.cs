@@ -45,6 +45,11 @@ namespace KWDMpluca
                 L_SelectedID.Content = x.GetDataElement(new gdcm.Tag(0x0010, 0x0020)).GetValue().toString();
                 T_SelectedName.Text = x.GetDataElement(new gdcm.Tag(0x0010, 0x0010)).GetValue().toString();
                 T_SelectedDateB.Text = x.GetDataElement(new gdcm.Tag(0x0010, 0x0030)).GetValue().toString();
+
+                if (x.FindDataElement(new gdcm.Tag(0x0008, 0x103E)))
+                    T_Description.Text = x.GetDataElement(new gdcm.Tag(0x0008, 0x103E)).GetValue().toString();
+                else
+                    T_Description.Text = "";
             }
         }
 
