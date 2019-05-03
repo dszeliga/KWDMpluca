@@ -44,6 +44,9 @@
         <Button x:Name="BEditDescription" Content="Dodaj/edytuj opis" HorizontalAlignment="Left" Margin="108,490,0,0" VerticalAlignment="Top" Width="121" Height="30" Click="BEditDescription_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
         <Button x:Name="BDescriptionAnuluj" Visibility="Hidden" Content="Anuluj" HorizontalAlignment="Left" Margin="200,493,0,0" VerticalAlignment="Top" Width="69" Height="30" Click="BDescriptionAnuluj_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
         <Button x:Name="BDescriptionOK" Visibility="Hidden" Content="OK" HorizontalAlignment="Left" Margin="72,493,0,0" VerticalAlignment="Top" Width="69" Height="30" Click="BDescriptionOK_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
+        <Button x:Name="bSegmentation" Content="Segmentuj" HorizontalAlignment="Left" Margin="960,132,0,0" VerticalAlignment="Top" Width="183" Click="BSegmentation_Click"/>
+        <RadioButton x:Name="rbSegmentation" Content="Segmentacja" HorizontalAlignment="Left" Margin="960,107,0,0" VerticalAlignment="Top" Checked="RbSegmentation_Checked"/>
+        <RadioButton x:Name="rbDrawing" Content="Zaznaczanie" HorizontalAlignment="Left" Margin="1058,107,0,0" VerticalAlignment="Top" Checked="RbDrawing_Checked"/>
 
 
 

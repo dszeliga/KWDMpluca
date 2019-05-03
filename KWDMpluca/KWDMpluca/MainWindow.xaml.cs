@@ -91,6 +91,7 @@ namespace KWDMpluca
             keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0020), Properties.Settings.Default.SelectedPatientID));
             keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0030), ""));
             keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0040), ""));
+            keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0028, 0x0030), ""));
 
             gdcm.BaseRootQuery query = gdcm.CompositeNetworkFunctions.ConstructQuery(type, level, keys);
 
@@ -190,49 +191,74 @@ namespace KWDMpluca
 
         private void Canvas_MouseMove(object sender, MouseEventArgs e)
         {
-            if (e.LeftButton == MouseButtonState.Pressed)
+            if (rbDrawing.IsChecked == true)
             {
-                Line line = new Line();
-
-                line.Stroke = SystemColors.WindowFrameBrush;
-                line.X1 = currentPoint.X;
-                line.Y1 = currentPoint.Y;
-                line.X2 = e.GetPosition(canvas).X;
-                line.Y2 = e.GetPosition(canvas).Y;
-
-                SolidColorBrush redBrush = new SolidColorBrush();
-                redBrush.Color = Colors.Red;
-
-                line.Stroke = redBrush;
-
-                currentPoint = e.GetPosition(canvas);
-
-                points.Add(currentPoint);
-
-                canvas.Children.Add(line);
-            }
-        }
-
-        private void Canvas_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Released)
-            {
-                if (currentPoint != startPoint)
+                if (e.LeftButton == MouseButtonState.Pressed)
                 {
                     Line line = new Line();
 
                     line.Stroke = SystemColors.WindowFrameBrush;
                     line.X1 = currentPoint.X;
                     line.Y1 = currentPoint.Y;
-                    line.X2 = startPoint.X;
-                    line.Y2 = startPoint.Y;
+                    line.X2 = e.GetPosition(canvas).X;
+                    line.Y2 = e.GetPosition(canvas).Y;
+
+                    SolidColorBrush redBrush = new SolidColorBrush();
+                    redBrush.Color = Colors.Red;
+
+                    line.Stroke = redBrush;
+
+                    currentPoint = e.GetPosition(canvas);
+
+                    points.Add(currentPoint);
 
                     canvas.Children.Add(line);
                 }
-
-                var area = Math.Abs(points.Take(points.Count - 1).Select((p, i) => (points[i + 1].X - p.X) * (points[i + 1].Y + p.Y)).Sum() / 2);
-
             }
+
+        }
+
+        private void Canvas_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (rbDrawing.IsChecked == true)
+            {
+                if (e.LeftButton == MouseButtonState.Released)
+                {
+                    if (currentPoint != startPoint)
+                    {
+                        Line line = new Line();
+
+                        line.Stroke = SystemColors.WindowFrameBrush;
+                        line.X1 = currentPoint.X;
+                        line.Y1 = currentPoint.Y;
+                        line.X2 = startPoint.X;
+                        line.Y2 = startPoint.Y;
+
+                        canvas.Children.Add(line);
+                    }
+
+                    var area = Math.Abs(points.Take(points.Count - 1).Select((p, i) => (points[i + 1].X - p.X) * (points[i + 1].Y + p.Y)).Sum() / 2);
+
+                }
+            }
+            else
+            {
+                if (e.LeftButton == MouseButtonState.Released)
+                {
+                    Ellipse ellipse = new Ellipse();
+
+                    ellipse.Stroke = SystemColors.WindowFrameBrush;
+                    ellipse.Height = 5;
+                    ellipse.Width = 5;
+                    SolidColorBrush greenBrush = new SolidColorBrush();
+                    greenBrush.Color = Colors.Green;
+                    ellipse.Fill = greenBrush;
+                    ellipse.Margin = new Thickness(currentPoint.X, currentPoint.Y,0,0);
+
+                    canvas.Children.Add(ellipse);
+                }
+            }
+            
         }
 
         private void CreateSaveBitmap(Canvas canvas, string filename)
@@ -283,6 +309,25 @@ namespace KWDMpluca
             BEditDescription.Visibility = Visibility.Visible;
             BDescriptionAnuluj.Visibility = Visibility.Hidden;
             BDescriptionOK.Visibility = Visibility.Hidden;
+        }
+
+        private void RbSegmentation_Checked(object sender, RoutedEventArgs e)
+        {
+            rbDrawing.IsChecked = false;
+        }
+
+        private void RbDrawing_Checked(object sender, RoutedEventArgs e)
+        {
+            rbSegmentation.IsChecked = false;
+        }
+
+        private void BSegmentation_Click(object sender, RoutedEventArgs e)
+        {
+            if (rbSegmentation.IsChecked == true)
+            {
+                SimpleITKHelper.SegmentArea(currentPoint, MyImg.Source);
+                MessageBox.Show("koniec");
+            }
         }
 
         //GraphicsPath GP = null;
