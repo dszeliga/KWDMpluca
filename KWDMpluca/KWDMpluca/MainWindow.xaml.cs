@@ -24,6 +24,8 @@ namespace KWDMpluca
         Point startPoint = new Point();
         List<Point> points = new List<Point>();
         gdcm.DataSetArrayType dataArray;
+        String data;
+        List<string> files;
 
         public MainWindow()
         {
@@ -91,6 +93,7 @@ namespace KWDMpluca
             keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0020), Properties.Settings.Default.SelectedPatientID));
             keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0030), ""));
             keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0040), ""));
+            keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0008, 0x103E), ""));
 
             gdcm.BaseRootQuery query = gdcm.CompositeNetworkFunctions.ConstructQuery(type, level, keys);
 
@@ -103,9 +106,11 @@ namespace KWDMpluca
                 L_SelectedID.Content = x.GetDataElement(new gdcm.Tag(0x0010, 0x0020)).GetValue().toString();
                 L_SelectedName.Content = x.GetDataElement(new gdcm.Tag(0x0010, 0x0010)).GetValue().toString();
                 L_SelectedDateB.Content = x.GetDataElement(new gdcm.Tag(0x0010, 0x0030)).GetValue().toString();
+                //T_Description.Text = x.GetDataElement(new gdcm.Tag(0x0008, 0x103E)).GetValue().toString();
 
-                if (x.FindDataElement(new gdcm.Tag(0x0010, 0x0030))) //0008, 103E - opis 
-                    T_Description.Text = x.GetDataElement(new gdcm.Tag(0x0010, 0x0030)).GetValue().toString();
+
+                if (x.FindDataElement(new gdcm.Tag(0x0008, 0x103E))) //0008, 103E - opis 
+                    T_Description.Text = x.GetDataElement(new gdcm.Tag(0x0008, 0x103E)).GetValue().toString();
                 else
                     T_Description.Text = "";
             }
@@ -121,7 +126,7 @@ namespace KWDMpluca
             if (!System.IO.Directory.Exists(received))
                 System.IO.Directory.CreateDirectory(received);
 
-            String data = System.IO.Path.Combine(received, System.IO.Path.GetRandomFileName());
+            data = System.IO.Path.Combine(received, System.IO.Path.GetRandomFileName());
             System.IO.Directory.CreateDirectory(data);
 
             status = gdcm.CompositeNetworkFunctions.CMove(Properties.Settings.Default.IP, ushort.Parse(Properties.Settings.Default.Port), query_new, 10104, Properties.Settings.Default.AET, Properties.Settings.Default.AEC, data);
@@ -132,7 +137,7 @@ namespace KWDMpluca
                 return;
             }
 
-            List<string> files = new List<string>(System.IO.Directory.EnumerateFiles(data));
+            files = new List<string>(System.IO.Directory.EnumerateFiles(data));
             foreach (String fileDcm in files)
             {
                 gdcm.PixmapReader reader = new gdcm.PixmapReader();
@@ -271,10 +276,60 @@ namespace KWDMpluca
             BDescriptionAnuluj.Visibility = Visibility.Hidden;
             BDescriptionOK.Visibility = Visibility.Hidden;
 
-            // byte[] decription = Encoding.ASCII.GetBytes(T_Description.Text);
-            //tu skopiowac to cos z gory z foreachem
-            // x.GetDataElement(new gdcm.Tag(0x0008, 0x103E)).SetByteValue(decription, new gdcm.VL((uint)decription.Length));
-            // x.GetDataElement(new gdcm.Tag(0x0008, 0x103E)).SetTag(new gdcm.Tag(0x0008, 0x103E).SetElementTag(0x0008, 0x103E));
+            List<string> patientList = new List<string>();
+            gdcm.ERootType type = gdcm.ERootType.ePatientRootType;
+
+            gdcm.EQueryLevel level = gdcm.EQueryLevel.ePatient;
+
+            gdcm.KeyValuePairArrayType keys = new gdcm.KeyValuePairArrayType();
+            gdcm.KeyValuePairType key = new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0010), "");
+            keys.Add(key);
+            keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0020), Properties.Settings.Default.SelectedPatientID));
+            keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0030), ""));
+            keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0040), ""));
+
+            gdcm.BaseRootQuery query = gdcm.CompositeNetworkFunctions.ConstructQuery(type, level, keys);
+            dataArray = new gdcm.DataSetArrayType();
+
+            bool status = gdcm.CompositeNetworkFunctions.CFind(Properties.Settings.Default.IP, ushort.Parse(Properties.Settings.Default.Port), query, dataArray, Properties.Settings.Default.AET, Properties.Settings.Default.AEC);
+           
+            int i = 0;
+
+            gdcm.Reader reader = new gdcm.Reader();
+            gdcm.Writer writer = new gdcm.Writer();
+            gdcm.File file;
+
+            foreach (var path in files)
+            {
+                reader.SetFileName(path);
+                file = reader.GetFile();
+                gdcm.DataSet ds = file.GetDataSet();
+               
+                byte[] descriptionTxt = Encoding.ASCII.GetBytes(T_Description.Text);
+                gdcm.DataElement de = ds.GetDataElement(new gdcm.Tag(0x0008, 0x103E));
+                de.SetByteValue(descriptionTxt, new gdcm.VL((uint)descriptionTxt.Length));
+                ds.Insert(de);
+
+                writer.CheckFileMetaInformationOn();
+                writer.SetFileName(path);
+                writer.SetFile(file);
+               //to nie działa zapisuje sie pusty plik... -.-
+            }           
+                     
+
+            //foreach (gdcm.DataSet x in dataArray)
+            //{
+            //    byte[] descriptionTxt = Encoding.ASCII.GetBytes(T_Description.Text);
+            //    gdcm.DataElement de = x.GetDataElement(new gdcm.Tag(0x0008, 0x103E));
+            //    de.SetByteValue(descriptionTxt, new gdcm.VL((uint)descriptionTxt.Length));
+            //    x.Insert(de);                         
+
+            //}
+
+
+
+            // bool statusStore = gdcm.CompositeNetworkFunctions.CStore(Properties.Settings.Default.IP, ushort.Parse(Properties.Settings.Default.Port), new gdcm.FilenamesType((System.Collections.ICollection)files), Properties.Settings.Default.AET, Properties.Settings.Default.AEC);
+
         }
 
         private void BDescriptionAnuluj_Click(object sender, RoutedEventArgs e)
