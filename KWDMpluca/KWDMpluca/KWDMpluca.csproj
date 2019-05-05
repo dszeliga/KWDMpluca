@@ -82,6 +82,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AddPatient.xaml.cs">
+      <DependentUpon>AddPatient.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CreatePDF.xaml.cs">
       <DependentUpon>CreatePDF.xaml</DependentUpon>
     </Compile>
@@ -93,6 +96,10 @@
     <Compile Include="Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
+    <Page Include="AddPatient.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="CreatePDF.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -177,6 +184,13 @@
   <ItemGroup>
     <Resource Include="image\SaveSearch.png" />
     <Resource Include="image\Search2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\AddAndSave.png" />
+    <Resource Include="image\AddIcon.png" />
+    <Resource Include="image\SelectDicom.png" />
+    <Resource Include="image\SelectFolder.png" />
+    <Resource Include="image\SendToPACS.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

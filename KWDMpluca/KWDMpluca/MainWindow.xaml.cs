@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -76,7 +77,8 @@ namespace KWDMpluca
 
         private void BAdd_Click(object sender, RoutedEventArgs e)
         {
-
+            AddPatient win2 = new AddPatient();
+            win2.Show();
         }
 
         private void BReload_Click(object sender, RoutedEventArgs e)
@@ -138,6 +140,8 @@ namespace KWDMpluca
             }
 
             files = new List<string>(System.IO.Directory.EnumerateFiles(data));
+            
+            
             foreach (String fileDcm in files)
             {
                 gdcm.PixmapReader reader = new gdcm.PixmapReader();
@@ -154,7 +158,7 @@ namespace KWDMpluca
                 for (int j = 0; j < X.Length; j++)
                 {
                     String name = String.Format("{0}_warstwa{1}.jpg", fileDcm, j);
-                    X[j].Save(name);
+                    X[j].Save(name);                    
                 }
             }
 
@@ -328,7 +332,7 @@ namespace KWDMpluca
 
 
 
-            // bool statusStore = gdcm.CompositeNetworkFunctions.CStore(Properties.Settings.Default.IP, ushort.Parse(Properties.Settings.Default.Port), new gdcm.FilenamesType((System.Collections.ICollection)files), Properties.Settings.Default.AET, Properties.Settings.Default.AEC);
+            //bool statusStore = gdcm.CompositeNetworkFunctions.CStore(Properties.Settings.Default.IP, ushort.Parse(Properties.Settings.Default.Port), new gdcm.FilenamesType((System.Collections.ICollection)files), Properties.Settings.Default.AET, Properties.Settings.Default.AEC);
 
         }
 
@@ -339,6 +343,24 @@ namespace KWDMpluca
             BDescriptionAnuluj.Visibility = Visibility.Hidden;
             BDescriptionOK.Visibility = Visibility.Hidden;
         }
+
+        //private void Button_Click(object sender, RoutedEventArgs e)
+        //{
+        //    gdcm.File file;
+            
+        //    gdcm.Reader reader = new gdcm.Reader();
+        //    string a= @"C:\PACS\BazaKWDM\RIDERLungCT\RIDER-5p\1\1\000000.dcm";
+        //    reader.SetFileName(a);
+        //    file = reader.GetFile();
+
+        //    gdcm.ImageReader aaa = new gdcm.ImageReader();
+        //    aaa.SetFileName(a);
+           
+        //    //gdcm.FilenamesType b = aaa;
+        //    //bool stat = gdcm.CompositeNetworkFunctions.CStore(Properties.Settings.Default.IP, ushort.Parse(Properties.Settings.Default.Port), b,Properties.Settings.Default.AET, Properties.Settings.Default.AEC);
+        //    //bool status = gdcm.CompositeNetworkFunctions.CMove(Properties.Settings.Default.IP, ushort.Parse(Properties.Settings.Default.Port), 10104, Properties.Settings.Default.AET, Properties.Settings.Default.AEC, data);
+        //    int c = 0;
+        //}
 
         //GraphicsPath GP = null;
         //List<Point> points = new List<Point>();
