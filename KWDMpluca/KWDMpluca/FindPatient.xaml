@@ -12,7 +12,7 @@
         </Border>
         <Button x:Name="B_Close" Background="{x:Null}" BorderBrush="{x:Null}" Content="X" HorizontalAlignment="Left" Height="35" Margin="748,10,0,0" VerticalAlignment="Top" Width="35" Click="B_Close_Click"/>
         <Button x:Name="B_Select" Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Left" Height="50" Margin="114,349,0,0" VerticalAlignment="Top" Width="133" Click="B_Select_Click">
-            <Button Content="Button" Width="75"/>
+            <Button Content="Button" Width="75" Click="Button_Click"/>
         </Button>
         <ListBox x:Name="L_Patient" BorderThickness="1" HorizontalAlignment="Left" Height="136" Margin="445,58,0,0" VerticalAlignment="Top" Width="266" SelectionChanged="L_Patient_SelectionChanged" BorderBrush="#FF4472C4"/>
         <Button x:Name="B_Search" Background="{x:Null}" BorderBrush="{x:Null}" Content="N" HorizontalAlignment="Left" Height="50" Margin="114,294,0,0" VerticalAlignment="Top" Width="133" Click="B_Search_Click"/>

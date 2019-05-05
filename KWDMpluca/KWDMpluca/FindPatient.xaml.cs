@@ -185,5 +185,9 @@ namespace KWDMpluca
             T_OtherSearchValue.IsEnabled = true;
         }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

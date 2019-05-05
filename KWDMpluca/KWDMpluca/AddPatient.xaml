@@ -22,7 +22,6 @@
         <Image HorizontalAlignment="Left" Height="35" Margin="10,10,0,0" Stretch="Fill" Source="image/AddIcon.png" VerticalAlignment="Top" Width="35"/>
         <Label Content="Wybierz serię/zdjęcie" HorizontalAlignment="Left" Margin="51,15,0,0" VerticalAlignment="Top" Width="165" Height="28" FontSize="14" FontWeight="Bold"/>
         <Label x:Name="L_Info" Content="Określ warunki wyszukiwania" Visibility="Hidden"  HorizontalAlignment="Left" Margin="84,277,0,0" VerticalAlignment="Top" Width="182" Height="29"/>
-        <Button x:Name="B_AddImage"  Background="{x:Null}" BorderBrush="{x:Null}" Content="OneImage" Margin="51,117,566.667,148" Click="B_AddImage_Click"  Height="57"/>
         <Label Content="Ścieżka:" HorizontalAlignment="Left" Margin="50,238,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="14"/>
         <Label x:Name="L_Path" Content="C://..." HorizontalAlignment="Left" Height="34" Margin="50,272,0,0" VerticalAlignment="Top" Width="630" FontSize="14"/>
         <Button x:Name="B_ToPACS" Background="{x:Null}" BorderBrush="{x:Null}" Content="AddToPACS" HorizontalAlignment="Left" Margin="545,199,0,0" VerticalAlignment="Top" Height="57" Width="135" Click="B_ToPACS_Click"/>

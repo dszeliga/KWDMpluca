@@ -27,8 +27,7 @@ namespace KWDMpluca
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
             // Wyświetlenie obrazka o określonej ścieżce na określonym przycisku
             InsertImage("image/AddAndSave.png", B_AddAndSave);
-            InsertImage("image/SelectFolder.png", B_AddFolder);
-            InsertImage("image/SelectDicom.png", B_AddImage);
+            InsertImage("image/SelectFolder.png", B_AddFolder);           
             InsertImage("image/SendToPACS.png", B_ToPACS);
             InsertImage("image/Close.png", B_Close);
         }
@@ -56,12 +55,36 @@ namespace KWDMpluca
 
         private void B_ToPACS_Click(object sender, RoutedEventArgs e)
         {
+            string path = L_Path.Content.ToString();
 
+            gdcm.Reader reader = new gdcm.Reader();
+            reader.SetFileName(path);
+            gdcm.File file = reader.GetFile();
+            gdcm.Directory dir = new gdcm.Directory();
+            dir.Load(path, true);
+            gdcm.FilenamesType filenamesType = dir.GetFilenames();
+
+            bool statusStore = gdcm.CompositeNetworkFunctions.CStore(Properties.Settings.Default.IP, ushort.Parse(Properties.Settings.Default.Port), new gdcm.FilenamesType(filenamesType), Properties.Settings.Default.AET, Properties.Settings.Default.AEC);
+            L_Path.Content = "Gotowe";
         }
 
         private void B_AddAndSave_Click(object sender, RoutedEventArgs e)
         {
+            string path = L_Path.Content.ToString();
 
+            gdcm.Reader reader = new gdcm.Reader();
+            reader.SetFileName(path);
+            gdcm.File file = reader.GetFile();
+            gdcm.Directory dir = new gdcm.Directory();
+            dir.Load(path, true);
+            gdcm.FilenamesType filenamesType = dir.GetFilenames();
+
+            bool statusStore = gdcm.CompositeNetworkFunctions.CStore(Properties.Settings.Default.IP, ushort.Parse(Properties.Settings.Default.Port), new gdcm.FilenamesType(filenamesType), Properties.Settings.Default.AET, Properties.Settings.Default.AEC);
+            L_Path.Content = "Gotowe";
+
+
+            Properties.Settings.Default.SelectedPatientID = L_SelectedID.Content.ToString();
+            Properties.Settings.Default.Save();
         }
 
         private void B_AddFolder_Click(object sender, RoutedEventArgs e)
