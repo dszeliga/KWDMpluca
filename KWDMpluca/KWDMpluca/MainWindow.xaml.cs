@@ -97,6 +97,7 @@ namespace KWDMpluca
             keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0030), ""));
             keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0040), ""));
             keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0008, 0x103E), ""));
+            keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0008, 0x1080), ""));
 
             gdcm.BaseRootQuery query = gdcm.CompositeNetworkFunctions.ConstructQuery(type, level, keys);
 
@@ -104,7 +105,7 @@ namespace KWDMpluca
 
             bool status = gdcm.CompositeNetworkFunctions.CFind(Properties.Settings.Default.IP, ushort.Parse(Properties.Settings.Default.Port), query, dataArray, Properties.Settings.Default.AET, Properties.Settings.Default.AEC);
             int i = 0;
-           
+
 
             #region Załadowanie obrazu
             //gdcm.KeyValuePairArrayType keys_new = new gdcm.KeyValuePairArrayType();
@@ -173,19 +174,35 @@ namespace KWDMpluca
                 L_SelectedID.Content = x.GetDataElement(new gdcm.Tag(0x0010, 0x0020)).GetValue().toString();
                 L_SelectedName.Content = x.GetDataElement(new gdcm.Tag(0x0010, 0x0010)).GetValue().toString();
                 L_SelectedDateB.Content = x.GetDataElement(new gdcm.Tag(0x0010, 0x0030)).GetValue().toString();
+                
+                foreach (var path in files)
+                {
+                    gdcm.ImageReader reader = new gdcm.ImageReader();
+                    gdcm.ImageWriter writer = new gdcm.ImageWriter();
+                    gdcm.File file;
+                    gdcm.Image image;
 
-                var kkk = x.GetDataElement(new gdcm.Tag(0x0008, 0x103E)).GetByteValue();
-                //string mm = System.Text.Encoding.UTF8.GetString((byte)kkk, 5);
+                    reader.SetFileName(path);
 
-                //var hh = kkk.toString();
+                    if (!reader.Read())
+                    {
+                        T_Description.Text = "Nie wczytano pliku";
+                    }
 
-                var fff = x.GetDataElement(new gdcm.Tag(0x0008, 0x103E)).toString();
-                //T_Description.Text = x.GetDataElement(new gdcm.Tag(0x0008, 0x103E)).GetByteValue().toString();
+                    file = reader.GetFile();
+                    image = reader.GetImage();
+                    gdcm.DataSet ds = file.GetDataSet();
 
-                //if (x.FindDataElement(new gdcm.Tag(0x0008, 0x103E))) //0008, 103E - opis 
-                //    T_Description.Text = x.GetDataElement(new gdcm.Tag(0x0008, 0x103E)).GetValue().toString();
-                //else
-                //    T_Description.Text = "";
+                    if (ds.FindDataElement(new gdcm.Tag(0x0008, 0x103E))) //0008, 103E - opis 
+                    {
+                        gdcm.StringFilter sf = new gdcm.StringFilter();
+                        sf.SetFile(file);                       
+                        var description = sf.ToStringPair(new gdcm.Tag(0x0008, 0x103E));
+                        T_Description.Text = description.second;
+                    }                    
+                    else
+                        T_Description.Text = "";
+                }
             }
         }
 
@@ -309,7 +326,7 @@ namespace KWDMpluca
 
             int i = 0;
 
-            
+
 
             foreach (var path in files)
             {
@@ -333,15 +350,14 @@ namespace KWDMpluca
                 gdcm.DataElement de = ds.GetDataElement(new gdcm.Tag(0x0008, 0x103E));
                 de.SetTag(new gdcm.Tag(0x0008, 0x103E));
                 de.SetByteValue(descriptionTxt, new gdcm.VL((uint)descriptionTxt.Length));
-               
-                ds.Insert(de);
+                ds.Insert(de);                
 
                 writer.CheckFileMetaInformationOn();
                 writer.SetFileName(path);
                 writer.SetFile(file);
                 writer.SetImage(image);
                 writer.Write();
-                
+
             }
 
             bool statusStore = gdcm.CompositeNetworkFunctions.CStore(Properties.Settings.Default.IP, ushort.Parse(Properties.Settings.Default.Port), new gdcm.FilenamesType(files), Properties.Settings.Default.AET, Properties.Settings.Default.AEC);
