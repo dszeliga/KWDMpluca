@@ -72,9 +72,9 @@ namespace KWDMpluca
         {
             string path = L_Path.Content.ToString();
 
-            gdcm.Reader reader = new gdcm.Reader();
-            reader.SetFileName(path);
-            gdcm.File file = reader.GetFile();
+            //gdcm.Reader reader = new gdcm.Reader();
+            //reader.SetFileName(path);
+            //gdcm.File file = reader.GetFile();
             gdcm.Directory dir = new gdcm.Directory();
             dir.Load(path, true);
             gdcm.FilenamesType filenamesType = dir.GetFilenames();

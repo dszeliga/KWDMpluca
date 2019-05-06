@@ -27,6 +27,7 @@ namespace KWDMpluca
         gdcm.DataSetArrayType dataArray;
         String data;
         List<string> files;
+        List<string> filesNew = new List<string>();
 
         public MainWindow()
         {
@@ -103,19 +104,7 @@ namespace KWDMpluca
 
             bool status = gdcm.CompositeNetworkFunctions.CFind(Properties.Settings.Default.IP, ushort.Parse(Properties.Settings.Default.Port), query, dataArray, Properties.Settings.Default.AET, Properties.Settings.Default.AEC);
             int i = 0;
-            foreach (gdcm.DataSet x in dataArray)
-            {
-                L_SelectedID.Content = x.GetDataElement(new gdcm.Tag(0x0010, 0x0020)).GetValue().toString();
-                L_SelectedName.Content = x.GetDataElement(new gdcm.Tag(0x0010, 0x0010)).GetValue().toString();
-                L_SelectedDateB.Content = x.GetDataElement(new gdcm.Tag(0x0010, 0x0030)).GetValue().toString();
-                //T_Description.Text = x.GetDataElement(new gdcm.Tag(0x0008, 0x103E)).GetValue().toString();
-
-
-                if (x.FindDataElement(new gdcm.Tag(0x0008, 0x103E))) //0008, 103E - opis 
-                    T_Description.Text = x.GetDataElement(new gdcm.Tag(0x0008, 0x103E)).GetValue().toString();
-                else
-                    T_Description.Text = "";
-            }
+           
 
             #region Załadowanie obrazu
             //gdcm.KeyValuePairArrayType keys_new = new gdcm.KeyValuePairArrayType();
@@ -140,8 +129,8 @@ namespace KWDMpluca
             }
 
             files = new List<string>(System.IO.Directory.EnumerateFiles(data));
-            
-            
+
+
             foreach (String fileDcm in files)
             {
                 gdcm.PixmapReader reader = new gdcm.PixmapReader();
@@ -158,7 +147,7 @@ namespace KWDMpluca
                 for (int j = 0; j < X.Length; j++)
                 {
                     String name = String.Format("{0}_warstwa{1}.jpg", fileDcm, j);
-                    X[j].Save(name);                    
+                    X[j].Save(name);
                 }
             }
 
@@ -178,6 +167,26 @@ namespace KWDMpluca
             MyImg.Height = 370;
 
             canvas.Children.Add(MyImg);
+
+            foreach (gdcm.DataSet x in dataArray)
+            {
+                L_SelectedID.Content = x.GetDataElement(new gdcm.Tag(0x0010, 0x0020)).GetValue().toString();
+                L_SelectedName.Content = x.GetDataElement(new gdcm.Tag(0x0010, 0x0010)).GetValue().toString();
+                L_SelectedDateB.Content = x.GetDataElement(new gdcm.Tag(0x0010, 0x0030)).GetValue().toString();
+
+                var kkk = x.GetDataElement(new gdcm.Tag(0x0008, 0x103E)).GetByteValue();
+                //string mm = System.Text.Encoding.UTF8.GetString((byte)kkk, 5);
+
+                //var hh = kkk.toString();
+
+                var fff = x.GetDataElement(new gdcm.Tag(0x0008, 0x103E)).toString();
+                //T_Description.Text = x.GetDataElement(new gdcm.Tag(0x0008, 0x103E)).GetByteValue().toString();
+
+                //if (x.FindDataElement(new gdcm.Tag(0x0008, 0x103E))) //0008, 103E - opis 
+                //    T_Description.Text = x.GetDataElement(new gdcm.Tag(0x0008, 0x103E)).GetValue().toString();
+                //else
+                //    T_Description.Text = "";
+            }
         }
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -291,48 +300,51 @@ namespace KWDMpluca
             keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0020), Properties.Settings.Default.SelectedPatientID));
             keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0030), ""));
             keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0040), ""));
+            keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0008, 0x103E), ""));
 
             gdcm.BaseRootQuery query = gdcm.CompositeNetworkFunctions.ConstructQuery(type, level, keys);
             dataArray = new gdcm.DataSetArrayType();
 
             bool status = gdcm.CompositeNetworkFunctions.CFind(Properties.Settings.Default.IP, ushort.Parse(Properties.Settings.Default.Port), query, dataArray, Properties.Settings.Default.AET, Properties.Settings.Default.AEC);
-           
+
             int i = 0;
 
-            gdcm.Reader reader = new gdcm.Reader();
-            gdcm.Writer writer = new gdcm.Writer();
-            gdcm.File file;
+            
 
             foreach (var path in files)
             {
+                gdcm.ImageReader reader = new gdcm.ImageReader();
+                gdcm.ImageWriter writer = new gdcm.ImageWriter();
+                gdcm.File file;
+                gdcm.Image image;
+
                 reader.SetFileName(path);
+
+                if (!reader.Read())
+                {
+                    T_Description.Text = "Nie wczytano pliku";
+                }
+
                 file = reader.GetFile();
+                image = reader.GetImage();
                 gdcm.DataSet ds = file.GetDataSet();
-               
+
                 byte[] descriptionTxt = Encoding.ASCII.GetBytes(T_Description.Text);
                 gdcm.DataElement de = ds.GetDataElement(new gdcm.Tag(0x0008, 0x103E));
+                de.SetTag(new gdcm.Tag(0x0008, 0x103E));
                 de.SetByteValue(descriptionTxt, new gdcm.VL((uint)descriptionTxt.Length));
+               
                 ds.Insert(de);
 
                 writer.CheckFileMetaInformationOn();
                 writer.SetFileName(path);
                 writer.SetFile(file);
-               //to nie działa zapisuje sie pusty plik... -.-
-            }           
-                     
+                writer.SetImage(image);
+                writer.Write();
+                
+            }
 
-            //foreach (gdcm.DataSet x in dataArray)
-            //{
-            //    byte[] descriptionTxt = Encoding.ASCII.GetBytes(T_Description.Text);
-            //    gdcm.DataElement de = x.GetDataElement(new gdcm.Tag(0x0008, 0x103E));
-            //    de.SetByteValue(descriptionTxt, new gdcm.VL((uint)descriptionTxt.Length));
-            //    x.Insert(de);                         
-
-            //}
-
-
-
-            //bool statusStore = gdcm.CompositeNetworkFunctions.CStore(Properties.Settings.Default.IP, ushort.Parse(Properties.Settings.Default.Port), new gdcm.FilenamesType((System.Collections.ICollection)files), Properties.Settings.Default.AET, Properties.Settings.Default.AEC);
+            bool statusStore = gdcm.CompositeNetworkFunctions.CStore(Properties.Settings.Default.IP, ushort.Parse(Properties.Settings.Default.Port), new gdcm.FilenamesType(files), Properties.Settings.Default.AET, Properties.Settings.Default.AEC);
 
         }
 
@@ -347,7 +359,7 @@ namespace KWDMpluca
         //private void Button_Click(object sender, RoutedEventArgs e)
         //{
         //    gdcm.File file;
-            
+
         //    gdcm.Reader reader = new gdcm.Reader();
         //    string a= @"C:\PACS\BazaKWDM\RIDERLungCT\RIDER-5p\1\1\000000.dcm";
         //    reader.SetFileName(a);
@@ -355,7 +367,7 @@ namespace KWDMpluca
 
         //    gdcm.ImageReader aaa = new gdcm.ImageReader();
         //    aaa.SetFileName(a);
-           
+
         //    //gdcm.FilenamesType b = aaa;
         //    //bool stat = gdcm.CompositeNetworkFunctions.CStore(Properties.Settings.Default.IP, ushort.Parse(Properties.Settings.Default.Port), b,Properties.Settings.Default.AET, Properties.Settings.Default.AEC);
         //    //bool status = gdcm.CompositeNetworkFunctions.CMove(Properties.Settings.Default.IP, ushort.Parse(Properties.Settings.Default.Port), 10104, Properties.Settings.Default.AET, Properties.Settings.Default.AEC, data);
