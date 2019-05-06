@@ -71,11 +71,12 @@ namespace KWDMpluca
         {
             CreateSaveBitmap(canvas, "image.bmp");
 
-            ImageSource dcm = new BitmapImage(new Uri("image.bmp", UriKind.Relative));
-            CreatePDF winPDF = new CreatePDF(dcm);
+            ImageSource dcm = new BitmapImage(new Uri("image.bmp", UriKind.Relative));           
+            CreatePDF winPDF = new CreatePDF(dcm, T_Description.Text);
             winPDF.Show();
         }
 
+       
         private void BAdd_Click(object sender, RoutedEventArgs e)
         {
             AddPatient win2 = new AddPatient();
@@ -97,16 +98,14 @@ namespace KWDMpluca
             keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0030), ""));
             keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0040), ""));
             keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0008, 0x103E), ""));
-            keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0008, 0x1080), ""));
+            
 
             gdcm.BaseRootQuery query = gdcm.CompositeNetworkFunctions.ConstructQuery(type, level, keys);
 
             dataArray = new gdcm.DataSetArrayType();
 
             bool status = gdcm.CompositeNetworkFunctions.CFind(Properties.Settings.Default.IP, ushort.Parse(Properties.Settings.Default.Port), query, dataArray, Properties.Settings.Default.AET, Properties.Settings.Default.AEC);
-            int i = 0;
-
-
+            
             #region Załadowanie obrazu
             //gdcm.KeyValuePairArrayType keys_new = new gdcm.KeyValuePairArrayType();
             //keys_new.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0010), L_SelectedName.Content.ToString()));
