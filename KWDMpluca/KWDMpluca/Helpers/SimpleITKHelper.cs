@@ -14,40 +14,99 @@ namespace KWDMpluca.Helpers
         public static void SegmentArea(Point point, ImageSource image)
         {
             string imagePath = GetFolderName(image) + "segmented_" + GetDicomFileName(image);
-            int seedX = int.Parse(Math.Round(point.X).ToString());
-            int seedY = int.Parse(Math.Round(point.Y).ToString());
-            int seedZ = FindInstance();
+            uint seedX = uint.Parse(Math.Round(point.X).ToString());
+            uint seedY = uint.Parse(Math.Round(point.Y).ToString());
+            uint seedZ = FindInstance();
 
-            sitk.VectorUInt32 seed = new sitk.VectorUInt32(new int[] {seedX, seedY, seedZ});
+            sitk.VectorUInt32 seed = new sitk.VectorUInt32(new uint[] {seedX, seedY, seedZ});
 
             sitk.ImageFileReader imageFileReader = new sitk.ImageFileReader();
             imageFileReader.SetFileName(GetFolderName(image) + GetDicomFileName(image));
-            imageFileReader.SetOutputPixelType(sitk.PixelIDValueEnum.sitkInt16);
+            imageFileReader.SetOutputPixelType(sitk.PixelIDValueEnum.sitkUnknown);
             sitk.Image imageDicomOrg = imageFileReader.Execute();
-
-            sitk.CurvatureFlowImageFilter curvatureFlowImageFilter = new sitk.CurvatureFlowImageFilter();
-            curvatureFlowImageFilter.SetNumberOfIterations(5);
-            curvatureFlowImageFilter.SetTimeStep(0.125);
-            imageDicomOrg = curvatureFlowImageFilter.Execute(imageDicomOrg);
 
             sitk.CastImageFilter castImageFilter = new sitk.CastImageFilter();
             castImageFilter.SetOutputPixelType(sitk.PixelIDValueEnum.sitkInt16);
             imageDicomOrg = castImageFilter.Execute(imageDicomOrg);
 
-            sitk.BinaryThresholdImageFilter binthr = new sitk.BinaryThresholdImageFilter();
-            binthr.SetLowerThreshold(-1042);
-            binthr.SetUpperThreshold(-64);
-            binthr.SetOutsideValue(1);
-            binthr.SetInsideValue(0);
-            imageDicomOrg = binthr.Execute(imageDicomOrg);
+            //Wygładzenie
+            //sitk.GradientAnisotropicDiffusionImageFilter gradientAnisotropicDiffusionImageFilter = new sitk.GradientAnisotropicDiffusionImageFilter();
+            //gradientAnisotropicDiffusionImageFilter.SetNumberOfIterations(5);
+            //gradientAnisotropicDiffusionImageFilter.SetTimeStep(0.05);
+            //gradientAnisotropicDiffusionImageFilter.SetConductanceParameter(1.0);
+            //imageDicomOrg = gradientAnisotropicDiffusionImageFilter.Execute(imageDicomOrg);
+            //SaveImage(imageDicomOrg, imagePath);
+            sitk.CurvatureFlowImageFilter curvatureFlowImageFilter = new sitk.CurvatureFlowImageFilter();
+            curvatureFlowImageFilter.SetNumberOfIterations(5);
+            curvatureFlowImageFilter.SetTimeStep(0.125);
+            imageDicomOrg = curvatureFlowImageFilter.Execute(imageDicomOrg);
 
-            sitk.BinaryErodeImageFilter binaryDilateImageFilter = new sitk.BinaryErodeImageFilter();
-            binaryDilateImageFilter.SetKernelRadius(2);
-            binaryDilateImageFilter.SetBackgroundValue(0);
-            binaryDilateImageFilter.SetForegroundValue(1);
-            imageDicomOrg = binaryDilateImageFilter.Execute(imageDicomOrg);
-
+            //Segmentacja
+            sitk.ConfidenceConnectedImageFilter confidenceConnectedImageFilter = new sitk.ConfidenceConnectedImageFilter();
+            confidenceConnectedImageFilter.SetReplaceValue(1);
+            confidenceConnectedImageFilter.SetInitialNeighborhoodRadius(1);
+            confidenceConnectedImageFilter.SetNumberOfIterations(5);
+            imageDicomOrg = confidenceConnectedImageFilter.Execute(imageDicomOrg);
             SaveImage(imageDicomOrg, imagePath);
+
+            //Dylacja
+            sitk.GrayscaleDilateImageFilter grayscaleDilateImageFilter = new sitk.GrayscaleDilateImageFilter();
+            grayscaleDilateImageFilter.SetKernelType(sitk.KernelEnum.sitkBall);
+            grayscaleDilateImageFilter.SetKernelRadius(5);
+            sitk.Image dilateDicomImage = grayscaleDilateImageFilter.Execute(imageDicomOrg);
+            SaveImage(dilateDicomImage, imagePath);
+
+            //Krawędzie
+            sitk.GradientMagnitudeRecursiveGaussianImageFilter gradientMagnitudeRecursiveGaussianImageFilter = new sitk.GradientMagnitudeRecursiveGaussianImageFilter();
+            gradientMagnitudeRecursiveGaussianImageFilter.SetSigma(1.0);
+            imageDicomOrg = gradientMagnitudeRecursiveGaussianImageFilter.Execute(imageDicomOrg);
+            SaveImage(imageDicomOrg, imagePath);
+
+            //Negacja
+            sitk.ExpNegativeImageFilter expNegativeImageFilter = new sitk.ExpNegativeImageFilter();
+            imageDicomOrg = expNegativeImageFilter.Execute(imageDicomOrg);
+            SaveImage(imageDicomOrg, imagePath);
+
+            //Mapa odległości
+            sitk.FastMarchingImageFilter fastMarchingImageFilter = new sitk.FastMarchingImageFilter();
+            sitk.VectorUIntList seeds = new sitk.VectorUIntList();
+            seeds.Add(seed);
+            fastMarchingImageFilter.SetTrialPoints(seeds);
+            imageDicomOrg = fastMarchingImageFilter.Execute(imageDicomOrg);
+            SaveImage(imageDicomOrg, imagePath);
+
+            //Aktywne kontury
+            sitk.GeodesicActiveContourLevelSetImageFilter geodesicActiveContourLevelSetImageFilter = new sitk.GeodesicActiveContourLevelSetImageFilter();
+            geodesicActiveContourLevelSetImageFilter.SetPropagationScaling(100);
+            geodesicActiveContourLevelSetImageFilter.SetCurvatureScaling(1);
+            geodesicActiveContourLevelSetImageFilter.SetMaximumRMSError(0.0005);
+            geodesicActiveContourLevelSetImageFilter.SetNumberOfIterations(800);
+            imageDicomOrg = geodesicActiveContourLevelSetImageFilter.Execute(imageDicomOrg, dilateDicomImage);
+            SaveImage(imageDicomOrg, imagePath);
+
+            //sitk.CurvatureFlowImageFilter curvatureFlowImageFilter = new sitk.CurvatureFlowImageFilter();
+            //curvatureFlowImageFilter.SetNumberOfIterations(5);
+            //curvatureFlowImageFilter.SetTimeStep(0.125);
+            //imageDicomOrg = curvatureFlowImageFilter.Execute(imageDicomOrg);
+
+            //sitk.CastImageFilter castImageFilter = new sitk.CastImageFilter();
+            //castImageFilter.SetOutputPixelType(sitk.PixelIDValueEnum.sitkInt16);
+            //imageDicomOrg = castImageFilter.Execute(imageDicomOrg);
+
+            //sitk.BinaryThresholdImageFilter binthr = new sitk.BinaryThresholdImageFilter();
+            //binthr.SetLowerThreshold(-1042);
+            //binthr.SetUpperThreshold(-64);
+            //binthr.SetOutsideValue(1);
+            //binthr.SetInsideValue(0);
+            //imageDicomOrg = binthr.Execute(imageDicomOrg);
+
+            //sitk.BinaryErodeImageFilter binaryDilateImageFilter = new sitk.BinaryErodeImageFilter();
+            //binaryDilateImageFilter.SetKernelRadius(2);
+            //binaryDilateImageFilter.SetBackgroundValue(0);
+            //binaryDilateImageFilter.SetForegroundValue(1);
+            //imageDicomOrg = binaryDilateImageFilter.Execute(imageDicomOrg);
+
+            //SaveImage(imageDicomOrg, imagePath);
         }
 
         private static void SaveImage(sitk.Image image, string pathToFile)
@@ -81,9 +140,9 @@ namespace KWDMpluca.Helpers
             return folderName;
         }
 
-        private static int FindInstance()
+        private static uint FindInstance()
         {
-            int instanceID = 0;
+            uint instanceID = 0;
 
             gdcm.ERootType type = gdcm.ERootType.ePatientRootType;
 
@@ -104,7 +163,7 @@ namespace KWDMpluca.Helpers
             {
                 foreach (gdcm.DataSet x in dataArray)
                 {
-                    instanceID = Convert.ToInt32(x.GetDataElement(new gdcm.Tag(0x0020, 0x0013)).GetValue());
+                    instanceID = uint.Parse(x.GetDataElement(new gdcm.Tag(0x0020, 0x0013)).GetValue().toString());
                 }
 
                 return instanceID;
