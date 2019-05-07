@@ -14,10 +14,11 @@ namespace KWDMpluca.Helpers
         public static void SegmentArea(Point point, ImageSource image)
         {
             string imagePath = GetFolderName(image) + "segmented_" + GetDicomFileName(image);
-            uint seedX = uint.Parse(Math.Round(point.X).ToString());
-            uint seedY = uint.Parse(Math.Round(point.Y).ToString());
+            int seedX = int.Parse(Math.Round(point.X).ToString());
+            int seedY = int.Parse(Math.Round(point.Y).ToString());
+            int seedZ = FindInstance();
 
-            sitk.VectorUInt32 seed = new sitk.VectorUInt32(new uint[] {seedX, seedY, 10 });
+            sitk.VectorUInt32 seed = new sitk.VectorUInt32(new int[] {seedX, seedY, seedZ});
 
             sitk.ImageFileReader imageFileReader = new sitk.ImageFileReader();
             imageFileReader.SetFileName(GetFolderName(image) + GetDicomFileName(image));
@@ -41,47 +42,12 @@ namespace KWDMpluca.Helpers
             imageDicomOrg = binthr.Execute(imageDicomOrg);
 
             sitk.BinaryErodeImageFilter binaryDilateImageFilter = new sitk.BinaryErodeImageFilter();
+            binaryDilateImageFilter.SetKernelRadius(2);
             binaryDilateImageFilter.SetBackgroundValue(0);
             binaryDilateImageFilter.SetForegroundValue(1);
             imageDicomOrg = binaryDilateImageFilter.Execute(imageDicomOrg);
 
-            sitk.ConnectedThresholdImageFilter connectedThresholdImageFilter = new sitk.ConnectedThresholdImageFilter();
-            connectedThresholdImageFilter.SetSeed(seed);
-            connectedThresholdImageFilter.SetLower(210);
-            connectedThresholdImageFilter.SetUpper(250);
-            connectedThresholdImageFilter.SetReplaceValue(255);
-            imageDicomOrg = connectedThresholdImageFilter.Execute(imageDicomOrg);
-
-            //sitk.BinaryDilateImageFilter binaryDilateImageFilter = new sitk.BinaryDilateImageFilter();
-            //binaryDilateImageFilter.SetBackgroundValue(0);
-            //binaryDilateImageFilter.SetForegroundValue(1);
-            //imageDicomOrg = binaryDilateImageFilter.Execute(imageDicomOrg);
-
-
             SaveImage(imageDicomOrg, imagePath);
-
-            
-
-            //SaveImage(imageDicomOrg, imagePath);
-
-            //sitk.BinaryThresholdImageFilter binthr = new sitk.BinaryThresholdImageFilter();
-            //binthr.SetLowerThreshold(-950);
-            //binthr.SetUpperThreshold(-720);
-            //binthr.SetOutsideValue(0);
-            //binthr.SetInsideValue(1);
-            //imageDicomOrg = binthr.Execute(imageDicomOrg);
-
-            //SaveImage(imageDicomOrg, imagePath);
-
-            //sitk.ConnectedThresholdImageFilter connectedThresholdImageFilter = new sitk.ConnectedThresholdImageFilter();
-            //connectedThresholdImageFilter.SetSeed(seed);
-            //connectedThresholdImageFilter.SetLower(100);
-            //connectedThresholdImageFilter.SetUpper(200);
-            //imageDicomOrg = connectedThresholdImageFilter.Execute(imageDicomOrg);
-
-            //SaveImage(imageDicomOrg, imagePath);
-            //sitk.CurvatureFlowImageFilter curvatureFlowImageFilter = new sitk.CurvatureFlowImageFilter();
-
         }
 
         private static void SaveImage(sitk.Image image, string pathToFile)
@@ -113,6 +79,38 @@ namespace KWDMpluca.Helpers
             string[] pathSegments = image.ToString().Split('\\');
             string folderName = pathSegments[0] + "\\" + pathSegments[1] + "\\" + pathSegments[2] + "\\";
             return folderName;
+        }
+
+        private static int FindInstance()
+        {
+            int instanceID = 0;
+
+            gdcm.ERootType type = gdcm.ERootType.ePatientRootType;
+
+            gdcm.EQueryLevel level = gdcm.EQueryLevel.ePatient;
+
+            gdcm.KeyValuePairArrayType keys = new gdcm.KeyValuePairArrayType();
+            gdcm.KeyValuePairType key = new gdcm.KeyValuePairType(new gdcm.Tag(0x0020, 0x0013), "");
+            keys.Add(key);
+            keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0020), Properties.Settings.Default.SelectedPatientID));
+
+            gdcm.BaseRootQuery query = gdcm.CompositeNetworkFunctions.ConstructQuery(type, level, keys);
+
+            gdcm.DataSetArrayType dataArray = new gdcm.DataSetArrayType();
+
+            bool status = gdcm.CompositeNetworkFunctions.CFind(Properties.Settings.Default.IP, ushort.Parse(Properties.Settings.Default.Port), query, dataArray, Properties.Settings.Default.AET, Properties.Settings.Default.AEC);
+
+            if (status)
+            {
+                foreach (gdcm.DataSet x in dataArray)
+                {
+                    instanceID = Convert.ToInt32(x.GetDataElement(new gdcm.Tag(0x0020, 0x0013)).GetValue());
+                }
+
+                return instanceID;
+            }
+
+            return 0;
         }
     }
 }
