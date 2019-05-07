@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KWDMpluca"
         mc:Ignorable="d"
-        Title="KWDM" Height="650" Width="1200" ResizeMode="NoResize" >
+        Title="KWDM" Height="650" Width="1200" ResizeMode="NoResize" WindowState="Maximized" KeyDown="Window_KeyDown">
     <Grid Background="#FFDEEBF7">
         <Border x:Name="listBoxPatients" BorderBrush="#FF4472C4" BorderThickness="1" HorizontalAlignment="Left" Height="129" Margin="52,94,0,0" VerticalAlignment="Top" Width="247">
             <Image x:Name="IInfo" HorizontalAlignment="Right" Height="35" VerticalAlignment="Top" Width="35" Stretch="Fill" Source="image/info.png" RenderTransformOrigin="-6.171,0.076" Margin="-17.333,-18,226,0"/>
@@ -21,29 +21,30 @@
         <Border BorderBrush="#FF4472C4" BorderThickness="1" HorizontalAlignment="Left" Height="280" Margin="52,248,0,0" VerticalAlignment="Top" Width="247" RenderTransformOrigin="0.524,0.754">
             <Image x:Name="INote" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="35" Stretch="Fill" Source="image/note.png" RenderTransformOrigin="-6.171,0.076" Margin="-20.333,-18.333,0,0"/>
         </Border>
-        <Border BorderBrush="#FF4472C4" BorderThickness="1" HorizontalAlignment="Left" Height="179" Margin="936,349,0,0" VerticalAlignment="Top" Width="224">
+        <Border BorderBrush="#FF4472C4" BorderThickness="1" HorizontalAlignment="Right" Height="179" Margin="0,0,34.667,94" VerticalAlignment="Bottom" Width="171">
             <Image x:Name="ICalc" HorizontalAlignment="Left" Height="35" VerticalAlignment="Bottom" Width="35" Stretch="Fill" Source="image/calc.png" Margin="-18.333,-20.333,0,160"/>
         </Border>
-        <Border BorderBrush="#FF4472C4" BorderThickness="1" HorizontalAlignment="Left" Height="439" Margin="356,89,0,0" VerticalAlignment="Top" Width="522">
-            <Canvas Name="canvas" Margin="44.2,38.2,43.8,31.6" MouseDown="Canvas_MouseDown" MouseMove="Canvas_MouseMove" MouseUp="Canvas_MouseUp"/>
+        <Border BorderBrush="#FF4472C4" BorderThickness="1" Margin="460,218,431.667,102">
+            <Canvas Name="canvas" Margin="8.667,8.667,9.333,9" MouseDown="Canvas_MouseDown" MouseMove="Canvas_MouseMove" MouseUp="Canvas_MouseUp"/>
         </Border>
-        <Border BorderBrush="#FF4472C4" BorderThickness="1" HorizontalAlignment="Left" Height="202" Margin="936,89,0,0" VerticalAlignment="Top" Width="224">
+        <Border BorderBrush="#FF4472C4" BorderThickness="1" Height="202" Margin="0,94,34.667,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="171">
             <Image x:Name="ITool" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="35" Stretch="Fill" Source="image/tool.png" RenderTransformOrigin="0.419,0.095" Margin="-18.333,-17.333,0,0"/>
         </Border>
-        <ListBox x:Name="patientsListBox" Margin="677,10,315.333,542.667" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}"  />
 
-        <Button x:Name="BSettings" Content="Ustawienia" HorizontalAlignment="Left" Margin="1045,13,0,0" VerticalAlignment="Top" Width="115" Height="43" Click="BSettings_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
+        <Button x:Name="BSettings" Content="Ustawienia" Margin="0,13,34.667,0" VerticalAlignment="Top" Height="43" Click="BSettings_Click" Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Right" Width="115"/>
         <Label x:Name="LCheck" Content="" HorizontalAlignment="Left" Height="28" Margin="169,61,0,0" VerticalAlignment="Top" Width="123"/>
         <Button x:Name="BAdd" Content="Dodawanie" HorizontalAlignment="Left" Margin="52,13,0,0" VerticalAlignment="Top" Width="112" Height="43" Click="BAdd_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
-        <Button x:Name="BSearch" Content="Szukanie" HorizontalAlignment="Right" Margin="0,13,894.333,0" VerticalAlignment="Top" Width="102" Height="43" Click="BSearch_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
-        <Button x:Name="BPrint" Content="Drukowanie" HorizontalAlignment="Left" Margin="108,549,0,0" VerticalAlignment="Top" Width="56" Height="43" Click="BPrint_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
+        <Button x:Name="BSearch" Content="Szukanie" Margin="198,13,0,0" Click="BSearch_Click" Background="{x:Null}" BorderBrush="{x:Null}" Height="43" VerticalAlignment="Top" HorizontalAlignment="Left" Width="102"/>
+        <Button x:Name="BPrint" Content="Drukowanie" HorizontalAlignment="Left" Margin="108,549,0,30" Width="56" Click="BPrint_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
         <Image x:Name="AppName" HorizontalAlignment="Left" Height="46" Margin="419,10,0,0" VerticalAlignment="Top" Width="344" Stretch="Fill" Source="image/AppName.png" />
         <Button x:Name="BReload" Content="R" Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Left" Height="30" Margin="269,193,0,0" VerticalAlignment="Top" Width="30" Click="BReload_Click"/>
-        <Slider HorizontalAlignment="Left" Margin="356,549,0,0" VerticalAlignment="Top" Width="522" ValueChanged="Slider_ValueChanged"/>
-        <TextBox x:Name="T_Description" IsReadOnly="True" TextWrapping="Wrap" Text="" Margin="65,260,910,132" RenderTransformOrigin="0.46,0.485" AcceptsReturn="True" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto"/>
+        <Slider Margin="356,0,316.667,30" ValueChanged="Slider_ValueChanged" Height="17" VerticalAlignment="Bottom"/>
+        <TextBox x:Name="T_Description" IsReadOnly="True" TextWrapping="Wrap" Text="" Margin="65,260,0,0" RenderTransformOrigin="0.46,0.485" AcceptsReturn="True" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" Width="227" Height="230" VerticalAlignment="Top"/>
         <Button x:Name="BEditDescription" Content="Dodaj/edytuj opis" HorizontalAlignment="Left" Margin="108,490,0,0" VerticalAlignment="Top" Width="121" Height="30" Click="BEditDescription_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
         <Button x:Name="BDescriptionAnuluj" Visibility="Hidden" Content="Anuluj" HorizontalAlignment="Left" Margin="200,493,0,0" VerticalAlignment="Top" Width="69" Height="30" Click="BDescriptionAnuluj_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
         <Button x:Name="BDescriptionOK" Visibility="Hidden" Content="OK" HorizontalAlignment="Left" Margin="72,493,0,0" VerticalAlignment="Top" Width="69" Height="30" Click="BDescriptionOK_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
+        <Image HorizontalAlignment="Left" Margin="356,0,0,102" Width="79" Height="71" VerticalAlignment="Bottom"/>
+        <Image Margin="0,0,316.667,102" HorizontalAlignment="Right" Width="79" Height="71" VerticalAlignment="Bottom"/>
 
 
 
