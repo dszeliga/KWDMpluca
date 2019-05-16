@@ -11,12 +11,12 @@ namespace KWDMpluca.Helpers
 {
     public class SimpleITKHelper
     {
-        public static void SegmentArea(Point point, ImageSource image)
+        public static string SegmentArea(Point point, ImageSource image)
         {
-            string imagePath = GetFolderName(image) + "segmented_" + GetDicomFileName(image);
+            string imagePath = GetFolderName(image) + "segmented_" + GetDicomFileName(image)+".dcm";
             uint seedX = uint.Parse(Math.Round(point.X).ToString());
             uint seedY = uint.Parse(Math.Round(point.Y).ToString());
-            uint seedZ = FindInstance();
+            uint seedZ = 1;//FindInstance();
 
             sitk.VectorUInt32 seed = new sitk.VectorUInt32(new uint[] { seedX, seedY, seedZ });
 
@@ -34,6 +34,7 @@ namespace KWDMpluca.Helpers
             castImageFilter.SetOutputPixelType(sitk.PixelIDValueEnum.sitkInt16);
             imageDicomOrg = castImageFilter.Execute(imageDicomOrg);
 
+            //progowanie
             sitk.BinaryThresholdImageFilter binthr = new sitk.BinaryThresholdImageFilter();
             binthr.SetLowerThreshold(-1042);
             binthr.SetUpperThreshold(-64);
@@ -41,12 +42,16 @@ namespace KWDMpluca.Helpers
             binthr.SetInsideValue(0);
             sitk.Image imageDicomOrg_beforeErode = binthr.Execute(imageDicomOrg);
 
-            sitk.BinaryErodeImageFilter binaryDilateImageFilter = new sitk.BinaryErodeImageFilter();
-            binaryDilateImageFilter.SetKernelRadius(2);
-            binaryDilateImageFilter.SetBackgroundValue(0);
-            binaryDilateImageFilter.SetForegroundValue(1);
-            imageDicomOrg = binaryDilateImageFilter.Execute(imageDicomOrg_beforeErode);
+            SaveImage(imageDicomOrg_beforeErode, imagePath);
 
+            //erozja
+            sitk.BinaryErodeImageFilter binaryErodeImageFilter = new sitk.BinaryErodeImageFilter();
+            binaryErodeImageFilter.SetKernelRadius(6);
+            binaryErodeImageFilter.SetBackgroundValue(0);
+            binaryErodeImageFilter.SetForegroundValue(1);
+            imageDicomOrg = binaryErodeImageFilter.Execute(imageDicomOrg_beforeErode);
+
+            //zmiana na uint8
             castImageFilter.SetOutputPixelType(sitk.PixelIDValueEnum.sitkUInt8);
             imageDicomOrg = castImageFilter.Execute(imageDicomOrg);
 
@@ -54,16 +59,35 @@ namespace KWDMpluca.Helpers
             imageDicomOrg_beforeErode = castImageFilter.Execute(imageDicomOrg_beforeErode);
 
             sitk.ConnectedComponentImageFilter labeler = new sitk.ConnectedComponentImageFilter();
-            labeler.SetFullyConnected(true);
+            labeler.SetFullyConnected(false);    
+            
             imageDicomOrg = labeler.Execute(imageDicomOrg_beforeErode, imageDicomOrg);
 
-            //sitk.RelabelComponentImageFilter relabeler = new sitk.RelabelComponentImageFilter();
-            //relabeler.SetMinimumObjectSize(700);
-            //relabeler.SortByObjectSizeOn();
-            //relabeler.Get
-            //imageDicomOrg = relabeler.Execute(imageDicomOrg);
+
+            sitk.RelabelComponentImageFilter relabeler = new sitk.RelabelComponentImageFilter();
+            relabeler.SetMinimumObjectSize(1000);
+            relabeler.SortByObjectSizeOn();
+            imageDicomOrg = relabeler.Execute(imageDicomOrg);
 
             SaveImage(imageDicomOrg, imagePath);
+
+            //sitk.ConfidenceConnectedImageFilter confidenceConnectedImageFilter = new sitk.ConfidenceConnectedImageFilter();
+            //confidenceConnectedImageFilter.SetSeed(seed);
+            //confidenceConnectedImageFilter.SetReplaceValue(5);
+            //confidenceConnectedImageFilter.SetInitialNeighborhoodRadius(5);
+            //confidenceConnectedImageFilter.SetNumberOfIterations(100);            
+            //imageDicomOrg=confidenceConnectedImageFilter.Execute(imageDicomOrg);
+
+
+            //sitk.NeighborhoodConnectedImageFilter neighborhoodConnectedImageFilter = new sitk.NeighborhoodConnectedImageFilter();
+            //neighborhoodConnectedImageFilter.SetSeed(seed);
+            //neighborhoodConnectedImageFilter.SetReplaceValue(1);
+            //neighborhoodConnectedImageFilter.SetRadius(5);
+            //imageDicomOrg=neighborhoodConnectedImageFilter.Execute(imageDicomOrg);
+
+            SaveImage(imageDicomOrg, imagePath);
+
+            return imagePath.Substring(0, imagePath.Length - 4);
         }
 
         private static void SaveImage(sitk.Image image, string pathToFile)

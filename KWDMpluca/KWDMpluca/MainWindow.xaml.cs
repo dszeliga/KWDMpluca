@@ -147,7 +147,7 @@ namespace KWDMpluca
                 gdcm.Bitmap bmjpeg2000 = BitmapHelper.pxmap2jpeg2000(reader.GetPixmap());
                 System.Drawing.Bitmap[] X = BitmapHelper.gdcmBitmap2Bitmap(bmjpeg2000);
 
-               // System.Drawing.Bitmap X = BitmapHelper.DicomToBitmap(itk.simple.SimpleITK.ReadImage(fileDcm), 0);
+                // System.Drawing.Bitmap X = BitmapHelper.DicomToBitmap(itk.simple.SimpleITK.ReadImage(fileDcm), 0);
                 for (int j = 0; j < X.Length; j++)
                 {
                     String name = String.Format("{0}_warstwa{1}.jpg", fileDcm, j);
@@ -160,7 +160,7 @@ namespace KWDMpluca
             //bitmapList.AddRange(System.IO.Directory.EnumerateFiles(data, "*.bmp"));
 
             MyImg.Source = BitmapHelper.LoadBitmapImage(0, bitmapList);
-           
+
             #endregion
 
             //FileStream file = new FileStream("lena.bmp", FileMode.Open);
@@ -257,12 +257,12 @@ namespace KWDMpluca
                     SolidColorBrush greenBrush = new SolidColorBrush();
                     greenBrush.Color = Colors.Green;
                     ellipse.Fill = greenBrush;
-                    ellipse.Margin = new Thickness(currentPoint.X, currentPoint.Y,0,0);
+                    ellipse.Margin = new Thickness(currentPoint.X, currentPoint.Y, 0, 0);
 
                     canvas.Children.Add(ellipse);
                 }
             }
-            
+
         }
 
         private void CreateSaveBitmap(Canvas canvas, string filename)
@@ -329,29 +329,42 @@ namespace KWDMpluca
         {
             if (rbSegmentation.IsChecked == true)
             {
-                SimpleITKHelper.SegmentArea(currentPoint, MyImg.Source);
+                string imagePath = SimpleITKHelper.SegmentArea(currentPoint, MyImg.Source);
+                
+                //gdcm.PixmapReader reader = new gdcm.PixmapReader();
+                //reader.SetFileName(imagePath);
+
+                //gdcm.Bitmap bmjpeg2000 = BitmapHelper.pxmap2jpeg2000(reader.GetPixmap());
+                //System.Drawing.Bitmap[] X = BitmapHelper.gdcmBitmap2Bitmap(bmjpeg2000);
+
+                //String name = String.Format("{0}_warstwaBMP.bmp", imagePath);
+                //X[0].Save(name);
+                //MyImg.Source = BitmapHelper.LoadBitmapImage(name);
                 MessageBox.Show("koniec");
             }
+
+
         }
-
-        //GraphicsPath GP = null;
-        //List<Point> points = new List<Point>();
-
-        //private void ImageDicom_MouseDown(object sender, MouseEventArgs e)
-        //{
-        //    points.Clear();
-        ////    points.Add(e.Lo);
-        ////}
-
-        //private void ImageDicom_MouseUp(object sender, MouseEventArgs e)
-        //{
-        //    GP = new GraphicsPath();
-        //    //GP.AddClosedCurve(points.ToArray());
-        //}
-
-        //private void ImageDicom_MouseMove(object sender, MouseEventArgs e)
-        //{
-        //    points.Add(e.Location);
-        //}
     }
+
+    //GraphicsPath GP = null;
+    //List<Point> points = new List<Point>();
+
+    //private void ImageDicom_MouseDown(object sender, MouseEventArgs e)
+    //{
+    //    points.Clear();
+    ////    points.Add(e.Lo);
+    ////}
+
+    //private void ImageDicom_MouseUp(object sender, MouseEventArgs e)
+    //{
+    //    GP = new GraphicsPath();
+    //    //GP.AddClosedCurve(points.ToArray());
+    //}
+
+    //private void ImageDicom_MouseMove(object sender, MouseEventArgs e)
+    //{
+    //    points.Add(e.Location);
+    //}
 }
+

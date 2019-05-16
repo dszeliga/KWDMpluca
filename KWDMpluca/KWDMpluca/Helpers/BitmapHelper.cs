@@ -81,8 +81,16 @@ namespace KWDMpluca.Helpers
             dicom.EndInit();
             return dicom;
         }
-
-        public static Bitmap DicomToBitmap(sitk.Image imagesDicom, uint depth)
+        public static BitmapImage LoadBitmapImage(string path)
+        {
+            BitmapImage dicom = new BitmapImage();
+            dicom.BeginInit();
+            dicom.UriSource = new Uri(path, UriKind.RelativeOrAbsolute);
+            dicom.CacheOption = BitmapCacheOption.OnLoad;
+            dicom.EndInit();
+            return dicom;
+        }
+            public static Bitmap DicomToBitmap(sitk.Image imagesDicom, uint depth)
         {
             sitk.VectorUInt32 idx = new sitk.VectorUInt32();
             uint[] size = imagesDicom.GetSize().ToArray();
