@@ -147,16 +147,20 @@ namespace KWDMpluca
                 gdcm.Bitmap bmjpeg2000 = BitmapHelper.pxmap2jpeg2000(reader.GetPixmap());
                 System.Drawing.Bitmap[] X = BitmapHelper.gdcmBitmap2Bitmap(bmjpeg2000);
 
+               // System.Drawing.Bitmap X = BitmapHelper.DicomToBitmap(itk.simple.SimpleITK.ReadImage(fileDcm), 0);
                 for (int j = 0; j < X.Length; j++)
                 {
                     String name = String.Format("{0}_warstwa{1}.jpg", fileDcm, j);
                     X[j].Save(name);
                 }
+                //String name = String.Format("{0}_warstwaBMP.bmp", fileDcm);
+                //X.Save(name);
             }
-
             bitmapList.AddRange(System.IO.Directory.EnumerateFiles(data, "*.jpg"));
+            //bitmapList.AddRange(System.IO.Directory.EnumerateFiles(data, "*.bmp"));
 
             MyImg.Source = BitmapHelper.LoadBitmapImage(0, bitmapList);
+           
             #endregion
 
             //FileStream file = new FileStream("lena.bmp", FileMode.Open);
