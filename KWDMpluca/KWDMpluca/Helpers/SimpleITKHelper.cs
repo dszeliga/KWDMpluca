@@ -14,22 +14,26 @@ namespace KWDMpluca.Helpers
         public static string SegmentArea(Point point, ImageSource image)
         {
             string imagePath = GetFolderName(image) + "segmented_" + GetDicomFileName(image)+".dcm";
-            uint seedX = uint.Parse(Math.Round(point.X).ToString());
-            uint seedY = uint.Parse(Math.Round(point.Y).ToString());
-            uint seedZ = 1;//FindInstance();
+            uint seedX = 149;//uint.Parse(Math.Round(point.X).ToString());
+            uint seedY = 363;// uint.Parse(Math.Round(point.Y).ToString());
+            uint seedZ = 0;//FindInstance();
 
+            //wspolrzedne punktu
             sitk.VectorUInt32 seed = new sitk.VectorUInt32(new uint[] { seedX, seedY, seedZ });
 
+            //wczytanie pliku
             sitk.ImageFileReader imageFileReader = new sitk.ImageFileReader();
             imageFileReader.SetFileName(GetFolderName(image) + GetDicomFileName(image));
             imageFileReader.SetOutputPixelType(sitk.PixelIDValueEnum.sitkInt16);
             sitk.Image imageDicomOrg = imageFileReader.Execute();
 
+            //odszumienie obrazu?
             sitk.CurvatureFlowImageFilter curvatureFlowImageFilter = new sitk.CurvatureFlowImageFilter();
             curvatureFlowImageFilter.SetNumberOfIterations(5);
             curvatureFlowImageFilter.SetTimeStep(0.125);
             imageDicomOrg = curvatureFlowImageFilter.Execute(imageDicomOrg);
 
+            //zmiana typu piksela na int16
             sitk.CastImageFilter castImageFilter = new sitk.CastImageFilter();
             castImageFilter.SetOutputPixelType(sitk.PixelIDValueEnum.sitkInt16);
             imageDicomOrg = castImageFilter.Execute(imageDicomOrg);
@@ -46,47 +50,40 @@ namespace KWDMpluca.Helpers
 
             //erozja
             sitk.BinaryErodeImageFilter binaryErodeImageFilter = new sitk.BinaryErodeImageFilter();
-            binaryErodeImageFilter.SetKernelRadius(6);
+            binaryErodeImageFilter.SetKernelRadius(4);
             binaryErodeImageFilter.SetBackgroundValue(0);
             binaryErodeImageFilter.SetForegroundValue(1);
-            imageDicomOrg = binaryErodeImageFilter.Execute(imageDicomOrg_beforeErode);
+            sitk.Image imageDicomErode = binaryErodeImageFilter.Execute(imageDicomOrg_beforeErode);
 
-            //zmiana na uint8
-            castImageFilter.SetOutputPixelType(sitk.PixelIDValueEnum.sitkUInt8);
-            imageDicomOrg = castImageFilter.Execute(imageDicomOrg);
-
-            castImageFilter.SetOutputPixelType(sitk.PixelIDValueEnum.sitkUInt8);
-            imageDicomOrg_beforeErode = castImageFilter.Execute(imageDicomOrg_beforeErode);
-
-            sitk.ConnectedComponentImageFilter labeler = new sitk.ConnectedComponentImageFilter();
-            labeler.SetFullyConnected(false);    
+            SaveImage(imageDicomErode, imagePath);
+            //otwarcie (erozja potem dylatacja )
+            sitk.BinaryMorphologicalOpeningImageFilter binaryMorphologicalOpeningImageFilter = new sitk.BinaryMorphologicalOpeningImageFilter();
+            binaryMorphologicalOpeningImageFilter.SetKernelRadius(4);
+            binaryMorphologicalOpeningImageFilter.SetBackgroundValue(0);
+            binaryMorphologicalOpeningImageFilter.SetForegroundValue(1);
+            binaryMorphologicalOpeningImageFilter.SetKernelType(sitk.KernelEnum.sitkBall);
+            sitk.Image imageDicomOpen = binaryMorphologicalOpeningImageFilter.Execute(imageDicomErode);
+           
+            //rozrost ze wskazanego punktu
+            sitk.ConfidenceConnectedImageFilter confidenceConnectedImageFilter = new sitk.ConfidenceConnectedImageFilter();
+            confidenceConnectedImageFilter.AddSeed(seed);
+            confidenceConnectedImageFilter.SetReplaceValue(255);
+            confidenceConnectedImageFilter.SetInitialNeighborhoodRadius(3);
+            confidenceConnectedImageFilter.SetNumberOfIterations(3);
+            confidenceConnectedImageFilter.SetMultiplier(3);
+            sitk.Image imageDicomSegmented = confidenceConnectedImageFilter.Execute(imageDicomOpen);
             
-            imageDicomOrg = labeler.Execute(imageDicomOrg_beforeErode, imageDicomOrg);
 
+            castImageFilter.SetOutputPixelType(sitk.PixelIDValueEnum.sitkInt16);
+            imageDicomSegmented = castImageFilter.Execute(imageDicomSegmented);
 
-            sitk.RelabelComponentImageFilter relabeler = new sitk.RelabelComponentImageFilter();
-            relabeler.SetMinimumObjectSize(1000);
-            relabeler.SortByObjectSizeOn();
-            imageDicomOrg = relabeler.Execute(imageDicomOrg);
+            sitk.AddImageFilter addImageFilter = new sitk.AddImageFilter();
+            sitk.Image imageDicomWithMask = addImageFilter.Execute(imageDicomOrg, imageDicomSegmented);
 
-            SaveImage(imageDicomOrg, imagePath);
+            //zapis do pliku
+            SaveImage(imageDicomWithMask, imagePath);
 
-            //sitk.ConfidenceConnectedImageFilter confidenceConnectedImageFilter = new sitk.ConfidenceConnectedImageFilter();
-            //confidenceConnectedImageFilter.SetSeed(seed);
-            //confidenceConnectedImageFilter.SetReplaceValue(5);
-            //confidenceConnectedImageFilter.SetInitialNeighborhoodRadius(5);
-            //confidenceConnectedImageFilter.SetNumberOfIterations(100);            
-            //imageDicomOrg=confidenceConnectedImageFilter.Execute(imageDicomOrg);
-
-
-            //sitk.NeighborhoodConnectedImageFilter neighborhoodConnectedImageFilter = new sitk.NeighborhoodConnectedImageFilter();
-            //neighborhoodConnectedImageFilter.SetSeed(seed);
-            //neighborhoodConnectedImageFilter.SetReplaceValue(1);
-            //neighborhoodConnectedImageFilter.SetRadius(5);
-            //imageDicomOrg=neighborhoodConnectedImageFilter.Execute(imageDicomOrg);
-
-            SaveImage(imageDicomOrg, imagePath);
-
+            //zwraca sciezke do pliku po segmentacji
             return imagePath.Substring(0, imagePath.Length - 4);
         }
 
