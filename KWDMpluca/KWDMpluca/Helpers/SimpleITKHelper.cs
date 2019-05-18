@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using sitk = itk.simple;
-
+using System.IO;
 namespace KWDMpluca.Helpers
 {
     public class SimpleITKHelper
     {
         public static string SegmentArea(Point point, ImageSource image)
         {
-            string imagePath = GetFolderName(image) + "segmented_" + GetDicomFileName(image)+".dcm";
+            
             uint seedX = 149;//uint.Parse(Math.Round(point.X).ToString());
             uint seedY = 363;// uint.Parse(Math.Round(point.Y).ToString());
             uint seedZ = 0;//FindInstance();
@@ -45,17 +45,14 @@ namespace KWDMpluca.Helpers
             binthr.SetOutsideValue(1);
             binthr.SetInsideValue(0);
             sitk.Image imageDicomOrg_beforeErode = binthr.Execute(imageDicomOrg);
-
-            SaveImage(imageDicomOrg_beforeErode, imagePath);
-
+            
             //erozja
             sitk.BinaryErodeImageFilter binaryErodeImageFilter = new sitk.BinaryErodeImageFilter();
             binaryErodeImageFilter.SetKernelRadius(4);
             binaryErodeImageFilter.SetBackgroundValue(0);
             binaryErodeImageFilter.SetForegroundValue(1);
             sitk.Image imageDicomErode = binaryErodeImageFilter.Execute(imageDicomOrg_beforeErode);
-
-            SaveImage(imageDicomErode, imagePath);
+                        
             //otwarcie (erozja potem dylatacja )
             sitk.BinaryMorphologicalOpeningImageFilter binaryMorphologicalOpeningImageFilter = new sitk.BinaryMorphologicalOpeningImageFilter();
             binaryMorphologicalOpeningImageFilter.SetKernelRadius(4);
@@ -67,23 +64,45 @@ namespace KWDMpluca.Helpers
             //rozrost ze wskazanego punktu
             sitk.ConfidenceConnectedImageFilter confidenceConnectedImageFilter = new sitk.ConfidenceConnectedImageFilter();
             confidenceConnectedImageFilter.AddSeed(seed);
-            confidenceConnectedImageFilter.SetReplaceValue(255);
+            confidenceConnectedImageFilter.SetReplaceValue(1);
             confidenceConnectedImageFilter.SetInitialNeighborhoodRadius(3);
             confidenceConnectedImageFilter.SetNumberOfIterations(3);
             confidenceConnectedImageFilter.SetMultiplier(3);
             sitk.Image imageDicomSegmented = confidenceConnectedImageFilter.Execute(imageDicomOpen);
-            
+
+            SaveImage(imageDicomSegmented, GetFolderName(image) + "segmentedMask" + GetDicomFileName(image) + ".dcm");
+            //zmiana piksela na int16
+            castImageFilter.SetOutputPixelType(sitk.PixelIDValueEnum.sitkInt16);
+            imageDicomSegmented = castImageFilter.Execute(imageDicomSegmented);
+
+            //maska w kolorze
+            //sitk.ScalarToRGBColormapImageFilter scalarToRGBColormap = new sitk.ScalarToRGBColormapImageFilter();
+            //scalarToRGBColormap.SetColormap(sitk.ScalarToRGBColormapImageFilter.ColormapType.Red);
+            //sitk.Image imageDicomSegmentedColor = scalarToRGBColormap.Execute(imageDicomSegmented);
+
+            //SaveImage(imageDicomSegmentedColor, GetFolderName(image) + "segmentedMaskColor" + GetDicomFileName(image) + ".dcm");
+
 
             castImageFilter.SetOutputPixelType(sitk.PixelIDValueEnum.sitkInt16);
             imageDicomSegmented = castImageFilter.Execute(imageDicomSegmented);
 
+            castImageFilter.SetOutputPixelType(sitk.PixelIDValueEnum.sitkInt16);
+            imageDicomOrg = castImageFilter.Execute(imageDicomOrg);
+
+            //zmiana formatu wektora koloru maski
+            //sitk.VectorIndexSelectionCastImageFilter vectorIndexSelectionCastImageFilter = new sitk.VectorIndexSelectionCastImageFilter();
+            //vectorIndexSelectionCastImageFilter.SetOutputPixelType(sitk.PixelIDValueEnum.sitkUInt16);
+            //imageDicomSegmentedColor = vectorIndexSelectionCastImageFilter.Execute(imageDicomSegmentedColor);
+
+            //nałożenie maski na obraz
             sitk.AddImageFilter addImageFilter = new sitk.AddImageFilter();
             sitk.Image imageDicomWithMask = addImageFilter.Execute(imageDicomOrg, imageDicomSegmented);
 
             //zapis do pliku
-            SaveImage(imageDicomWithMask, imagePath);
+            SaveImage(imageDicomWithMask, GetFolderName(image) + "imageWithMask" + GetDicomFileName(image) + ".dcm");
 
-            //zwraca sciezke do pliku po segmentacji
+            string imagePath = GetFolderName(image) + "imageWithMask" + GetDicomFileName(image) + ".dcm";
+            //zwraca sciezke do pliku po nałożeniu
             return imagePath.Substring(0, imagePath.Length - 4);
         }
 
