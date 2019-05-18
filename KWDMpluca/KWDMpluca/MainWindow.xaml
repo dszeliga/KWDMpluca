@@ -46,8 +46,8 @@
         <Button x:Name="bSegmentation" Content="Segmentuj" Margin="988,132,34.6,0" VerticalAlignment="Top" Click="BSegmentation_Click" Height="20"/>
         <RadioButton x:Name="rbSegmentation" Content="Segmentacja" Margin="988,110,118.6,0" VerticalAlignment="Top" Checked="RbSegmentation_Checked"/>
         <RadioButton x:Name="rbDrawing" Content="Zaznaczanie" Margin="1077,107,33.6,498" Checked="RbDrawing_Checked"/>
-        <Image HorizontalAlignment="Left" Margin="327,0,0,94" Width="108" Height="96" VerticalAlignment="Bottom"/>
-        <Image Margin="0,0,239.667,102" HorizontalAlignment="Right" Width="96" Height="88" VerticalAlignment="Bottom"/>
+        <Image Name="IPrevious" HorizontalAlignment="Left" Margin="327,0,0,94" Width="108" Height="96" VerticalAlignment="Bottom"/>
+        <Image Name="INext" Margin="0,0,239.667,102" HorizontalAlignment="Right" Width="96" Height="88" VerticalAlignment="Bottom"/>
         <Border BorderBrush="#FF4472C4" BorderThickness="1" Margin="0,94,239.667,0" HorizontalAlignment="Right" Width="300" Height="300" VerticalAlignment="Top">
             <Canvas x:Name="canvas1" Margin="8.667,8.667,9.333,9" MouseDown="Canvas_MouseDown" MouseMove="Canvas_MouseMove" MouseUp="Canvas_MouseUp"/>
         </Border>
@@ -56,6 +56,8 @@
         <Button x:Name="bDistance" Content="Zmierz odcinek" Margin="989,175,33.6,0" VerticalAlignment="Top" Click="BDistance_Click" Height="20"/>
         <Label x:Name="L_Distance" Content="" Margin="1018,366,34.6,190" Height="28"/>
         <Label x:Name="L_Area" Content="" Margin="1018,430,34.6,162" Height="28"/>
+        <Button x:Name="BNextImage" Content="Następne" Margin="755,0,365.6,115" Click="BNext_Click" Background="{x:Null}" BorderBrush="{x:Null}" Height="43" VerticalAlignment="Bottom"/>
+        <Button x:Name="BPreviousImage" Content="Poprzednie" Margin="462,0,657.6,115" Click="BPrevious_Click" Background="{x:Null}" BorderBrush="{x:Null}" Height="43" VerticalAlignment="Bottom"/>
 
 
 

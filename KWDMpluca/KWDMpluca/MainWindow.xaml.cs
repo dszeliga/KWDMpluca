@@ -32,6 +32,7 @@ namespace KWDMpluca
         bool bDistanceClicked = false;
         double[] pointsDistance = new double[4];
         int ind = 0;
+        int numberOfImage = 0;
 
         public MainWindow()
         {
@@ -75,12 +76,12 @@ namespace KWDMpluca
         {
             CreateSaveBitmap(canvas, "image.bmp");
 
-            ImageSource dcm = new BitmapImage(new Uri("image.bmp", UriKind.Relative));           
+            ImageSource dcm = new BitmapImage(new Uri("image.bmp", UriKind.Relative));
             CreatePDF winPDF = new CreatePDF(dcm, T_Description.Text);
             winPDF.Show();
         }
 
-       
+
         private void BAdd_Click(object sender, RoutedEventArgs e)
         {
             AddPatient win2 = new AddPatient();
@@ -101,7 +102,7 @@ namespace KWDMpluca
             keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0020), Properties.Settings.Default.SelectedPatientID));
             keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0030), ""));
             keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0040), ""));
-            keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0008, 0x103E), ""));            
+            keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0008, 0x103E), ""));
             keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0028, 0x0030), ""));
 
             gdcm.BaseRootQuery query = gdcm.CompositeNetworkFunctions.ConstructQuery(type, level, keys);
@@ -109,7 +110,7 @@ namespace KWDMpluca
             dataArray = new gdcm.DataSetArrayType();
 
             bool status = gdcm.CompositeNetworkFunctions.CFind(Properties.Settings.Default.IP, ushort.Parse(Properties.Settings.Default.Port), query, dataArray, Properties.Settings.Default.AET, Properties.Settings.Default.AEC);
-            
+
             #region Załadowanie obrazu
             //gdcm.KeyValuePairArrayType keys_new = new gdcm.KeyValuePairArrayType();
             //keys_new.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0010), L_SelectedName.Content.ToString()));
@@ -160,7 +161,7 @@ namespace KWDMpluca
             bitmapList.AddRange(System.IO.Directory.EnumerateFiles(data, "*.jpg"));
             //bitmapList.AddRange(System.IO.Directory.EnumerateFiles(data, "*.bmp"));
 
-            MyImg.Source = BitmapHelper.LoadBitmapImage(0, bitmapList);
+            MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
 
             #endregion
 
@@ -181,7 +182,7 @@ namespace KWDMpluca
                 L_SelectedID.Content = x.GetDataElement(new gdcm.Tag(0x0010, 0x0020)).GetValue().toString();
                 L_SelectedName.Content = x.GetDataElement(new gdcm.Tag(0x0010, 0x0010)).GetValue().toString();
                 L_SelectedDateB.Content = x.GetDataElement(new gdcm.Tag(0x0010, 0x0030)).GetValue().toString();
-                
+
                 foreach (var path in files)
                 {
                     gdcm.ImageReader reader = new gdcm.ImageReader();
@@ -203,15 +204,15 @@ namespace KWDMpluca
                     sf.SetFile(file);
 
                     if (ds.FindDataElement(new gdcm.Tag(0x0008, 0x103E))) //0008, 103E - opis 
-                    {                                               
+                    {
                         var description = sf.ToStringPair(new gdcm.Tag(0x0008, 0x103E));
-                        
+
                         T_Description.Text = description.second;
-                    }                    
+                    }
                     else
                         T_Description.Text = "";
 
-                    
+
                     var pixelData = sf.ToStringPair(new gdcm.Tag(0x0028, 0x0030));
                     var index = pixelData.second.IndexOf('\\');
                     string pixel = pixelData.second.Substring(0, index).Replace('.', ',');
@@ -234,10 +235,10 @@ namespace KWDMpluca
                 points.Add(currentPoint);
             }
 
-            if(bDistanceClicked)
+            if (bDistanceClicked)
             {
-                if (ind<4)
-                {                   
+                if (ind < 4)
+                {
 
                     if (e.LeftButton == MouseButtonState.Pressed)
                     {
@@ -252,27 +253,27 @@ namespace KWDMpluca
                         ellipse.Margin = new Thickness(currentPoint.X, currentPoint.Y, 0, 0);
                         pointsDistance[ind] = currentPoint.X;
                         pointsDistance[ind + 1] = currentPoint.Y;
-                        canvas.Children.Add(ellipse);                        
+                        canvas.Children.Add(ellipse);
                         ind += 2;
                     }
 
-                    if(ind==4)
+                    if (ind == 4)
                     {
-                        var distance = (Math.Sqrt((Math.Pow(pointsDistance[0] - pointsDistance[2], 2) + Math.Pow(pointsDistance[1] - pointsDistance[3], 2))))*pixelSpacing;
-                        L_Distance.Content = "Długość: " + Math.Round(distance,2) +"mm";
+                        var distance = (Math.Sqrt((Math.Pow(pointsDistance[0] - pointsDistance[2], 2) + Math.Pow(pointsDistance[1] - pointsDistance[3], 2)))) * pixelSpacing;
+                        L_Distance.Content = "Długość: " + Math.Round(distance, 2) + "mm";
                     }
 
                 }
                 else
                 {
                     var length = canvas.Children.Count;
-                    for (int i=length-1;i>=length-2;i--)
+                    for (int i = length - 1; i >= length - 2; i--)
                     {
                         canvas.Children.RemoveAt(i);
-                    }         
-                   
+                    }
+
                     ind = 0;
-                    
+
                 }
             }
             //currentPoint = e.GetPosition(this);
@@ -331,8 +332,8 @@ namespace KWDMpluca
                     L_Area.Content = "Pole: " + area;
                 }
             }
-            
-            else if (rbSegmentation.IsChecked==true)
+
+            else if (rbSegmentation.IsChecked == true)
             {
                 if (e.LeftButton == MouseButtonState.Released)
                 {
@@ -432,7 +433,7 @@ namespace KWDMpluca
                 gdcm.DataElement de = ds.GetDataElement(new gdcm.Tag(0x0008, 0x103E));
                 de.SetTag(new gdcm.Tag(0x0008, 0x103E));
                 de.SetByteValue(descriptionTxt, new gdcm.VL((uint)descriptionTxt.Length));
-                ds.Insert(de);                
+                ds.Insert(de);
 
                 writer.CheckFileMetaInformationOn();
                 writer.SetFileName(path);
@@ -495,20 +496,20 @@ namespace KWDMpluca
             if (rbSegmentation.IsChecked == true)
             {
                 string imagePath = SimpleITKHelper.GetFolderName(MyImg.Source) + "imageWithMask" + SimpleITKHelper.GetDicomFileName(MyImg.Source) + ".dcm";
-                int area=SimpleITKHelper.SegmentArea(currentPoint, MyImg.Source);
-                L_Area.Content = "Pole: "+area;
+                int area = SimpleITKHelper.SegmentArea(currentPoint, MyImg.Source);
+                L_Area.Content = "Pole: " + area;
                 gdcm.PixmapReader reader = new gdcm.PixmapReader();
                 reader.SetFileName(imagePath);
                 if (!reader.Read())
                 {
-                    MessageBox.Show("Opuszczam plik {0}", imagePath);                    
+                    MessageBox.Show("Opuszczam plik {0}", imagePath);
                 }
-                
+
                 String name = String.Format("{0}_segmented.jpg", imagePath);
                 System.Drawing.Bitmap X = BitmapHelper.DicomToBitmap(itk.simple.SimpleITK.ReadImage(imagePath), 0);
                 X.Save(name);
-               
-                MyImg.Source = BitmapHelper.LoadBitmapImage(name);                
+
+                MyImg.Source = BitmapHelper.LoadBitmapImage(name);
             }
 
 
@@ -517,6 +518,50 @@ namespace KWDMpluca
         private void BDistance_Click(object sender, RoutedEventArgs e)
         {
             bDistanceClicked = true;
+        }
+
+        private void BPrevious_Click(object sender, RoutedEventArgs e)
+        {
+            numberOfImage -= 1;
+            if (numberOfImage > 0)
+            {
+                MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
+                IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage-1, bitmapList);
+                INext.Source = BitmapHelper.LoadBitmapImage(numberOfImage + 1 , bitmapList);
+            }
+            else
+            {
+                MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage + 1, bitmapList);
+                IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage + 1, bitmapList);//pusty
+                INext.Source = BitmapHelper.LoadBitmapImage(numberOfImage + 2, bitmapList);
+                numberOfImage = 0;
+            }
+        }
+
+        private void BNext_Click(object sender, RoutedEventArgs e)
+        {
+            numberOfImage += 1;
+            if (numberOfImage < bitmapList.Count)
+            {
+                MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
+                IPrevious.Source= BitmapHelper.LoadBitmapImage(numberOfImage-1, bitmapList);
+                if(numberOfImage==bitmapList.Count-1)
+                {
+                    INext = null;
+                }
+                else
+                {
+                    INext.Source = BitmapHelper.LoadBitmapImage(numberOfImage + 1, bitmapList);
+                }
+                
+            }
+            else
+            {
+                MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
+                IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 2, bitmapList);
+                INext.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList); //pusty
+                numberOfImage = bitmapList.Count - 1;                
+            }
         }
     }
 
