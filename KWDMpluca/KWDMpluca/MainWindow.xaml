@@ -43,9 +43,9 @@
         <Button x:Name="BEditDescription" Content="Dodaj/edytuj opis" HorizontalAlignment="Left" Margin="108,555,0,0" VerticalAlignment="Top" Width="121" Height="30" Click="BEditDescription_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
         <Button x:Name="BDescriptionAnuluj" Visibility="Hidden" Content="Anuluj" HorizontalAlignment="Left" Margin="200,493,0,0" VerticalAlignment="Top" Width="69" Height="30" Click="BDescriptionAnuluj_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
         <Button x:Name="BDescriptionOK" Visibility="Hidden" Content="OK" HorizontalAlignment="Left" Margin="72,493,0,0" VerticalAlignment="Top" Width="69" Height="30" Click="BDescriptionOK_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
-        <Button x:Name="bSegmentation" Content="Segmentuj" HorizontalAlignment="Left" Margin="960,132,0,0" VerticalAlignment="Top" Width="183" Click="BSegmentation_Click"/>
-        <RadioButton x:Name="rbSegmentation" Content="Segmentacja" HorizontalAlignment="Left" Margin="960,107,0,0" VerticalAlignment="Top" Checked="RbSegmentation_Checked"/>
-        <RadioButton x:Name="rbDrawing" Content="Zaznaczanie" HorizontalAlignment="Left" Margin="1058,107,0,0" VerticalAlignment="Top" Checked="RbDrawing_Checked"/>
+        <Button x:Name="bSegmentation" Content="Segmentuj" Margin="988,132,34.6,0" VerticalAlignment="Top" Click="BSegmentation_Click" Height="20"/>
+        <RadioButton x:Name="rbSegmentation" Content="Segmentacja" Margin="988,110,118.6,0" VerticalAlignment="Top" Checked="RbSegmentation_Checked"/>
+        <RadioButton x:Name="rbDrawing" Content="Zaznaczanie" Margin="1077,107,33.6,498" Checked="RbDrawing_Checked"/>
         <Image HorizontalAlignment="Left" Margin="327,0,0,94" Width="108" Height="96" VerticalAlignment="Bottom"/>
         <Image Margin="0,0,239.667,102" HorizontalAlignment="Right" Width="96" Height="88" VerticalAlignment="Bottom"/>
         <Border BorderBrush="#FF4472C4" BorderThickness="1" Margin="0,94,239.667,0" HorizontalAlignment="Right" Width="300" Height="300" VerticalAlignment="Top">
@@ -53,6 +53,9 @@
         </Border>
         <Button Content="Button" Visibility="Hidden" HorizontalAlignment="Left" Margin="458,0,0,99" Width="59" Height="56" VerticalAlignment="Bottom"/>
         <Button Content="Button" Visibility="Hidden" HorizontalAlignment="Right" Margin="0,0,361.667,99" Width="59" Height="56" VerticalAlignment="Bottom"/>
+        <Button x:Name="bDistance" Content="Zmierz odcinek" Margin="989,175,33.6,0" VerticalAlignment="Top" Click="BDistance_Click" Height="20"/>
+        <Label x:Name="L_Distance" Content="" Margin="1018,366,34.6,190" Height="28"/>
+        <Label x:Name="L_Area" Content="" Margin="1018,430,34.6,162" Height="28"/>
 
 
 

@@ -28,6 +28,10 @@ namespace KWDMpluca
         String data;
         List<string> files;
         List<string> filesNew = new List<string>();
+        double pixelSpacing;
+        bool bDistanceClicked = false;
+        double[] pointsDistance = new double[4];
+        int ind = 0;
 
         public MainWindow()
         {
@@ -97,8 +101,7 @@ namespace KWDMpluca
             keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0020), Properties.Settings.Default.SelectedPatientID));
             keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0030), ""));
             keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0040), ""));
-            keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0008, 0x103E), ""));
-            
+            keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0008, 0x103E), ""));            
             keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0028, 0x0030), ""));
 
             gdcm.BaseRootQuery query = gdcm.CompositeNetworkFunctions.ConstructQuery(type, level, keys);
@@ -196,16 +199,23 @@ namespace KWDMpluca
                     file = reader.GetFile();
                     image = reader.GetImage();
                     gdcm.DataSet ds = file.GetDataSet();
+                    gdcm.StringFilter sf = new gdcm.StringFilter();
+                    sf.SetFile(file);
 
                     if (ds.FindDataElement(new gdcm.Tag(0x0008, 0x103E))) //0008, 103E - opis 
-                    {
-                        gdcm.StringFilter sf = new gdcm.StringFilter();
-                        sf.SetFile(file);                       
+                    {                                               
                         var description = sf.ToStringPair(new gdcm.Tag(0x0008, 0x103E));
+                        
                         T_Description.Text = description.second;
                     }                    
                     else
                         T_Description.Text = "";
+
+                    
+                    var pixelData = sf.ToStringPair(new gdcm.Tag(0x0028, 0x0030));
+                    var index = pixelData.second.IndexOf('\\');
+                    string pixel = pixelData.second.Substring(0, index).Replace('.', ',');
+                    pixelSpacing = Convert.ToDouble(pixel);
                 }
             }
         }
@@ -222,6 +232,48 @@ namespace KWDMpluca
                 startPoint = e.GetPosition(canvas);
                 currentPoint = startPoint;
                 points.Add(currentPoint);
+            }
+
+            if(bDistanceClicked)
+            {
+                if (ind<4)
+                {                   
+
+                    if (e.LeftButton == MouseButtonState.Pressed)
+                    {
+                        Ellipse ellipse = new Ellipse();
+
+                        ellipse.Stroke = SystemColors.WindowFrameBrush;
+                        ellipse.Height = 5;
+                        ellipse.Width = 5;
+                        SolidColorBrush greenBrush = new SolidColorBrush();
+                        greenBrush.Color = Colors.Red;
+                        ellipse.Fill = greenBrush;
+                        ellipse.Margin = new Thickness(currentPoint.X, currentPoint.Y, 0, 0);
+                        pointsDistance[ind] = currentPoint.X;
+                        pointsDistance[ind + 1] = currentPoint.Y;
+                        canvas.Children.Add(ellipse);                        
+                        ind += 2;
+                    }
+
+                    if(ind==4)
+                    {
+                        var distance = (Math.Sqrt((Math.Pow(pointsDistance[0] - pointsDistance[2], 2) + Math.Pow(pointsDistance[1] - pointsDistance[3], 2))))*pixelSpacing;
+                        L_Distance.Content = "Długość: " + Math.Round(distance,2) +"mm";
+                    }
+
+                }
+                else
+                {
+                    var length = canvas.Children.Count;
+                    for (int i=length-1;i>=length-2;i--)
+                    {
+                        canvas.Children.RemoveAt(i);
+                    }         
+                   
+                    ind = 0;
+                    
+                }
             }
             //currentPoint = e.GetPosition(this);
             //currentPoint = e.GetPosition(canvas);
@@ -275,11 +327,12 @@ namespace KWDMpluca
                         canvas.Children.Add(line);
                     }
 
-                    var area = Math.Abs(points.Take(points.Count - 1).Select((p, i) => (points[i + 1].X - p.X) * (points[i + 1].Y + p.Y)).Sum() / 2);
-
+                   // var area = Math.Abs(points.Take(points.Count - 1).Select((p, i) => (points[i + 1].X - p.X) * (points[i + 1].Y + p.Y)).Sum() / 2);
+                    //L_Distance.Content = "Pole: " + area;
                 }
             }
-            else
+            
+            else if (rbSegmentation.IsChecked==true)
             {
                 if (e.LeftButton == MouseButtonState.Released)
                 {
@@ -458,6 +511,11 @@ namespace KWDMpluca
             }
 
 
+        }
+
+        private void BDistance_Click(object sender, RoutedEventArgs e)
+        {
+            bDistanceClicked = true;
         }
     }
 
