@@ -18,10 +18,10 @@
         <TextBox x:Name="T_SelectedName" Text="" HorizontalAlignment="Left" Height="28" Margin="144,80,0,0" VerticalAlignment="Top" Width="124"/>
         <TextBox x:Name="T_SelectedDateB" Text="" HorizontalAlignment="Left" Height="28" Margin="145,108,0,0" VerticalAlignment="Top" Width="124"/>
 
-        <Border BorderBrush="#FF4472C4" BorderThickness="1" HorizontalAlignment="Left" Height="280" Margin="28,212,0,0" VerticalAlignment="Top" Width="247" RenderTransformOrigin="0.524,0.754">
+        <Border BorderBrush="#FF4472C4" BorderThickness="1" HorizontalAlignment="Left" Height="311" Margin="28,212,0,0" VerticalAlignment="Top" Width="247" RenderTransformOrigin="0.524,0.754">
             <Image x:Name="INote" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="35" Stretch="Fill" Source="image/note.png" RenderTransformOrigin="-6.171,0.076" Margin="-20.333,-18.333,0,0"/>
         </Border>
-        <TextBox x:Name="T_Description" TextWrapping="Wrap" Text="" Margin="48,235,547.6,98.4" RenderTransformOrigin="0.46,0.485" AcceptsReturn="True" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto"/>
+        <TextBox x:Name="T_Description" TextWrapping="Wrap" IsReadOnly="True" Text="" Margin="48,235,547.6,98.4" RenderTransformOrigin="0.46,0.485" AcceptsReturn="True" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto"/>
         <Border x:Name="listBoxPatients_Copy" BorderBrush="#FF4472C4" BorderThickness="1" HorizontalAlignment="Left" Height="129" Margin="351,27,0,0" VerticalAlignment="Top" Width="247">
             <Image x:Name="IInfo1" HorizontalAlignment="Right" Height="35" VerticalAlignment="Top" Width="35" Stretch="Fill" Source="image/info.png" RenderTransformOrigin="-6.171,0.076" Margin="-17.333,-18,226,0"/>
         </Border>
@@ -37,6 +37,9 @@
         <Button x:Name="B_AddImage" Background="{x:Null}" BorderBrush="{x:Null}" Content="Dołącz zdjęcie" HorizontalAlignment="Left" Height="50" Margin="410,181,0,0" VerticalAlignment="Top" Width="133" Click="B_AddImage_Click" FontSize="16"/>
         <Image x:Name="IImage" HorizontalAlignment="Left" Height="172" Margin="387,255,0,0" VerticalAlignment="Top" Width="179"/>
         <Button x:Name="B_Generate" Background="{x:Null}" BorderBrush="{x:Null}" Content="Generuj raport" HorizontalAlignment="Left" Height="50" Margin="410,432,0,0" VerticalAlignment="Top" Width="133" Click="B_Generate_Click" FontSize="16"/>
+        <Button x:Name="BEditDescription" Content="Dodaj/edytuj opis" HorizontalAlignment="Left" Margin="92,477,0,0" VerticalAlignment="Top" Width="121" Height="30" Click="BEditDescription_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
+        <Button x:Name="BDescriptionAnuluj" Visibility="Hidden" Content="Anuluj" HorizontalAlignment="Left" Margin="177,477,0,0" VerticalAlignment="Top" Width="69" Height="30" Click="BDescriptionAnuluj_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
+        <Button x:Name="BDescriptionOK" Visibility="Hidden" Content="OK" HorizontalAlignment="Left" Margin="48,477,0,0" VerticalAlignment="Top" Width="69" Height="30" Click="BDescriptionOK_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
 
     </Grid>
 </Window>

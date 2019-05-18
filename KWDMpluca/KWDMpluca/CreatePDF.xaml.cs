@@ -18,6 +18,7 @@ namespace KWDMpluca
     public partial class CreatePDF : Window
     {
         ImageSource imageDicom;
+        string description="";
         public CreatePDF()
         {
             InitializeComponent();
@@ -44,19 +45,15 @@ namespace KWDMpluca
             {
                 L_SelectedID.Content = x.GetDataElement(new gdcm.Tag(0x0010, 0x0020)).GetValue().toString();
                 T_SelectedName.Text = x.GetDataElement(new gdcm.Tag(0x0010, 0x0010)).GetValue().toString();
-                T_SelectedDateB.Text = x.GetDataElement(new gdcm.Tag(0x0010, 0x0030)).GetValue().toString();
-
-                if (x.FindDataElement(new gdcm.Tag(0x0008, 0x103E)))
-                    T_Description.Text = x.GetDataElement(new gdcm.Tag(0x0008, 0x103E)).GetValue().toString();
-                else
-                    T_Description.Text = "";
+                T_SelectedDateB.Text = x.GetDataElement(new gdcm.Tag(0x0010, 0x0030)).GetValue().toString();                
             }
         }
 
-        public CreatePDF(ImageSource image) : this()
+        public CreatePDF(ImageSource image, string descriptionMain) : this()
         {
             imageDicom = image;
-        }
+            description = descriptionMain;
+        }        
 
         private void B_AddImage_Click(object sender, RoutedEventArgs e)
         {
@@ -212,5 +209,30 @@ namespace KWDMpluca
             //otwarcie pdfa w programie
             System.Diagnostics.Process.Start(path);
         }
-    }
+
+        private void BEditDescription_Click(object sender, RoutedEventArgs e)
+        {
+            T_Description.Text = description;
+            T_Description.IsReadOnly = false;
+            BEditDescription.Visibility = Visibility.Hidden;
+            BDescriptionAnuluj.Visibility = Visibility.Visible;
+            BDescriptionOK.Visibility = Visibility.Visible;
+        }
+
+        private void BDescriptionAnuluj_Click(object sender, RoutedEventArgs e)
+        {
+            T_Description.IsReadOnly = true;
+            BEditDescription.Visibility = Visibility.Visible;
+            BDescriptionAnuluj.Visibility = Visibility.Hidden;
+            BDescriptionOK.Visibility = Visibility.Hidden;
+        }
+
+        private void BDescriptionOK_Click(object sender, RoutedEventArgs e)
+        {
+            T_Description.IsReadOnly = true;
+            BEditDescription.Visibility = Visibility.Visible;
+            BDescriptionAnuluj.Visibility = Visibility.Hidden;
+            BDescriptionOK.Visibility = Visibility.Hidden;
+        }
+        }
 }
