@@ -330,16 +330,26 @@ namespace KWDMpluca
             if (rbSegmentation.IsChecked == true)
             {
                 string imagePath = SimpleITKHelper.SegmentArea(currentPoint, MyImg.Source);
-                
-                //gdcm.PixmapReader reader = new gdcm.PixmapReader();
-                //reader.SetFileName(imagePath);
+
+                gdcm.PixmapReader reader = new gdcm.PixmapReader();
+                reader.SetFileName(imagePath);
+                if (!reader.Read())
+                {
+                    MessageBox.Show("Opuszczam plik {0}", imagePath);
+                    
+                }
 
                 //gdcm.Bitmap bmjpeg2000 = BitmapHelper.pxmap2jpeg2000(reader.GetPixmap());
                 //System.Drawing.Bitmap[] X = BitmapHelper.gdcmBitmap2Bitmap(bmjpeg2000);
+                String name = String.Format("{0}_segmented.jpg", imagePath);
+                System.Drawing.Bitmap X = BitmapHelper.DicomToBitmap(itk.simple.SimpleITK.ReadImage(imagePath), 0);
+                for (int j = 0; j < 1; j++)
+                {
+                    
+                    X.Save(name);
+                }
 
-                //String name = String.Format("{0}_warstwaBMP.bmp", imagePath);
-                //X[0].Save(name);
-                //MyImg.Source = BitmapHelper.LoadBitmapImage(name);
+                MyImg.Source = BitmapHelper.LoadBitmapImage(name);
                 MessageBox.Show("koniec");
             }
 

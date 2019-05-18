@@ -103,7 +103,7 @@ namespace KWDMpluca.Helpers
 
             string imagePath = GetFolderName(image) + "imageWithMask" + GetDicomFileName(image) + ".dcm";
             //zwraca sciezke do pliku po nałożeniu
-            return imagePath.Substring(0, imagePath.Length - 4);
+            return imagePath;
         }
 
         private static void SaveImage(sitk.Image image, string pathToFile)
