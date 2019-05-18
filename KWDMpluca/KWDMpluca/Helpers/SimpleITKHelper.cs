@@ -11,7 +11,7 @@ namespace KWDMpluca.Helpers
 {
     public class SimpleITKHelper
     {
-        public static string SegmentArea(Point point, ImageSource image)
+        public static int SegmentArea(Point point, ImageSource image)
         {
             
             uint seedX = 149;//uint.Parse(Math.Round(point.X).ToString());
@@ -75,6 +75,27 @@ namespace KWDMpluca.Helpers
             castImageFilter.SetOutputPixelType(sitk.PixelIDValueEnum.sitkInt16);
             imageDicomSegmented = castImageFilter.Execute(imageDicomSegmented);
 
+            var x = imageDicomSegmented.GetPixelIDValue();
+            int area = 0;
+            for (int i = 0; i < imageDicomSegmented.GetWidth(); i++)
+            {
+                for (int j = 0; j < imageDicomSegmented.GetHeight(); j++)
+                {
+                    seed[0] = (uint)i;
+                    seed[1] = (uint)j;
+                    var piksel = imageDicomSegmented.GetPixelAsInt16(seed);
+
+                   
+                    if(piksel==1)
+                    {
+                        area++;                        
+                    }
+                }
+            }
+            
+            
+
+           
             //maska w kolorze
             //sitk.ScalarToRGBColormapImageFilter scalarToRGBColormap = new sitk.ScalarToRGBColormapImageFilter();
             //scalarToRGBColormap.SetColormap(sitk.ScalarToRGBColormapImageFilter.ColormapType.Red);
@@ -101,9 +122,9 @@ namespace KWDMpluca.Helpers
             //zapis do pliku
             SaveImage(imageDicomWithMask, GetFolderName(image) + "imageWithMask" + GetDicomFileName(image) + ".dcm");
 
-            string imagePath = GetFolderName(image) + "imageWithMask" + GetDicomFileName(image) + ".dcm";
+            //string imagePath = GetFolderName(image) + "imageWithMask" + GetDicomFileName(image) + ".dcm";
             //zwraca sciezke do pliku po nałożeniu
-            return imagePath;
+            return area;
         }
 
         private static void SaveImage(sitk.Image image, string pathToFile)
@@ -113,7 +134,7 @@ namespace KWDMpluca.Helpers
             writer.Execute(image);
         }
 
-        private static string GetDicomFileName(ImageSource image)
+        public static string GetDicomFileName(ImageSource image)
         {
             string[] pathSegments = image.ToString().Split('\\');
             string[] fileNameSegments = pathSegments[3].Split('_');
@@ -130,7 +151,7 @@ namespace KWDMpluca.Helpers
             return sliceName;
         }
 
-        private static string GetFolderName(ImageSource image)
+        public static string GetFolderName(ImageSource image)
         {
             string[] pathSegments = image.ToString().Split('\\');
             string folderName = pathSegments[0] + "\\" + pathSegments[1] + "\\" + pathSegments[2] + "\\";

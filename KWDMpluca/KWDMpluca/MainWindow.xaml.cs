@@ -327,8 +327,8 @@ namespace KWDMpluca
                         canvas.Children.Add(line);
                     }
 
-                   // var area = Math.Abs(points.Take(points.Count - 1).Select((p, i) => (points[i + 1].X - p.X) * (points[i + 1].Y + p.Y)).Sum() / 2);
-                    //L_Distance.Content = "Pole: " + area;
+                    var area = Math.Abs(points.Take(points.Count - 1).Select((p, i) => (points[i + 1].X - p.X) * (points[i + 1].Y + p.Y)).Sum() / 2);
+                    L_Area.Content = "Pole: " + area;
                 }
             }
             
@@ -494,8 +494,9 @@ namespace KWDMpluca
         {
             if (rbSegmentation.IsChecked == true)
             {
-                string imagePath = SimpleITKHelper.SegmentArea(currentPoint, MyImg.Source);
-
+                string imagePath = SimpleITKHelper.GetFolderName(MyImg.Source) + "imageWithMask" + SimpleITKHelper.GetDicomFileName(MyImg.Source) + ".dcm";
+                int area=SimpleITKHelper.SegmentArea(currentPoint, MyImg.Source);
+                L_Area.Content = "Pole: "+area;
                 gdcm.PixmapReader reader = new gdcm.PixmapReader();
                 reader.SetFileName(imagePath);
                 if (!reader.Read())
@@ -506,7 +507,7 @@ namespace KWDMpluca
                 String name = String.Format("{0}_segmented.jpg", imagePath);
                 System.Drawing.Bitmap X = BitmapHelper.DicomToBitmap(itk.simple.SimpleITK.ReadImage(imagePath), 0);
                 X.Save(name);
-                
+               
                 MyImg.Source = BitmapHelper.LoadBitmapImage(name);                
             }
 
