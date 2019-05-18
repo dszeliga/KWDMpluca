@@ -335,22 +335,14 @@ namespace KWDMpluca
                 reader.SetFileName(imagePath);
                 if (!reader.Read())
                 {
-                    MessageBox.Show("Opuszczam plik {0}", imagePath);
-                    
+                    MessageBox.Show("Opuszczam plik {0}", imagePath);                    
                 }
-
-                //gdcm.Bitmap bmjpeg2000 = BitmapHelper.pxmap2jpeg2000(reader.GetPixmap());
-                //System.Drawing.Bitmap[] X = BitmapHelper.gdcmBitmap2Bitmap(bmjpeg2000);
+                
                 String name = String.Format("{0}_segmented.jpg", imagePath);
                 System.Drawing.Bitmap X = BitmapHelper.DicomToBitmap(itk.simple.SimpleITK.ReadImage(imagePath), 0);
-                for (int j = 0; j < 1; j++)
-                {
-                    
-                    X.Save(name);
-                }
-
-                MyImg.Source = BitmapHelper.LoadBitmapImage(name);
-                MessageBox.Show("koniec");
+                X.Save(name);
+                
+                MyImg.Source = BitmapHelper.LoadBitmapImage(name);                
             }
 
 
