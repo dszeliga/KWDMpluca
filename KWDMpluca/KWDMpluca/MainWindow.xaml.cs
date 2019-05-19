@@ -1,6 +1,7 @@
 ﻿using KWDMpluca.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -33,6 +34,7 @@ namespace KWDMpluca
         double[] pointsDistance = new double[4];
         int ind = 0;
         int numberOfImage = 0;
+        string pathEmpty = ".\\tlo.bmp";
 
         public MainWindow()
         {
@@ -174,8 +176,17 @@ namespace KWDMpluca
 
             //MyImg.Width = 370;
             //MyImg.Height = 370;
-
-            canvas.Children.Add(MyImg);
+            if(canvas.Children.Count>=1)
+            {
+                canvas.Children.RemoveRange(0, canvas.Children.Count);
+                canvas.Children.Add(MyImg);
+            }
+            else
+            {
+                canvas.Children.Add(MyImg);
+            }
+            INext.Source = BitmapHelper.LoadBitmapImage(pathEmpty);
+            IPrevious.Source = BitmapHelper.LoadBitmapImage(pathEmpty);
 
             foreach (gdcm.DataSet x in dataArray)
             {
@@ -495,7 +506,7 @@ namespace KWDMpluca
         {
             if (rbSegmentation.IsChecked == true)
             {
-                string imagePath = SimpleITKHelper.GetFolderName(MyImg.Source) + "imageWithMask" + SimpleITKHelper.GetDicomFileName(MyImg.Source) + ".dcm";
+                string imagePath = SimpleITKHelper.GetFolderName(MyImg.Source) + "segmentedMask" + SimpleITKHelper.GetDicomFileName(MyImg.Source) + ".dcm";
                 int area = SimpleITKHelper.SegmentArea(currentPoint, MyImg.Source);
                 L_Area.Content = "Pole: " + area+"px";
 
@@ -506,8 +517,25 @@ namespace KWDMpluca
                     MessageBox.Show("Opuszczam plik {0}", imagePath);
                 }
 
-                String name = String.Format("{0}_segmented.jpg", imagePath);                
+                String name = String.Format("{0}_segmented.bmp", imagePath);                
                 System.Drawing.Bitmap X = BitmapHelper.DicomToBitmap(itk.simple.SimpleITK.ReadImage(imagePath), 0);
+                BitmapData bmd = X.LockBits(new System.Drawing.Rectangle(0, 0, (int)X.Height, (int)X.Width),
+                                                    ImageLockMode.ReadOnly, X.PixelFormat);
+               
+                X.UnlockBits(bmd);
+
+                //nie działa
+                //for (int i = 149; i < X.Height; i++)
+                //{
+                //    for (int j = 363; j < X.Width; j++)
+                //    {
+                //        if (X.GetPixel(i, j) != System.Drawing.Color.LightGray)
+                //        {
+                //            X.SetPixel(i, j, System.Drawing.Color.Red);
+                //        }
+                //    }
+                //}
+
                 X.Save(name);
 
                 MyImg.Source = BitmapHelper.LoadBitmapImage(name);
@@ -545,7 +573,7 @@ namespace KWDMpluca
         {
 
             numberOfImage += 1;
-            string pathEmpty = ".\\tlo.bmp";
+            
             if (numberOfImage < bitmapList.Count)
             {
                 MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);

@@ -89,21 +89,19 @@ namespace KWDMpluca.Helpers
                     if(piksel==1)
                     {
                         area++;                        
-                    }
+                    }                    
                 }
             }
-            
-            
 
-           
+
+
+
             //maska w kolorze
             //sitk.ScalarToRGBColormapImageFilter scalarToRGBColormap = new sitk.ScalarToRGBColormapImageFilter();
-            //scalarToRGBColormap.SetColormap(sitk.ScalarToRGBColormapImageFilter.ColormapType.Red);
+            //scalarToRGBColormap.SetColormap(sitk.ScalarToRGBColormapImageFilter.ColormapType.Blue);            
             //sitk.Image imageDicomSegmentedColor = scalarToRGBColormap.Execute(imageDicomSegmented);
-
             //SaveImage(imageDicomSegmentedColor, GetFolderName(image) + "segmentedMaskColor" + GetDicomFileName(image) + ".dcm");
-
-
+            
             //castImageFilter.SetOutputPixelType(sitk.PixelIDValueEnum.sitkInt32);
             //imageDicomSegmented = castImageFilter.Execute(imageDicomSegmented);
 
@@ -114,6 +112,7 @@ namespace KWDMpluca.Helpers
             //sitk.VectorIndexSelectionCastImageFilter vectorIndexSelectionCastImageFilter = new sitk.VectorIndexSelectionCastImageFilter();
             //vectorIndexSelectionCastImageFilter.SetOutputPixelType(sitk.PixelIDValueEnum.sitkUInt16);
             //imageDicomSegmentedColor = vectorIndexSelectionCastImageFilter.Execute(imageDicomSegmentedColor);
+            //SaveImage(imageDicomSegmentedColor, GetFolderName(image) + "segmentedMaskColor" + GetDicomFileName(image) + ".dcm");
 
             //nałożenie maski na obraz
             sitk.AddImageFilter addImageFilter = new sitk.AddImageFilter();

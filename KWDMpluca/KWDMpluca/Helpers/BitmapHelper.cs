@@ -131,7 +131,7 @@ namespace KWDMpluca.Helpers
                 }
             }
 
-            //bmp.UnlockBits(bmd);
+            bmp.UnlockBits(bmd);
            
             return bmp;
         }
