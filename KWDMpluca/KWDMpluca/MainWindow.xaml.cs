@@ -172,8 +172,8 @@ namespace KWDMpluca
 
             //MyImg.Source = BitmapFrame.Create(file, BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
 
-            MyImg.Width = 370;
-            MyImg.Height = 370;
+            //MyImg.Width = 370;
+            //MyImg.Height = 370;
 
             canvas.Children.Add(MyImg);
 
@@ -497,7 +497,8 @@ namespace KWDMpluca
             {
                 string imagePath = SimpleITKHelper.GetFolderName(MyImg.Source) + "imageWithMask" + SimpleITKHelper.GetDicomFileName(MyImg.Source) + ".dcm";
                 int area = SimpleITKHelper.SegmentArea(currentPoint, MyImg.Source);
-                L_Area.Content = "Pole: " + area;
+                L_Area.Content = "Pole: " + area+"px";
+
                 gdcm.PixmapReader reader = new gdcm.PixmapReader();
                 reader.SetFileName(imagePath);
                 if (!reader.Read())
@@ -551,7 +552,7 @@ namespace KWDMpluca
                 IPrevious.Source= BitmapHelper.LoadBitmapImage(numberOfImage-1, bitmapList);
                 if(numberOfImage==bitmapList.Count-1)
                 {
-                    INext.Source = BitmapHelper.LoadBitmapImage(pathEmpty);
+                    INext.Source = BitmapHelper.LoadBitmapImage(pathEmpty);//pusty
                 }
                 else
                 {

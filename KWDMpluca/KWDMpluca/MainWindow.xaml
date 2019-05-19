@@ -25,7 +25,7 @@
             <Image x:Name="ICalc" HorizontalAlignment="Left" Height="35" VerticalAlignment="Bottom" Width="35" Stretch="Fill" Source="image/calc.png" Margin="-19.333,-20.333,0,219.333" RenderTransformOrigin="0.4,0.486"/>
         </Border>
         <Border BorderBrush="#FF4472C4" BorderThickness="1" Margin="327,94,0,0" Height="300" VerticalAlignment="Top" HorizontalAlignment="Left" Width="300">
-            <Canvas Name="canvas" Margin="8.667,8.667,9.333,9" MouseDown="Canvas_MouseDown" MouseMove="Canvas_MouseMove" MouseUp="Canvas_MouseUp"/>
+            <Canvas Name="canvas" Margin="8.2,8.2,9.4,9.4" MouseDown="Canvas_MouseDown" MouseMove="Canvas_MouseMove" MouseUp="Canvas_MouseUp" Height="290" Width="290"/>
         </Border>
         <Border BorderBrush="#FF4472C4" BorderThickness="1" Height="230" Margin="0,94,34.667,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="171">
             <Image x:Name="ITool" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="35" Stretch="Fill" Source="image/tool.png" RenderTransformOrigin="0.419,0.095" Margin="-18.333,-17.333,0,0"/>
@@ -34,30 +34,30 @@
         <Button x:Name="BSettings" Content="Ustawienia" Margin="0,13,34.667,0" VerticalAlignment="Top" Height="43" Click="BSettings_Click" Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Right" Width="115"/>
         <Label x:Name="LCheck" Content="" HorizontalAlignment="Left" Height="28" Margin="169,61,0,0" VerticalAlignment="Top" Width="123"/>
         <Button x:Name="BAdd" Content="Dodawanie" HorizontalAlignment="Left" Margin="52,13,0,0" VerticalAlignment="Top" Width="112" Height="43" Click="BAdd_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
-        <Button x:Name="BSearch" Content="Szukanie" Margin="198,13,0,0" Click="BSearch_Click" Background="{x:Null}" BorderBrush="{x:Null}" Height="43" VerticalAlignment="Top" HorizontalAlignment="Left" Width="102"/>
-        <Button x:Name="BPrint" Content="Drukowanie" Margin="612,0,526.667,115" Click="BPrint_Click" Background="{x:Null}" BorderBrush="{x:Null}" Height="43" VerticalAlignment="Bottom"/>
-        <Image x:Name="AppName" HorizontalAlignment="Left" Height="46" Margin="419,10,0,0" VerticalAlignment="Top" Width="344" Stretch="Fill" Source="image/AppName.png" />
+        <Button x:Name="BSearch" Content="Szukanie" Margin="198,13,0,0" Click="BSearch_Click" Background="{x:Null}" BorderBrush="{x:Null}" Height="43" Width="102" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <Button x:Name="BPrint" Content="Drukowanie" Margin="612,0,526.667,115" Click="BPrint_Click" Background="{x:Null}" BorderBrush="{x:Null}" Height="43" Width="60" VerticalAlignment="Bottom"/>
+        <Image x:Name="AppName" Height="46" Margin="419,10,430.6,0" VerticalAlignment="Top" Stretch="Fill" Source="image/AppName.png" />
         <Button x:Name="BReload" Content="R" Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Left" Height="30" Margin="269,193,0,0" VerticalAlignment="Top" Width="30" Click="BReload_Click"/>
         <Slider Margin="391,0,281.667,30" ValueChanged="Slider_ValueChanged" Height="17" VerticalAlignment="Bottom"/>
         <TextBox x:Name="T_Description" IsReadOnly="True" TextWrapping="Wrap" Text="" Margin="65,260,0,0" RenderTransformOrigin="0.46,0.485" AcceptsReturn="True" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" Width="227" Height="290" VerticalAlignment="Top"/>
         <Button x:Name="BEditDescription" Content="Dodaj/edytuj opis" HorizontalAlignment="Left" Margin="108,555,0,0" VerticalAlignment="Top" Width="121" Height="30" Click="BEditDescription_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
         <Button x:Name="BDescriptionAnuluj" Visibility="Hidden" Content="Anuluj" HorizontalAlignment="Left" Margin="200,493,0,0" VerticalAlignment="Top" Width="69" Height="30" Click="BDescriptionAnuluj_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
         <Button x:Name="BDescriptionOK" Visibility="Hidden" Content="OK" HorizontalAlignment="Left" Margin="72,493,0,0" VerticalAlignment="Top" Width="69" Height="30" Click="BDescriptionOK_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
-        <Button x:Name="bSegmentation" Content="Segmentuj" Margin="988,132,34.6,0" VerticalAlignment="Top" Click="BSegmentation_Click" Height="20"/>
-        <RadioButton x:Name="rbSegmentation" Content="Segmentacja" Margin="988,110,118.6,0" VerticalAlignment="Top" Checked="RbSegmentation_Checked"/>
-        <RadioButton x:Name="rbDrawing" Content="Zaznaczanie" Margin="1077,107,33.6,498" Checked="RbDrawing_Checked"/>
+        <Button x:Name="bSegmentation" Content="Segmentuj" Margin="0,132,34.6,0" VerticalAlignment="Top" Click="BSegmentation_Click" Height="20" HorizontalAlignment="Right" Width="171"/>
+        <RadioButton x:Name="rbSegmentation" Content="Segmentacja" Margin="0,110,116.6,0" VerticalAlignment="Top" Checked="RbSegmentation_Checked" Height="17" HorizontalAlignment="Right" Width="89"/>
+        <RadioButton x:Name="rbDrawing" Content="Zaznaczanie" Margin="0,112,34.6,0" Checked="RbDrawing_Checked" HorizontalAlignment="Right" Width="83" Height="15" VerticalAlignment="Top"/>
         <Image Name="IPrevious" HorizontalAlignment="Left" Margin="327,0,0,94" Width="108" Height="96" VerticalAlignment="Bottom"/>
         <Image Name="INext" Margin="0,0,239.667,102" HorizontalAlignment="Right" Width="96" Height="88" VerticalAlignment="Bottom"/>
         <Border BorderBrush="#FF4472C4" BorderThickness="1" Margin="0,94,239.667,0" HorizontalAlignment="Right" Width="300" Height="300" VerticalAlignment="Top">
-            <Canvas x:Name="canvas1" Margin="8.667,8.667,9.333,9" MouseDown="Canvas_MouseDown" MouseMove="Canvas_MouseMove" MouseUp="Canvas_MouseUp"/>
+            <Canvas x:Name="canvas1" Margin="9.2,9.2,8.4,0" MouseDown="Canvas_MouseDown" MouseMove="Canvas_MouseMove" MouseUp="Canvas_MouseUp" Height="290" Width="290" VerticalAlignment="Top"/>
         </Border>
         <Button Content="Button" Visibility="Hidden" HorizontalAlignment="Left" Margin="458,0,0,99" Width="59" Height="56" VerticalAlignment="Bottom"/>
         <Button Content="Button" Visibility="Hidden" HorizontalAlignment="Right" Margin="0,0,361.667,99" Width="59" Height="56" VerticalAlignment="Bottom"/>
-        <Button x:Name="bDistance" Content="Zmierz odcinek" Margin="989,175,33.6,0" VerticalAlignment="Top" Click="BDistance_Click" Height="20"/>
-        <Label x:Name="L_Distance" Content="" Margin="1018,366,34.6,190" Height="28"/>
-        <Label x:Name="L_Area" Content="" Margin="1018,430,34.6,162" Height="28"/>
-        <Button x:Name="BNextImage" Content="Następne" Margin="755,0,365.6,115" Click="BNext_Click" Background="{x:Null}" BorderBrush="{x:Null}" Height="43" VerticalAlignment="Bottom"/>
-        <Button x:Name="BPreviousImage" Content="Poprzednie" Margin="462,0,657.6,115" Click="BPrevious_Click" Background="{x:Null}" BorderBrush="{x:Null}" Height="43" VerticalAlignment="Bottom"/>
+        <Button x:Name="bDistance" Content="Zmierz odcinek" Margin="0,175,33.6,0" VerticalAlignment="Top" Click="BDistance_Click" Height="20" HorizontalAlignment="Right" Width="171"/>
+        <Label x:Name="L_Distance" Content="" Margin="0,0,34.6,208" HorizontalAlignment="Right" Width="141" Height="28" VerticalAlignment="Bottom"/>
+        <Label x:Name="L_Area" Content="" Margin="0,0,34.6,162" HorizontalAlignment="Right" Width="141" Height="28" VerticalAlignment="Bottom"/>
+        <Button x:Name="BNextImage" Content="Następne" Margin="755,0,365.6,115" Click="BNext_Click" Background="{x:Null}" BorderBrush="{x:Null}" Height="43" Width="70" VerticalAlignment="Bottom"/>
+        <Button x:Name="BPreviousImage" Content="Poprzednie" Margin="462,0,657.6,115" Click="BPrevious_Click" Background="{x:Null}" BorderBrush="{x:Null}" Height="43" Width="70" VerticalAlignment="Bottom"/>
 
 
 
