@@ -174,9 +174,11 @@ namespace KWDMpluca
 
             //MyImg.Source = BitmapFrame.Create(file, BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
 
-            //MyImg.Width = 370;
-            //MyImg.Height = 370;
-            if(canvas.Children.Count>=1)
+            MyImg.Width = 280;
+            MyImg.Height = 280;
+            
+
+            if (canvas.Children.Count>=1)
             {
                 canvas.Children.RemoveRange(0, canvas.Children.Count);
                 canvas.Children.Add(MyImg);
@@ -366,12 +368,12 @@ namespace KWDMpluca
 
         private void CreateSaveBitmap(Canvas canvas, string filename)
         {
-            RenderTargetBitmap renderBitmap = new RenderTargetBitmap(
-             (int)MyImg.Width, (int)MyImg.Height,
-             96d, 96d, PixelFormats.Pbgra32);
+            int height = (int)MyImg.Width;
+            int width = (int)MyImg.Height;
+            RenderTargetBitmap renderBitmap = new RenderTargetBitmap(width, height, 96d, 96d, PixelFormats.Pbgra32);
             // needed otherwise the image output is black
-            canvas.Measure(new Size((int)MyImg.Width, (int)MyImg.Height));
-            canvas.Arrange(new Rect(new Size((int)MyImg.Width, (int)MyImg.Height)));
+            canvas.Measure(new Size(width, height));
+            canvas.Arrange(new Rect(new Size(width, height)));
 
             renderBitmap.Render(canvas);
 
@@ -537,8 +539,10 @@ namespace KWDMpluca
                 //}
 
                 X.Save(name);
-
                 Image MyImg1 = new Image();
+                MyImg1.Width = 280;
+                MyImg1.Height = 280;
+                
                 MyImg1.Source = BitmapHelper.LoadBitmapImage(name);
                 canvas1.Children.Add(MyImg1);
             }
@@ -564,8 +568,7 @@ namespace KWDMpluca
             {
                 MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage + 1, bitmapList);
                 string path = ".\\tlo.bmp";
-                IPrevious.Source = BitmapHelper.LoadBitmapImage(path);
-                //IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage + 1, bitmapList);//pusty
+                IPrevious.Source = BitmapHelper.LoadBitmapImage(path);           
                 INext.Source = BitmapHelper.LoadBitmapImage(numberOfImage + 2, bitmapList);
                 numberOfImage = 0;
             }
