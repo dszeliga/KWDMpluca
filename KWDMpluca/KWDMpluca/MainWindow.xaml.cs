@@ -165,6 +165,7 @@ namespace KWDMpluca
 
             MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
 
+
             #endregion
 
             //FileStream file = new FileStream("lena.bmp", FileMode.Open);
@@ -519,12 +520,18 @@ namespace KWDMpluca
                     MessageBox.Show("Opuszczam plik {0}", imagePath);
                 }
 
-                String name = String.Format("{0}_segmented.bmp", imagePath);                
-                System.Drawing.Bitmap X = BitmapHelper.DicomToBitmap(itk.simple.SimpleITK.ReadImage(imagePath), 0);
-                BitmapData bmd = X.LockBits(new System.Drawing.Rectangle(0, 0, (int)X.Height, (int)X.Width),
-                                                    ImageLockMode.ReadOnly, X.PixelFormat);
-               
-                X.UnlockBits(bmd);
+                String name = String.Format("{0}_segmented.bmp", imagePath);
+
+                gdcm.Bitmap bmjpeg2000 = BitmapHelper.pxmap2jpeg2000(reader.GetPixmap());
+                System.Drawing.Bitmap[] X = BitmapHelper.gdcmBitmap2Bitmap(bmjpeg2000);
+
+                
+                //System.Drawing.Bitmap X = BitmapHelper.DicomToBitmap(itk.simple.SimpleITK.ReadImage(imagePath), 0);
+                //BitmapData bmd = X.LockBits(new System.Drawing.Rectangle(0, 0, (int)X.Height, (int)X.Width),
+                //                                    ImageLockMode.ReadOnly, X.PixelFormat);
+                BitmapData bmd = X[0].LockBits(new System.Drawing.Rectangle(0, 0, (int)X[0].Height, (int)X[0].Width),
+                                                   ImageLockMode.ReadOnly, X[0].PixelFormat);
+                 X[0].UnlockBits(bmd);
 
                 //nie działa
                 //for (int i = 149; i < X.Height; i++)
@@ -538,7 +545,7 @@ namespace KWDMpluca
                 //    }
                 //}
 
-                X.Save(name);
+                X[0].Save(name);
                 Image MyImg1 = new Image();
                 MyImg1.Width = 280;
                 MyImg1.Height = 280;

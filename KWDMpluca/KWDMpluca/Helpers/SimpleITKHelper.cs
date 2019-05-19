@@ -101,12 +101,12 @@ namespace KWDMpluca.Helpers
             //scalarToRGBColormap.SetColormap(sitk.ScalarToRGBColormapImageFilter.ColormapType.Blue);            
             //sitk.Image imageDicomSegmentedColor = scalarToRGBColormap.Execute(imageDicomSegmented);
             //SaveImage(imageDicomSegmentedColor, GetFolderName(image) + "segmentedMaskColor" + GetDicomFileName(image) + ".dcm");
-            
-            //castImageFilter.SetOutputPixelType(sitk.PixelIDValueEnum.sitkInt32);
-            //imageDicomSegmented = castImageFilter.Execute(imageDicomSegmented);
 
-            //castImageFilter.SetOutputPixelType(sitk.PixelIDValueEnum.sitkInt32);
-            //imageDicomOrg = castImageFilter.Execute(imageDicomOrg);
+            castImageFilter.SetOutputPixelType(sitk.PixelIDValueEnum.sitkInt16);
+            imageDicomSegmented = castImageFilter.Execute(imageDicomSegmented);
+
+            castImageFilter.SetOutputPixelType(sitk.PixelIDValueEnum.sitkInt16);
+            imageDicomOrg = castImageFilter.Execute(imageDicomOrg);
 
             //zmiana formatu wektora koloru maski
             //sitk.VectorIndexSelectionCastImageFilter vectorIndexSelectionCastImageFilter = new sitk.VectorIndexSelectionCastImageFilter();

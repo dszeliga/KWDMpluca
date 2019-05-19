@@ -35,7 +35,7 @@
         <Label x:Name="LCheck" Content="" HorizontalAlignment="Left" Height="28" Margin="169,61,0,0" VerticalAlignment="Top" Width="123"/>
         <Button x:Name="BAdd" Content="Dodawanie" HorizontalAlignment="Left" Margin="52,13,0,0" VerticalAlignment="Top" Width="112" Height="43" Click="BAdd_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
         <Button x:Name="BSearch" Content="Szukanie" Margin="198,13,0,0" Click="BSearch_Click" Background="{x:Null}" BorderBrush="{x:Null}" Height="43" Width="102" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-        <Button x:Name="BPrint" Content="Drukowanie" Margin="612,0,526.667,115" Click="BPrint_Click" Background="{x:Null}" BorderBrush="{x:Null}" Height="43" Width="60" VerticalAlignment="Bottom"/>
+        <Button x:Name="BPrint" Content="Drukowanie" Margin="612,0,501.6,115" Click="BPrint_Click" Background="{x:Null}" BorderBrush="{x:Null}" Height="43" VerticalAlignment="Bottom"/>
         <Image x:Name="AppName" Height="46" Margin="419,10,430.6,0" VerticalAlignment="Top" Stretch="Fill" Source="image/AppName.png" />
         <Button x:Name="BReload" Content="R" Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Left" Height="30" Margin="269,193,0,0" VerticalAlignment="Top" Width="30" Click="BReload_Click"/>
         <Slider Margin="391,0,281.667,30" ValueChanged="Slider_ValueChanged" Height="17" VerticalAlignment="Bottom"/>
@@ -56,8 +56,8 @@
         <Button x:Name="bDistance" Content="Zmierz odcinek" Margin="0,175,33.6,0" VerticalAlignment="Top" Click="BDistance_Click" Height="20" HorizontalAlignment="Right" Width="171"/>
         <Label x:Name="L_Distance" Content="" Margin="0,0,34.6,208" HorizontalAlignment="Right" Width="141" Height="28" VerticalAlignment="Bottom"/>
         <Label x:Name="L_Area" Content="" Margin="0,0,34.6,162" HorizontalAlignment="Right" Width="141" Height="28" VerticalAlignment="Bottom"/>
-        <Button x:Name="BNextImage" Content="Następne" Margin="755,0,365.6,115" Click="BNext_Click" Background="{x:Null}" BorderBrush="{x:Null}" Height="43" Width="70" VerticalAlignment="Bottom"/>
-        <Button x:Name="BPreviousImage" Content="Poprzednie" Margin="462,0,657.6,115" Click="BPrevious_Click" Background="{x:Null}" BorderBrush="{x:Null}" Height="43" Width="70" VerticalAlignment="Bottom"/>
+        <Button x:Name="BNextImage" Content="Następne" Margin="0,0,358.6,115" Click="BNext_Click" Background="{x:Null}" BorderBrush="{x:Null}" Height="43" Width="80" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
+        <Button x:Name="BPreviousImage" Content="Poprzednie" Margin="462,0,0,115" Click="BPrevious_Click" Background="{x:Null}" BorderBrush="{x:Null}" Height="43" Width="80" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
 
 
 
