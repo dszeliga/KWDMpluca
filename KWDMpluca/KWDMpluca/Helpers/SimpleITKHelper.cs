@@ -12,20 +12,21 @@ namespace KWDMpluca.Helpers
     public class SimpleITKHelper
     {
         public static int SegmentArea(Point point, ImageSource image)
-        {
-            
-            uint seedX = 149;//uint.Parse(Math.Round(point.X).ToString());
-            uint seedY = 363;// uint.Parse(Math.Round(point.Y).ToString());
-            uint seedZ = 0;//FindInstance();
-
-            //wspolrzedne punktu
-            sitk.VectorUInt32 seed = new sitk.VectorUInt32(new uint[] { seedX, seedY, seedZ });
+        {           
 
             //wczytanie pliku
             sitk.ImageFileReader imageFileReader = new sitk.ImageFileReader();
             imageFileReader.SetFileName(GetFolderName(image) + GetDicomFileName(image));
             imageFileReader.SetOutputPixelType(sitk.PixelIDValueEnum.sitkInt16);
             sitk.Image imageDicomOrg = imageFileReader.Execute();
+
+
+            uint seedX = (uint.Parse(Math.Round(point.X).ToString()) * imageDicomOrg.GetWidth()) / 280;
+            uint seedY = (uint.Parse(Math.Round(point.Y).ToString()) * imageDicomOrg.GetHeight()) / 280;
+            uint seedZ = 0;//FindInstance();
+
+            //wspolrzedne punktu
+            sitk.VectorUInt32 seed = new sitk.VectorUInt32(new uint[] { seedX, seedY, seedZ });
 
             //odszumienie obrazu?
             sitk.CurvatureFlowImageFilter curvatureFlowImageFilter = new sitk.CurvatureFlowImageFilter();
