@@ -45,7 +45,7 @@ namespace KWDMpluca
             {
                 L_SelectedID.Content = x.GetDataElement(new gdcm.Tag(0x0010, 0x0020)).GetValue().toString();
                 T_SelectedName.Text = x.GetDataElement(new gdcm.Tag(0x0010, 0x0010)).GetValue().toString();
-                T_SelectedDateB.Text = x.GetDataElement(new gdcm.Tag(0x0010, 0x0030)).GetValue().toString();                
+               // T_SelectedDateB.Text = x.GetDataElement(new gdcm.Tag(0x0010, 0x0030)).GetValue().toString();                
             }
         }
 
@@ -71,6 +71,8 @@ namespace KWDMpluca
 
             //wczytanie z podglądu 
             var uri = new Uri("image.bmp", UriKind.Relative);
+            IImage.Height = 190;
+            IImage.Width = 190;
             IImage.Source = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "image.bmp", UriKind.Absolute));                     
 
         }

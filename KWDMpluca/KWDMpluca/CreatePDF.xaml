@@ -35,7 +35,7 @@
         <Label Content="Płeć:" HorizontalAlignment="Left" Height="28" Margin="28,141,0,0" VerticalAlignment="Top" Width="111"/>
         <TextBox x:Name="T_Sex" Text="" HorizontalAlignment="Left" Height="28" Margin="145,141,0,0" VerticalAlignment="Top" Width="124"/>
         <Button x:Name="B_AddImage" Background="{x:Null}" BorderBrush="{x:Null}" Content="Dołącz zdjęcie" HorizontalAlignment="Left" Height="50" Margin="410,181,0,0" VerticalAlignment="Top" Width="133" Click="B_AddImage_Click" FontSize="16"/>
-        <Image x:Name="IImage" HorizontalAlignment="Left" Height="172" Margin="387,255,0,0" VerticalAlignment="Top" Width="179"/>
+        <Image x:Name="IImage" HorizontalAlignment="Left" Height="180" Margin="387,255,0,0" VerticalAlignment="Top" Width="180"/>
         <Button x:Name="B_Generate" Background="{x:Null}" BorderBrush="{x:Null}" Content="Generuj raport" HorizontalAlignment="Left" Height="50" Margin="410,432,0,0" VerticalAlignment="Top" Width="133" Click="B_Generate_Click" FontSize="16"/>
         <Button x:Name="BEditDescription" Content="Dodaj/edytuj opis" HorizontalAlignment="Left" Margin="92,477,0,0" VerticalAlignment="Top" Width="121" Height="30" Click="BEditDescription_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
         <Button x:Name="BDescriptionAnuluj" Visibility="Hidden" Content="Anuluj" HorizontalAlignment="Left" Margin="177,477,0,0" VerticalAlignment="Top" Width="69" Height="30" Click="BDescriptionAnuluj_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
