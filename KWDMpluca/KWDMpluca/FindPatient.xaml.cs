@@ -147,6 +147,7 @@ namespace KWDMpluca
                 Properties.Settings.Default.SelectedPatientID = PatientInfo[number, 0];
                 Properties.Settings.Default.Save();
             }
+            this.Close();
         }
 
         private void CB_After_Checked(object sender, RoutedEventArgs e)

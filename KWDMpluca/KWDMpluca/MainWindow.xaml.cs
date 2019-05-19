@@ -128,7 +128,7 @@ namespace KWDMpluca
             System.IO.Directory.CreateDirectory(data);
 
             status = gdcm.CompositeNetworkFunctions.CMove(Properties.Settings.Default.IP, ushort.Parse(Properties.Settings.Default.Port), query_new, 10104, Properties.Settings.Default.AET, Properties.Settings.Default.AEC, data);
-
+            
             if (!status)
             {
                 MessageBox.Show("Pobieranie obrazów nie powodło się");
@@ -194,7 +194,7 @@ namespace KWDMpluca
             {
                 L_SelectedID.Content = x.GetDataElement(new gdcm.Tag(0x0010, 0x0020)).GetValue().toString();
                 L_SelectedName.Content = x.GetDataElement(new gdcm.Tag(0x0010, 0x0010)).GetValue().toString();
-                L_SelectedDateB.Content = x.GetDataElement(new gdcm.Tag(0x0010, 0x0030)).GetValue().toString();
+                //L_SelectedDateB.Content = x.GetDataElement(new gdcm.Tag(0x0010, 0x0030)).GetValue().toString();
 
                 foreach (var path in files)
                 {
