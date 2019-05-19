@@ -505,7 +505,7 @@ namespace KWDMpluca
                     MessageBox.Show("Opuszczam plik {0}", imagePath);
                 }
 
-                String name = String.Format("{0}_segmented.jpg", imagePath);
+                String name = String.Format("{0}_segmented.jpg", imagePath);                
                 System.Drawing.Bitmap X = BitmapHelper.DicomToBitmap(itk.simple.SimpleITK.ReadImage(imagePath), 0);
                 X.Save(name);
 
@@ -532,7 +532,9 @@ namespace KWDMpluca
             else
             {
                 MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage + 1, bitmapList);
-                IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage + 1, bitmapList);//pusty
+                string path = ".\\tlo.bmp";
+                IPrevious.Source = BitmapHelper.LoadBitmapImage(path);
+                //IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage + 1, bitmapList);//pusty
                 INext.Source = BitmapHelper.LoadBitmapImage(numberOfImage + 2, bitmapList);
                 numberOfImage = 0;
             }
@@ -540,14 +542,16 @@ namespace KWDMpluca
 
         private void BNext_Click(object sender, RoutedEventArgs e)
         {
+
             numberOfImage += 1;
+            string pathEmpty = ".\\tlo.bmp";
             if (numberOfImage < bitmapList.Count)
             {
                 MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
                 IPrevious.Source= BitmapHelper.LoadBitmapImage(numberOfImage-1, bitmapList);
                 if(numberOfImage==bitmapList.Count-1)
                 {
-                    INext = null;
+                    INext.Source = BitmapHelper.LoadBitmapImage(pathEmpty);
                 }
                 else
                 {
@@ -559,7 +563,8 @@ namespace KWDMpluca
             {
                 MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
                 IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 2, bitmapList);
-                INext.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList); //pusty
+                
+                INext.Source = BitmapHelper.LoadBitmapImage(pathEmpty); //pusty
                 numberOfImage = bitmapList.Count - 1;                
             }
         }
