@@ -35,6 +35,7 @@ namespace KWDMpluca
         int ind = 0;
         int numberOfImage = 0;
         string pathEmpty = ".\\tlo.bmp";
+        string[] Poukladanesciezki;
 
         public MainWindow()
         {
@@ -106,6 +107,8 @@ namespace KWDMpluca
             keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0040), ""));
             keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0008, 0x103E), ""));
             keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0028, 0x0030), ""));
+            keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0008, 0x0020), ""));
+            keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0020, 0x0013), "")); // NUMER W SERII
 
             gdcm.BaseRootQuery query = gdcm.CompositeNetworkFunctions.ConstructQuery(type, level, keys);
 
@@ -128,7 +131,18 @@ namespace KWDMpluca
             System.IO.Directory.CreateDirectory(data);
 
             status = gdcm.CompositeNetworkFunctions.CMove(Properties.Settings.Default.IP, ushort.Parse(Properties.Settings.Default.Port), query_new, 10104, Properties.Settings.Default.AET, Properties.Settings.Default.AEC, data);
-            
+
+            //gdcm.Reader reader = new gdcm.Reader();
+            //reader.SetFileName(received);
+            //bool ret = reader.Read();
+            //gdcm.File file = reader.GetFile();
+
+            //gdcm.StringFilter filter = new gdcm.StringFilter();
+            //filter.SetFile(file);
+            //string patientName = filter.ToString(new gdcm.Tag(0x0010, 0x0010));
+            //string patientID = filter.ToString(new gdcm.Tag(0x0010, 0x0020));
+
+
             if (!status)
             {
                 MessageBox.Show("Pobieranie obrazów nie powodło się");
@@ -137,28 +151,60 @@ namespace KWDMpluca
 
             files = new List<string>(System.IO.Directory.EnumerateFiles(data));
 
+            int i = 0;
+            foreach (String fileDcm in files)
+            {
+                gdcm.Reader reader = new gdcm.Reader();
+                reader.SetFileName(fileDcm);
+                bool ret = reader.Read();
+                gdcm.File file = reader.GetFile();
+
+                gdcm.StringFilter filter = new gdcm.StringFilter();
+                filter.SetFile(file);
+                string numberInSeries = filter.ToString(new gdcm.Tag(0x0020, 0x0013));
+                int numer = int.Parse(numberInSeries);
+                if (numer > i)
+                    i = numer;
+            }
+            Poukladanesciezki = new string[i+1];
 
             foreach (String fileDcm in files)
             {
-                gdcm.PixmapReader reader = new gdcm.PixmapReader();
+                // fileDcm to ścieżka do pliku zapisanego i ściągnętego z bazy
+                gdcm.Reader reader = new gdcm.Reader();
                 reader.SetFileName(fileDcm);
-                if (!reader.Read())
-                {
-                    MessageBox.Show("Opuszczam plik {0}", fileDcm);
-                    continue;
-                }
+                bool ret = reader.Read();
+                gdcm.File file = reader.GetFile();
 
-                gdcm.Bitmap bmjpeg2000 = BitmapHelper.pxmap2jpeg2000(reader.GetPixmap());
-                System.Drawing.Bitmap[] X = BitmapHelper.gdcmBitmap2Bitmap(bmjpeg2000);
-
-                // System.Drawing.Bitmap X = BitmapHelper.DicomToBitmap(itk.simple.SimpleITK.ReadImage(fileDcm), 0);
-                for (int j = 0; j < X.Length; j++)
+                gdcm.StringFilter filter = new gdcm.StringFilter();
+                filter.SetFile(file);
+                string numberInSeries = filter.ToString(new gdcm.Tag(0x0020, 0x0013));
+                int numer = int.Parse(numberInSeries);
+                Poukladanesciezki[numer] = fileDcm;
+            }
+            int j = 1000;
+            foreach (String fileDcm in Poukladanesciezki)
+            {
+                if (!string.IsNullOrEmpty(fileDcm))
                 {
-                    String name = String.Format("{0}_warstwa{1}.jpg", fileDcm, j);
-                    X[j].Save(name);
+                    gdcm.PixmapReader reader = new gdcm.PixmapReader();
+                    reader.SetFileName(fileDcm);
+                    if (!reader.Read())
+                    {
+                        MessageBox.Show("Opuszczam plik {0}", fileDcm);
+                        continue;
+                    }
+
+                    gdcm.Bitmap bmjpeg2000 = BitmapHelper.pxmap2jpeg2000(reader.GetPixmap());
+                    System.Drawing.Bitmap[] X = BitmapHelper.gdcmBitmap2Bitmap(bmjpeg2000);
+
+                    // System.Drawing.Bitmap X = BitmapHelper.DicomToBitmap(itk.simple.SimpleITK.ReadImage(fileDcm), 0);
+                    String name = String.Format("{0}\\{1}.jpg", data, j);
+                    X[0].Save(name);
+                    j++;
+                    //String name = String.Format("{0}_warstwaBMP.bmp", fileDcm);
+                    //X.Save(name);
                 }
-                //String name = String.Format("{0}_warstwaBMP.bmp", fileDcm);
-                //X.Save(name);
             }
             bitmapList.AddRange(System.IO.Directory.EnumerateFiles(data, "*.jpg"));
             //bitmapList.AddRange(System.IO.Directory.EnumerateFiles(data, "*.bmp"));
