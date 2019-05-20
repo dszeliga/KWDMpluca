@@ -70,11 +70,12 @@ namespace KWDMpluca.Helpers
             confidenceConnectedImageFilter.SetNumberOfIterations(3);
             confidenceConnectedImageFilter.SetMultiplier(3);
             sitk.Image imageDicomSegmented = confidenceConnectedImageFilter.Execute(imageDicomOpen);
-
-            SaveImage(imageDicomSegmented, GetFolderName(image) + "segmentedMask" + GetDicomFileName(image) + ".dcm");
             //zmiana piksela na int16
             castImageFilter.SetOutputPixelType(sitk.PixelIDValueEnum.sitkInt16);
             imageDicomSegmented = castImageFilter.Execute(imageDicomSegmented);
+
+            SaveImage(imageDicomSegmented, GetFolderName(image) + "segmentedMask" + GetDicomFileName(image) + ".dcm");
+           
 
             var x = imageDicomSegmented.GetPixelIDValue();
             int area = 0;
@@ -136,10 +137,21 @@ namespace KWDMpluca.Helpers
 
         public static string GetDicomFileName(ImageSource image)
         {
-            string[] pathSegments = image.ToString().Split('\\');
-            string[] fileNameSegments = pathSegments[3].Split('_');
-            string dicomName = fileNameSegments[0];//.TrimEnd(new char[] { '.', 'd', 'c', 'm' });
-            return dicomName;
+            if (image.ToString().Contains("pack"))
+            {
+                string[] pathSegments = image.ToString().Split('/');
+                string[] fileNameSegments = pathSegments[5].Split('_');
+                string dicomName = fileNameSegments[0];//.TrimEnd(new char[] { '.', 'd', 'c', 'm' });
+                return dicomName;
+            }
+            else
+            {
+                string[] pathSegments = image.ToString().Split('\\');
+                string[] fileNameSegments = pathSegments[3].Split('_');
+                string dicomName = fileNameSegments[0];//.TrimEnd(new char[] { '.', 'd', 'c', 'm' });
+                return dicomName;
+            }
+                
         }
 
         private static string GetImageFileName(ImageSource image)
@@ -153,9 +165,18 @@ namespace KWDMpluca.Helpers
 
         public static string GetFolderName(ImageSource image)
         {
-            string[] pathSegments = image.ToString().Split('\\');
-            string folderName = pathSegments[0] + "\\" + pathSegments[1] + "\\" + pathSegments[2] + "\\";
-            return folderName;
+            if (image.ToString().Contains("pack"))
+            {
+                string[] pathSegments = image.ToString().Split('/');
+                string folderName = ".\\"+pathSegments[3] + "\\" + pathSegments[4] + "\\";
+                return folderName;
+            }
+            else
+            {
+                string[] pathSegments = image.ToString().Split('\\');
+                string folderName = pathSegments[0] + "\\" + pathSegments[1] + "\\" + pathSegments[2] + "\\";
+                return folderName;
+            }
         }
 
         private static uint FindInstance()

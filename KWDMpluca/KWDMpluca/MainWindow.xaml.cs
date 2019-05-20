@@ -555,7 +555,7 @@ namespace KWDMpluca
         {
             if (rbSegmentation.IsChecked == true)
             {
-                string imagePath = SimpleITKHelper.GetFolderName(MyImg.Source) + "imageWithMask" + SimpleITKHelper.GetDicomFileName(MyImg.Source) + ".dcm";
+                string imagePath = SimpleITKHelper.GetFolderName(MyImg.Source) + "segmentedMask" + SimpleITKHelper.GetDicomFileName(MyImg.Source) + ".dcm";
                 int area = SimpleITKHelper.SegmentArea(currentPoint, MyImg.Source);
                 L_Area.Content = "Pole: " + area+"px";
 

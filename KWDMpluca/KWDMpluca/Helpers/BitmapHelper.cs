@@ -37,7 +37,7 @@ namespace KWDMpluca.Helpers
                     for (int c = 0; c < columns; c++)
                     {
                         int j = ((int)(l * rows * columns) + (int)(r * columns) + (int)c) * 2;
-                        Y[r, c] = (double)bufor[j + 1] * 256 + (double)bufor[j];
+                        Y[r, c] = (double)bufor[j + 1] * 256 + (double)bufor[j]+1000;
                         if (Y[r, c] > m)
                         {
                             m = Y[r, c];
