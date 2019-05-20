@@ -148,7 +148,7 @@ namespace KWDMpluca
                 MessageBox.Show("Pobieranie obrazów nie powodło się");
                 return;
             }
-
+           
             files = new List<string>(System.IO.Directory.EnumerateFiles(data));
 
             int i = 0;
@@ -206,6 +206,10 @@ namespace KWDMpluca
                     //X.Save(name);
                 }
             }
+
+            if (bitmapList.Count != 0)
+                bitmapList.RemoveRange(0, bitmapList.Count);
+
             bitmapList.AddRange(System.IO.Directory.EnumerateFiles(data, "*.jpg"));
             //bitmapList.AddRange(System.IO.Directory.EnumerateFiles(data, "*.bmp"));
 
@@ -272,11 +276,16 @@ namespace KWDMpluca
                     else
                         T_Description.Text = "";
 
+                    if (ds.FindDataElement(new gdcm.Tag(0x0028, 0x0030)))
+                    {
+                        var pixelData = sf.ToStringPair(new gdcm.Tag(0x0028, 0x0030));
+                        var index = pixelData.second.IndexOf('\\');
 
-                    var pixelData = sf.ToStringPair(new gdcm.Tag(0x0028, 0x0030));
-                    var index = pixelData.second.IndexOf('\\');
-                    string pixel = pixelData.second.Substring(0, index).Replace('.', ',');
-                    pixelSpacing = Convert.ToDouble(pixel);
+                        string pixel = pixelData.second.Substring(0, index).Replace('.', ',');
+                        pixelSpacing = Convert.ToDouble(pixel);
+                    }
+                    else
+                        pixelSpacing = 1;
                 }
             }
         }
