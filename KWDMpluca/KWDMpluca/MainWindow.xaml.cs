@@ -564,7 +564,7 @@ namespace KWDMpluca
         {
             if (rbSegmentation.IsChecked == true)
             {
-                string imagePath = SimpleITKHelper.GetFolderName(MyImg.Source) + "segmentedMask" + SimpleITKHelper.GetDicomFileName(MyImg.Source) + ".dcm";
+                string imagePath = SimpleITKHelper.GetFolderName(MyImg.Source) + "imageWithMask" + SimpleITKHelper.GetDicomFileName(MyImg.Source) + ".dcm";
                 int area = SimpleITKHelper.SegmentArea(currentPoint, MyImg.Source);
                 L_Area.Content = "Pole: " + area+"px";
 
@@ -588,17 +588,23 @@ namespace KWDMpluca
                                                    ImageLockMode.ReadOnly, X[0].PixelFormat);
                  X[0].UnlockBits(bmd);
 
-                //nie działa
-                //for (int i = 149; i < X.Height; i++)
-                //{
-                //    for (int j = 363; j < X.Width; j++)
-                //    {
-                //        if (X.GetPixel(i, j) != System.Drawing.Color.LightGray)
-                //        {
-                //            X.SetPixel(i, j, System.Drawing.Color.Red);
-                //        }
-                //    }
-                //}
+                //działa jak coś
+                for (int i = 0; i < X[0].Height; i++)
+                {
+                    for (int j = 0; j < X[0].Width; j++)
+                    {
+                        var color = X[0].GetPixel(i, j);
+                        var nazwa = X[0].GetPixel(i, j).Name;
+                        if (X[0].GetPixel(i, j).Name != "ffcbcbcb")
+                        {
+                            X[0].SetPixel(i, j, System.Drawing.Color.Red);
+                        }
+                        else
+                        {
+                            X[0].SetPixel(i, j, System.Drawing.Color.Transparent);
+                        }
+                    }
+                }
 
                 X[0].Save(name);
                 Image MyImg1 = new Image();
