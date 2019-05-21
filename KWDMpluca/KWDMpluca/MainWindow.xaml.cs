@@ -564,7 +564,7 @@ namespace KWDMpluca
         {
             if (rbSegmentation.IsChecked == true)
             {
-                string imagePath = SimpleITKHelper.GetFolderName(MyImg.Source) + "imageWithMask" + SimpleITKHelper.GetDicomFileName(MyImg.Source) + ".dcm";
+                string imagePath = SimpleITKHelper.GetFolderName(MyImg.Source) + "segmentedMask" + SimpleITKHelper.GetDicomFileName(MyImg.Source) + ".dcm";
                 int area = SimpleITKHelper.SegmentArea(currentPoint, MyImg.Source);
                 L_Area.Content = "Pole: " + area+"px";
 
@@ -597,7 +597,7 @@ namespace KWDMpluca
                         var nazwa = X[0].GetPixel(i, j).Name;
                         if (X[0].GetPixel(i, j).Name != "ffcbcbcb")
                         {
-                            X[0].SetPixel(i, j, System.Drawing.Color.Red);
+                            X[0].SetPixel(i, j, System.Drawing.Color.YellowGreen);
                         }
                         else
                         {
@@ -606,6 +606,12 @@ namespace KWDMpluca
                     }
                 }
 
+                Image MyImg2 = new Image();
+                MyImg2.Width = 280;
+                MyImg2.Height = 280;
+                MyImg2.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
+                canvas1.Children.Add(MyImg2);
+
                 X[0].Save(name);
                 Image MyImg1 = new Image();
                 MyImg1.Width = 280;
@@ -613,6 +619,7 @@ namespace KWDMpluca
                 
                 MyImg1.Source = BitmapHelper.LoadBitmapImage(name);
                 canvas1.Children.Add(MyImg1);
+                               
             }
 
 
