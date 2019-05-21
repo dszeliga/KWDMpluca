@@ -60,19 +60,20 @@ namespace KWDMpluca.Helpers
 
             //otwarcie (erozja potem dylatacja )
             sitk.BinaryMorphologicalOpeningImageFilter binaryMorphologicalOpeningImageFilter = new sitk.BinaryMorphologicalOpeningImageFilter();
-            binaryMorphologicalOpeningImageFilter.SetKernelRadius(2);
+            binaryMorphologicalOpeningImageFilter.SetKernelRadius(4);
             binaryMorphologicalOpeningImageFilter.SetBackgroundValue(0);
             binaryMorphologicalOpeningImageFilter.SetForegroundValue(1);
             binaryMorphologicalOpeningImageFilter.SetKernelType(sitk.KernelEnum.sitkBall);
             sitk.Image imageDicomOpen = binaryMorphologicalOpeningImageFilter.Execute(imageDicomErode);
-           
+
+            SaveImage(imageDicomOpen, GetFolderName(image) + "open" + GetDicomFileName(image) + ".dcm");
             //rozrost ze wskazanego punktu
             sitk.ConfidenceConnectedImageFilter confidenceConnectedImageFilter = new sitk.ConfidenceConnectedImageFilter();
             confidenceConnectedImageFilter.AddSeed(seed);
-            confidenceConnectedImageFilter.SetReplaceValue(1);
-            confidenceConnectedImageFilter.SetInitialNeighborhoodRadius(3);
-            confidenceConnectedImageFilter.SetNumberOfIterations(5);
-            confidenceConnectedImageFilter.SetMultiplier(3);
+            confidenceConnectedImageFilter.SetReplaceValue(255);
+            confidenceConnectedImageFilter.SetInitialNeighborhoodRadius(1);
+            confidenceConnectedImageFilter.SetNumberOfIterations(20);
+            confidenceConnectedImageFilter.SetMultiplier(2);
             sitk.Image imageDicomSegmented = confidenceConnectedImageFilter.Execute(imageDicomOpen);
             //zmiana piksela na int16
             castImageFilter.SetOutputPixelType(sitk.PixelIDValueEnum.sitkInt16);
@@ -92,7 +93,7 @@ namespace KWDMpluca.Helpers
                     var piksel = imageDicomSegmented.GetPixelAsInt16(seed);
 
                    
-                    if(piksel==1)
+                    if(piksel==255)
                     {
                         area++;                        
                     }                    
@@ -108,10 +109,10 @@ namespace KWDMpluca.Helpers
             //sitk.Image imageDicomSegmentedColor = scalarToRGBColormap.Execute(imageDicomSegmented);
             //SaveImage(imageDicomSegmentedColor, GetFolderName(image) + "segmentedMaskColor" + GetDicomFileName(image) + ".dcm");
 
-            castImageFilter.SetOutputPixelType(sitk.PixelIDValueEnum.sitkUInt8);
+            castImageFilter.SetOutputPixelType(sitk.PixelIDValueEnum.sitkInt16);
             imageDicomSegmented = castImageFilter.Execute(imageDicomSegmented);
 
-            castImageFilter.SetOutputPixelType(sitk.PixelIDValueEnum.sitkUInt8);
+            castImageFilter.SetOutputPixelType(sitk.PixelIDValueEnum.sitkInt16);
             imageDicomOrg = castImageFilter.Execute(imageDicomOrg);
 
             //zmiana formatu wektora koloru maski
