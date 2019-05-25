@@ -5,7 +5,6 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -117,8 +116,6 @@ namespace KWDMpluca
             bool status = gdcm.CompositeNetworkFunctions.CFind(Properties.Settings.Default.IP, ushort.Parse(Properties.Settings.Default.Port), query, dataArray, Properties.Settings.Default.AET, Properties.Settings.Default.AEC);
 
             #region Załadowanie obrazu
-            //gdcm.KeyValuePairArrayType keys_new = new gdcm.KeyValuePairArrayType();
-            //keys_new.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0010), L_SelectedName.Content.ToString()));
 
             gdcm.BaseRootQuery query_new = gdcm.CompositeNetworkFunctions.ConstructQuery(type, level, keys, true);
 
@@ -148,7 +145,7 @@ namespace KWDMpluca
                 MessageBox.Show("Pobieranie obrazów nie powodło się");
                 return;
             }
-           
+
             files = new List<string>(System.IO.Directory.EnumerateFiles(data));
 
             int i = 0;
@@ -166,7 +163,7 @@ namespace KWDMpluca
                 if (numer > i)
                     i = numer;
             }
-            Poukladanesciezki = new string[i+1];
+            Poukladanesciezki = new string[i + 1];
 
             foreach (String fileDcm in files)
             {
@@ -198,12 +195,9 @@ namespace KWDMpluca
                     gdcm.Bitmap bmjpeg2000 = BitmapHelper.pxmap2jpeg2000(reader.GetPixmap());
                     System.Drawing.Bitmap[] X = BitmapHelper.gdcmBitmap2Bitmap(bmjpeg2000);
 
-                    // System.Drawing.Bitmap X = BitmapHelper.DicomToBitmap(itk.simple.SimpleITK.ReadImage(fileDcm), 0);
                     String name = String.Format("{0}\\{1}.jpg", data, j);
                     X[0].Save(name);
                     j++;
-                    //String name = String.Format("{0}_warstwaBMP.bmp", fileDcm);
-                    //X.Save(name);
                 }
             }
 
@@ -211,8 +205,6 @@ namespace KWDMpluca
                 bitmapList.RemoveRange(0, bitmapList.Count);
 
             bitmapList.AddRange(System.IO.Directory.EnumerateFiles(data, "*.jpg"));
-            //bitmapList.AddRange(System.IO.Directory.EnumerateFiles(data, "*.bmp"));
-
             MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
 
 
@@ -227,9 +219,8 @@ namespace KWDMpluca
 
             MyImg.Width = 280;
             MyImg.Height = 280;
-            
 
-            if (canvas.Children.Count>=1)
+            if (canvas.Children.Count >= 1)
             {
                 canvas.Children.RemoveRange(0, canvas.Children.Count);
                 canvas.Children.Add(MyImg);
@@ -238,6 +229,7 @@ namespace KWDMpluca
             {
                 canvas.Children.Add(MyImg);
             }
+
             INext.Source = BitmapHelper.LoadBitmapImage(pathEmpty);
             IPrevious.Source = BitmapHelper.LoadBitmapImage(pathEmpty);
 
@@ -292,7 +284,58 @@ namespace KWDMpluca
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            MyImg.Source = BitmapHelper.LoadBitmapImage(Convert.ToInt32(e.NewValue), bitmapList);
+            //MyImg.Source = BitmapHelper.LoadBitmapImage(Convert.ToInt32(e.NewValue), bitmapList);
+            if (numberOfImage < bitmapList.Count)
+                numberOfImage = Convert.ToInt32(e.NewValue);
+
+            var slider = sender as Slider;
+            slider.TickFrequency = 1;
+            slider.Minimum = 0;
+            slider.Maximum = bitmapList.Count - 1;
+            T_Description.Text = "" + Convert.ToInt32(e.NewValue);
+
+            if (numberOfImage == 0)
+            {
+                MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
+                string path = ".\\tlo.bmp";
+                IPrevious.Source = BitmapHelper.LoadBitmapImage(path);
+                INext.Source = BitmapHelper.LoadBitmapImage(numberOfImage + 1, bitmapList);
+            }            
+            else if (numberOfImage < bitmapList.Count && e.OldValue > e.NewValue)
+            {
+                MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
+                IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
+                if (numberOfImage >= bitmapList.Count - 1)
+                {
+                    INext.Source = BitmapHelper.LoadBitmapImage(pathEmpty);//pusty                   
+                }
+                else
+                {
+                    INext.Source = BitmapHelper.LoadBitmapImage(numberOfImage + 1, bitmapList);
+                }
+
+            }
+            else if (numberOfImage > 0 && e.OldValue < e.NewValue)
+            {
+                MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
+                IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
+                if (numberOfImage >= bitmapList.Count - 1)
+                {
+                    INext.Source = BitmapHelper.LoadBitmapImage(pathEmpty);//pusty                   
+                }
+                else
+                {
+                    INext.Source = BitmapHelper.LoadBitmapImage(numberOfImage + 1, bitmapList);
+                }
+            }
+            else if (numberOfImage >= bitmapList.Count - 1)
+            {
+                MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
+                IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 2, bitmapList);
+
+                INext.Source = BitmapHelper.LoadBitmapImage(pathEmpty); //pusty
+
+            }
         }
 
         private void Canvas_MouseDown(object sender, MouseButtonEventArgs e)
@@ -566,7 +609,7 @@ namespace KWDMpluca
             {
                 string imagePath = SimpleITKHelper.GetFolderName(MyImg.Source) + "segmentedMask" + SimpleITKHelper.GetDicomFileName(MyImg.Source) + ".dcm";
                 int area = SimpleITKHelper.SegmentArea(currentPoint, MyImg.Source);
-                L_Area.Content = "Pole: " + area+"px";
+                L_Area.Content = "Pole: " + area + "px";
 
                 gdcm.PixmapReader reader = new gdcm.PixmapReader();
                 reader.SetFileName(imagePath);
@@ -580,15 +623,11 @@ namespace KWDMpluca
                 gdcm.Bitmap bmjpeg2000 = BitmapHelper.pxmap2jpeg2000(reader.GetPixmap());
                 System.Drawing.Bitmap[] X = BitmapHelper.gdcmBitmap2Bitmap(bmjpeg2000);
 
-                
-                //System.Drawing.Bitmap X = BitmapHelper.DicomToBitmap(itk.simple.SimpleITK.ReadImage(imagePath), 0);
-                //BitmapData bmd = X.LockBits(new System.Drawing.Rectangle(0, 0, (int)X.Height, (int)X.Width),
-                //                                    ImageLockMode.ReadOnly, X.PixelFormat);
-                BitmapData bmd = X[0].LockBits(new System.Drawing.Rectangle(0, 0, (int)X[0].Height, (int)X[0].Width),
-                                                   ImageLockMode.ReadOnly, X[0].PixelFormat);
-                 X[0].UnlockBits(bmd);
 
-                //działa jak coś
+                BitmapData bmd = X[0].LockBits(new System.Drawing.Rectangle(0, 0, (int)X[0].Height, (int)X[0].Width),
+                                                     ImageLockMode.ReadOnly, X[0].PixelFormat);
+                X[0].UnlockBits(bmd);
+
                 for (int i = 0; i < X[0].Height; i++)
                 {
                     for (int j = 0; j < X[0].Width; j++)
@@ -616,13 +655,10 @@ namespace KWDMpluca
                 Image MyImg1 = new Image();
                 MyImg1.Width = 280;
                 MyImg1.Height = 280;
-                
+
                 MyImg1.Source = BitmapHelper.LoadBitmapImage(name);
                 canvas1.Children.Add(MyImg1);
-                               
             }
-
-
         }
 
         private void BDistance_Click(object sender, RoutedEventArgs e)
@@ -636,14 +672,14 @@ namespace KWDMpluca
             if (numberOfImage > 0)
             {
                 MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
-                IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage-1, bitmapList);
-                INext.Source = BitmapHelper.LoadBitmapImage(numberOfImage + 1 , bitmapList);
+                IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
+                INext.Source = BitmapHelper.LoadBitmapImage(numberOfImage + 1, bitmapList);
             }
             else
             {
                 MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage + 1, bitmapList);
                 string path = ".\\tlo.bmp";
-                IPrevious.Source = BitmapHelper.LoadBitmapImage(path);           
+                IPrevious.Source = BitmapHelper.LoadBitmapImage(path);
                 INext.Source = BitmapHelper.LoadBitmapImage(numberOfImage + 2, bitmapList);
                 numberOfImage = 0;
             }
@@ -653,12 +689,12 @@ namespace KWDMpluca
         {
 
             numberOfImage += 1;
-            
+
             if (numberOfImage < bitmapList.Count)
             {
                 MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
-                IPrevious.Source= BitmapHelper.LoadBitmapImage(numberOfImage-1, bitmapList);
-                if(numberOfImage==bitmapList.Count-1)
+                IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
+                if (numberOfImage == bitmapList.Count - 1)
                 {
                     INext.Source = BitmapHelper.LoadBitmapImage(pathEmpty);//pusty
                 }
@@ -666,15 +702,15 @@ namespace KWDMpluca
                 {
                     INext.Source = BitmapHelper.LoadBitmapImage(numberOfImage + 1, bitmapList);
                 }
-                
+
             }
             else
             {
                 MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
                 IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 2, bitmapList);
-                
+
                 INext.Source = BitmapHelper.LoadBitmapImage(pathEmpty); //pusty
-                numberOfImage = bitmapList.Count - 1;                
+                numberOfImage = bitmapList.Count - 1;
             }
         }
     }

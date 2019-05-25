@@ -1,18 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using sitk = itk.simple;
-using System.IO;
 namespace KWDMpluca.Helpers
 {
     public class SimpleITKHelper
     {
         public static int SegmentArea(Point point, ImageSource image)
-        {           
+        {
 
             //wczytanie pliku
             sitk.ImageFileReader imageFileReader = new sitk.ImageFileReader();
@@ -34,12 +29,13 @@ namespace KWDMpluca.Helpers
             curvatureFlowImageFilter.SetTimeStep(0.125);
             imageDicomOrg = curvatureFlowImageFilter.Execute(imageDicomOrg);
 
-            
+
             //zmiana typu piksela na int16
             sitk.CastImageFilter castImageFilter = new sitk.CastImageFilter();
             castImageFilter.SetOutputPixelType(sitk.PixelIDValueEnum.sitkInt16);
             imageDicomOrg = castImageFilter.Execute(imageDicomOrg);
             SaveImage(imageDicomOrg, GetFolderName(image) + "org16" + GetDicomFileName(image) + ".dcm");
+
             //progowanie
             sitk.BinaryThresholdImageFilter binthr = new sitk.BinaryThresholdImageFilter();
             binthr.SetLowerThreshold(100);
@@ -48,7 +44,6 @@ namespace KWDMpluca.Helpers
             binthr.SetInsideValue(1);
             sitk.Image imageDicomOrg_beforeErode = binthr.Execute(imageDicomOrg);
 
-            SaveImage(imageDicomOrg_beforeErode, GetFolderName(image) + "beforeErode" + GetDicomFileName(image) + ".dcm");
             //erozja
             sitk.BinaryErodeImageFilter binaryErodeImageFilter = new sitk.BinaryErodeImageFilter();
             binaryErodeImageFilter.SetKernelRadius(2);
@@ -67,6 +62,7 @@ namespace KWDMpluca.Helpers
             sitk.Image imageDicomOpen = binaryMorphologicalOpeningImageFilter.Execute(imageDicomErode);
 
             SaveImage(imageDicomOpen, GetFolderName(image) + "open" + GetDicomFileName(image) + ".dcm");
+            
             //rozrost ze wskazanego punktu
             sitk.ConfidenceConnectedImageFilter confidenceConnectedImageFilter = new sitk.ConfidenceConnectedImageFilter();
             confidenceConnectedImageFilter.AddSeed(seed);
@@ -75,14 +71,15 @@ namespace KWDMpluca.Helpers
             confidenceConnectedImageFilter.SetNumberOfIterations(20);
             confidenceConnectedImageFilter.SetMultiplier(2);
             sitk.Image imageDicomSegmented = confidenceConnectedImageFilter.Execute(imageDicomOpen);
+
             //zmiana piksela na int16
             castImageFilter.SetOutputPixelType(sitk.PixelIDValueEnum.sitkInt16);
             imageDicomSegmented = castImageFilter.Execute(imageDicomSegmented);
 
             SaveImage(imageDicomSegmented, GetFolderName(image) + "segmentedMask" + GetDicomFileName(image) + ".dcm");
-           
 
-            var x = imageDicomSegmented.GetPixelIDValue();
+
+           //obliczenie pola guza w pikselach
             int area = 0;
             for (int i = 0; i < imageDicomSegmented.GetWidth(); i++)
             {
@@ -92,44 +89,13 @@ namespace KWDMpluca.Helpers
                     seed[1] = (uint)j;
                     var piksel = imageDicomSegmented.GetPixelAsInt16(seed);
 
-                   
-                    if(piksel==255)
+
+                    if (piksel == 255)
                     {
-                        area++;                        
-                    }                    
+                        area++;
+                    }
                 }
             }
-
-
-
-
-            //maska w kolorze
-            //sitk.ScalarToRGBColormapImageFilter scalarToRGBColormap = new sitk.ScalarToRGBColormapImageFilter();
-            //scalarToRGBColormap.SetColormap(sitk.ScalarToRGBColormapImageFilter.ColormapType.Blue);            
-            //sitk.Image imageDicomSegmentedColor = scalarToRGBColormap.Execute(imageDicomSegmented);
-            //SaveImage(imageDicomSegmentedColor, GetFolderName(image) + "segmentedMaskColor" + GetDicomFileName(image) + ".dcm");
-
-            castImageFilter.SetOutputPixelType(sitk.PixelIDValueEnum.sitkInt16);
-            imageDicomSegmented = castImageFilter.Execute(imageDicomSegmented);
-
-            castImageFilter.SetOutputPixelType(sitk.PixelIDValueEnum.sitkInt16);
-            imageDicomOrg = castImageFilter.Execute(imageDicomOrg);
-
-            //zmiana formatu wektora koloru maski
-            //sitk.VectorIndexSelectionCastImageFilter vectorIndexSelectionCastImageFilter = new sitk.VectorIndexSelectionCastImageFilter();
-            //vectorIndexSelectionCastImageFilter.SetOutputPixelType(sitk.PixelIDValueEnum.sitkUInt16);
-            //imageDicomSegmentedColor = vectorIndexSelectionCastImageFilter.Execute(imageDicomSegmentedColor);
-            //SaveImage(imageDicomSegmentedColor, GetFolderName(image) + "segmentedMaskColor" + GetDicomFileName(image) + ".dcm");
-
-            //nałożenie maski na obraz
-            sitk.AddImageFilter addImageFilter = new sitk.AddImageFilter();
-            sitk.Image imageDicomWithMask = addImageFilter.Execute(imageDicomOrg, imageDicomSegmented);
-
-            //zapis do pliku
-            SaveImage(imageDicomWithMask, GetFolderName(image) + "imageWithMask" + GetDicomFileName(image) + ".dcm");
-
-            //string imagePath = GetFolderName(image) + "imageWithMask" + GetDicomFileName(image) + ".dcm";
-            //zwraca sciezke do pliku po nałożeniu
             return area;
         }
 
@@ -146,17 +112,16 @@ namespace KWDMpluca.Helpers
             {
                 string[] pathSegments = image.ToString().Split('/');
                 string[] fileNameSegments = pathSegments[5].Split('_');
-                string dicomName = fileNameSegments[0];//.TrimEnd(new char[] { '.', 'd', 'c', 'm' });
+                string dicomName = fileNameSegments[0];
                 return dicomName;
             }
             else
             {
                 string[] pathSegments = image.ToString().Split('\\');
                 string[] fileNameSegments = pathSegments[3].Split('_');
-                string dicomName = fileNameSegments[0];//.TrimEnd(new char[] { '.', 'd', 'c', 'm' });
+                string dicomName = fileNameSegments[0];
                 return dicomName;
             }
-                
         }
 
         private static string GetImageFileName(ImageSource image)
@@ -173,7 +138,7 @@ namespace KWDMpluca.Helpers
             if (image.ToString().Contains("pack"))
             {
                 string[] pathSegments = image.ToString().Split('/');
-                string folderName = ".\\"+pathSegments[3] + "\\" + pathSegments[4] + "\\";
+                string folderName = ".\\" + pathSegments[3] + "\\" + pathSegments[4] + "\\";
                 return folderName;
             }
             else
@@ -184,36 +149,36 @@ namespace KWDMpluca.Helpers
             }
         }
 
-        private static uint FindInstance()
-        {
-            uint instanceID = 0;
+        //private static uint FindInstance()
+        //{
+        //    uint instanceID = 0;
 
-            gdcm.ERootType type = gdcm.ERootType.ePatientRootType;
+        //    gdcm.ERootType type = gdcm.ERootType.ePatientRootType;
 
-            gdcm.EQueryLevel level = gdcm.EQueryLevel.ePatient;
+        //    gdcm.EQueryLevel level = gdcm.EQueryLevel.ePatient;
 
-            gdcm.KeyValuePairArrayType keys = new gdcm.KeyValuePairArrayType();
-            gdcm.KeyValuePairType key = new gdcm.KeyValuePairType(new gdcm.Tag(0x0020, 0x0013), "");
-            keys.Add(key);
-            keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0020), Properties.Settings.Default.SelectedPatientID));
+        //    gdcm.KeyValuePairArrayType keys = new gdcm.KeyValuePairArrayType();
+        //    gdcm.KeyValuePairType key = new gdcm.KeyValuePairType(new gdcm.Tag(0x0020, 0x0013), "");
+        //    keys.Add(key);
+        //    keys.Add(new gdcm.KeyValuePairType(new gdcm.Tag(0x0010, 0x0020), Properties.Settings.Default.SelectedPatientID));
 
-            gdcm.BaseRootQuery query = gdcm.CompositeNetworkFunctions.ConstructQuery(type, level, keys);
+        //    gdcm.BaseRootQuery query = gdcm.CompositeNetworkFunctions.ConstructQuery(type, level, keys);
 
-            gdcm.DataSetArrayType dataArray = new gdcm.DataSetArrayType();
+        //    gdcm.DataSetArrayType dataArray = new gdcm.DataSetArrayType();
 
-            bool status = gdcm.CompositeNetworkFunctions.CFind(Properties.Settings.Default.IP, ushort.Parse(Properties.Settings.Default.Port), query, dataArray, Properties.Settings.Default.AET, Properties.Settings.Default.AEC);
+        //    bool status = gdcm.CompositeNetworkFunctions.CFind(Properties.Settings.Default.IP, ushort.Parse(Properties.Settings.Default.Port), query, dataArray, Properties.Settings.Default.AET, Properties.Settings.Default.AEC);
 
-            if (status)
-            {
-                foreach (gdcm.DataSet x in dataArray)
-                {
-                    instanceID = uint.Parse(x.GetDataElement(new gdcm.Tag(0x0020, 0x0013)).GetValue().toString());
-                }
+        //    if (status)
+        //    {
+        //        foreach (gdcm.DataSet x in dataArray)
+        //        {
+        //            instanceID = uint.Parse(x.GetDataElement(new gdcm.Tag(0x0020, 0x0013)).GetValue().toString());
+        //        }
 
-                return instanceID;
-            }
+        //        return instanceID;
+        //    }
 
-            return 0;
-        }
+        //    return 0;
+        //}
     }
 }

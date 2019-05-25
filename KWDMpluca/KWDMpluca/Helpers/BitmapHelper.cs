@@ -90,53 +90,5 @@ namespace KWDMpluca.Helpers
             dicom.EndInit();
             return dicom;
         }
-            public static Bitmap DicomToBitmap(sitk.Image imagesDicom, uint depth)
-        {
-            sitk.VectorUInt32 idx = new sitk.VectorUInt32();
-            uint[] size = imagesDicom.GetSize().ToArray();
-            idx.Add(0); idx.Add(0); idx.Add(depth);
-
-            sitk.CastImageFilter castImageFilter = new sitk.CastImageFilter();
-            castImageFilter.SetOutputPixelType(sitk.PixelIDValueEnum.sitkFloat32);
-            imagesDicom = castImageFilter.Execute(imagesDicom);
-
-            Bitmap bmp = new Bitmap((int)size[0], (int)size[1], PixelFormat.Format32bppRgb);
-            BitmapData bmd = bmp.LockBits(new Rectangle(0, 0, (int)size[0], (int)size[1]),
-                                                    ImageLockMode.ReadOnly, bmp.PixelFormat);
-
-            int pixelSize = 4;
-            unsafe
-            {
-                for (int y = 0; y < bmd.Height; y++)
-                {
-                    byte* row = (byte*)bmd.Scan0 + (y * bmd.Stride);
-
-
-                    for (int x = 0; x < bmd.Width; x++)
-                    {
-                        idx[0] = (uint)x;
-                        idx[1] = (uint)y;
-                        byte rgb = (byte)imagesDicom.GetPixelAsFloat(idx);
-
-                        // Blue  0-255 
-                        row[x * pixelSize] = rgb;
-                        // Green 0-255
-                        row[x * pixelSize + 1] = rgb;
-                        // Red   0-255
-                        row[x * pixelSize + 2] = rgb;
-                        // Alpha 0-255
-                        row[x * pixelSize + 3] = rgb;
-                        
-                    }
-                }
-            }
-
-            bmp.UnlockBits(bmd);
-           
-            return bmp;
-        }
-
-
-
     }
 }
