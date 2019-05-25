@@ -19,6 +19,8 @@ namespace KWDMpluca
     {
         ImageSource imageDicom;
         string description="";
+        double area = 0.0;
+        double distance = 0.0;
         public CreatePDF()
         {
             InitializeComponent();
@@ -49,10 +51,12 @@ namespace KWDMpluca
             }
         }
 
-        public CreatePDF(ImageSource image, string descriptionMain) : this()
+        public CreatePDF(ImageSource image, string descriptionMain, double areaMain, double distanceMain) : this()
         {
             imageDicom = image;
             description = descriptionMain;
+            area = areaMain;
+            distance = distanceMain;
         }        
 
         private void B_AddImage_Click(object sender, RoutedEventArgs e)
@@ -83,13 +87,7 @@ namespace KWDMpluca
             var pdf = new Document(PageSize.LETTER, 40f, 40f, 60f, 60f);
             //sciezka do pliku
             string path = $".\\raport.pdf";
-            //string name = "";
-            //if (File.Exists(path))
-            //{
-            //    name = Interaction.InputBox("Raport o tej nazwie już istnieje, czy nadpisać dokument?", "Raport już istnieje","raport", -1,-1);
-            //    path = $".\\"+name.ToString()+".pdf";
-            //}
-            
+                      
             //przerwa między kolejnymi liniami
             var spacer = new Paragraph("")
             {
@@ -156,6 +154,12 @@ namespace KWDMpluca
             descriptionOfResearch.AddCell("Opis badania:");
             descriptionOfResearch.AddCell(new Phrase(T_Description.Text, myFont));
 
+            //descriptionOfResearch.AddCell("Powierzchnia guza:");
+            //descriptionOfResearch.AddCell(new Phrase("mm^2", myFont));
+            //descriptionOfResearch.AddCell("Średnica:");
+            //descriptionOfResearch.AddCell(new Phrase("mm", myFont));
+
+
             pdf.Add(descriptionOfResearch);
             pdf.Add(spacer);
 
@@ -170,9 +174,9 @@ namespace KWDMpluca
 
             doctorTable.AddCell("ID Lekarza:");
             doctorTable.AddCell(T_IDdoctor.Text);
-            doctorTable.AddCell("Imię i nazwisko:");
+            doctorTable.AddCell("Imie i nazwisko:");
             doctorTable.AddCell(new Phrase(T_DoctorName.Text, myFont));
-            doctorTable.AddCell("Specjalność:");
+            doctorTable.AddCell("Specjalnosc:");
             doctorTable.AddCell(new Phrase(T_DoctorSpeciality.Text, myFont));
 
             pdf.Add(headDoctor);

@@ -31,6 +31,7 @@ namespace KWDMpluca
         double pixelSpacing;
         bool bDistanceClicked = false;
         double[] pointsDistance = new double[4];
+        double area, distance;
         int ind = 0;
         int numberOfImage = 0;
         string pathEmpty = ".\\tlo.bmp";
@@ -79,7 +80,7 @@ namespace KWDMpluca
             CreateSaveBitmap(canvas, "image.bmp");
 
             ImageSource dcm = new BitmapImage(new Uri("image.bmp", UriKind.Relative));
-            CreatePDF winPDF = new CreatePDF(dcm, T_Description.Text);
+            CreatePDF winPDF = new CreatePDF(dcm, T_Description.Text, area, distance);
             winPDF.Show();
         }
 
@@ -291,8 +292,7 @@ namespace KWDMpluca
             var slider = sender as Slider;
             slider.TickFrequency = 1;
             slider.Minimum = 0;
-            slider.Maximum = bitmapList.Count - 1;
-            T_Description.Text = "" + Convert.ToInt32(e.NewValue);
+            slider.Maximum = bitmapList.Count - 1;            
 
             if (numberOfImage == 0)
             {
@@ -300,7 +300,7 @@ namespace KWDMpluca
                 string path = ".\\tlo.bmp";
                 IPrevious.Source = BitmapHelper.LoadBitmapImage(path);
                 INext.Source = BitmapHelper.LoadBitmapImage(numberOfImage + 1, bitmapList);
-            }            
+            }
             else if (numberOfImage < bitmapList.Count && e.OldValue > e.NewValue)
             {
                 MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
@@ -371,7 +371,7 @@ namespace KWDMpluca
 
                     if (ind == 4)
                     {
-                        var distance = (Math.Sqrt((Math.Pow(pointsDistance[0] - pointsDistance[2], 2) + Math.Pow(pointsDistance[1] - pointsDistance[3], 2)))) * pixelSpacing;
+                        distance = (Math.Sqrt((Math.Pow(pointsDistance[0] - pointsDistance[2], 2) + Math.Pow(pointsDistance[1] - pointsDistance[3], 2)))) * pixelSpacing;
                         L_Distance.Content = "Długość: " + Math.Round(distance, 2) + "mm";
                     }
 
@@ -440,7 +440,7 @@ namespace KWDMpluca
                         canvas.Children.Add(line);
                     }
 
-                    var area = Math.Abs(points.Take(points.Count - 1).Select((p, i) => (points[i + 1].X - p.X) * (points[i + 1].Y + p.Y)).Sum() / 2);
+                    area = Math.Abs(points.Take(points.Count - 1).Select((p, i) => (points[i + 1].X - p.X) * (points[i + 1].Y + p.Y)).Sum() / 2);
                     L_Area.Content = "Pole: " + area;
                 }
             }
@@ -608,7 +608,7 @@ namespace KWDMpluca
             if (rbSegmentation.IsChecked == true)
             {
                 string imagePath = SimpleITKHelper.GetFolderName(MyImg.Source) + "segmentedMask" + SimpleITKHelper.GetDicomFileName(MyImg.Source) + ".dcm";
-                int area = SimpleITKHelper.SegmentArea(currentPoint, MyImg.Source);
+                area = SimpleITKHelper.SegmentArea(currentPoint, MyImg.Source);
                 L_Area.Content = "Pole: " + area + "px";
 
                 gdcm.PixmapReader reader = new gdcm.PixmapReader();

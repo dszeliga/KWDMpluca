@@ -6,15 +6,13 @@ namespace KWDMpluca.Helpers
 {
     public class SimpleITKHelper
     {
-        public static int SegmentArea(Point point, ImageSource image)
+        public static double SegmentArea(Point point, ImageSource image)
         {
-
             //wczytanie pliku
             sitk.ImageFileReader imageFileReader = new sitk.ImageFileReader();
             imageFileReader.SetFileName(GetFolderName(image) + GetDicomFileName(image));
             imageFileReader.SetOutputPixelType(sitk.PixelIDValueEnum.sitkInt16);
             sitk.Image imageDicomOrg = imageFileReader.Execute();
-
 
             uint seedX = (uint.Parse(Math.Round(point.X).ToString()) * imageDicomOrg.GetWidth()) / 280;
             uint seedY = (uint.Parse(Math.Round(point.Y).ToString()) * imageDicomOrg.GetHeight()) / 280;
@@ -28,7 +26,6 @@ namespace KWDMpluca.Helpers
             curvatureFlowImageFilter.SetNumberOfIterations(5);
             curvatureFlowImageFilter.SetTimeStep(0.125);
             imageDicomOrg = curvatureFlowImageFilter.Execute(imageDicomOrg);
-
 
             //zmiana typu piksela na int16
             sitk.CastImageFilter castImageFilter = new sitk.CastImageFilter();
@@ -62,7 +59,7 @@ namespace KWDMpluca.Helpers
             sitk.Image imageDicomOpen = binaryMorphologicalOpeningImageFilter.Execute(imageDicomErode);
 
             SaveImage(imageDicomOpen, GetFolderName(image) + "open" + GetDicomFileName(image) + ".dcm");
-            
+
             //rozrost ze wskazanego punktu
             sitk.ConfidenceConnectedImageFilter confidenceConnectedImageFilter = new sitk.ConfidenceConnectedImageFilter();
             confidenceConnectedImageFilter.AddSeed(seed);
@@ -79,7 +76,7 @@ namespace KWDMpluca.Helpers
             SaveImage(imageDicomSegmented, GetFolderName(image) + "segmentedMask" + GetDicomFileName(image) + ".dcm");
 
 
-           //obliczenie pola guza w pikselach
+            //obliczenie pola guza w pikselach
             int area = 0;
             for (int i = 0; i < imageDicomSegmented.GetWidth(); i++)
             {
