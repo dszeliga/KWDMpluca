@@ -87,7 +87,10 @@ namespace KWDMpluca
             var pdf = new Document(PageSize.LETTER, 40f, 40f, 60f, 60f);
             //sciezka do pliku
             string path = $".\\raport.pdf";
-                      
+
+            if (File.Exists(path))
+                File.Delete(path);
+
             //przerwa między kolejnymi liniami
             var spacer = new Paragraph("")
             {
@@ -154,10 +157,10 @@ namespace KWDMpluca
             descriptionOfResearch.AddCell("Opis badania:");
             descriptionOfResearch.AddCell(new Phrase(T_Description.Text, myFont));
 
-            //descriptionOfResearch.AddCell("Powierzchnia guza:");
-            //descriptionOfResearch.AddCell(new Phrase("mm^2", myFont));
-            //descriptionOfResearch.AddCell("Średnica:");
-            //descriptionOfResearch.AddCell(new Phrase("mm", myFont));
+            descriptionOfResearch.AddCell("Powierzchnia guza:");
+            descriptionOfResearch.AddCell(new Phrase(area+"mm^2", myFont));
+            descriptionOfResearch.AddCell("Srednica:");
+            descriptionOfResearch.AddCell(new Phrase(distance+"mm", myFont));
 
 
             pdf.Add(descriptionOfResearch);
