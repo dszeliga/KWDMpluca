@@ -440,8 +440,9 @@ namespace KWDMpluca
                         canvas.Children.Add(line);
                     }
 
-                    area = Math.Abs(points.Take(points.Count - 1).Select((p, i) => (points[i + 1].X - p.X) * (points[i + 1].Y + p.Y)).Sum() / 2);
-                    L_Area.Content = "Pole: " + area;
+                    area = (Math.Abs(points.Take(points.Count - 1).Select((p, i) => (points[i + 1].X - p.X) 
+                            * (points[i + 1].Y + p.Y)).Sum() / 2))*Math.Pow(pixelSpacing, 2);
+                    L_Area.Content = "Pole: " + Math.Round(area, 2)+"mm^2";
                 }
             }
 
@@ -609,7 +610,8 @@ namespace KWDMpluca
             {
                 string imagePath = SimpleITKHelper.GetFolderName(MyImg.Source) + "segmentedMask" + SimpleITKHelper.GetDicomFileName(MyImg.Source) + ".dcm";
                 area = SimpleITKHelper.SegmentArea(currentPoint, MyImg.Source);
-                L_Area.Content = "Pole: " + area + "px";
+                area = area * Math.Pow(pixelSpacing, 2);
+                L_Area.Content = "Pole: " + Math.Round(area) + "mm^2";
 
                 gdcm.PixmapReader reader = new gdcm.PixmapReader();
                 reader.SetFileName(imagePath);

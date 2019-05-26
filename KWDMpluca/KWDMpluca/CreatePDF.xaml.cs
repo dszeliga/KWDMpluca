@@ -55,8 +55,8 @@ namespace KWDMpluca
         {
             imageDicom = image;
             description = descriptionMain;
-            area = areaMain;
-            distance = distanceMain;
+            area = Math.Round(areaMain,2);
+            distance = Math.Round(distanceMain,2);
         }        
 
         private void B_AddImage_Click(object sender, RoutedEventArgs e)
