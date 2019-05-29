@@ -26,10 +26,12 @@ namespace KWDMpluca
         List<Point> points = new List<Point>();
         gdcm.DataSetArrayType dataArray;
         String data;
+        ScaleTransform st = new ScaleTransform();
         List<string> files;
         List<string> filesNew = new List<string>();
         double pixelSpacing;
         bool bDistanceClicked = false;
+        bool bZoomClicked = false;
         double[] pointsDistance = new double[4];
         double area, distance;
         int ind = 0;
@@ -93,6 +95,8 @@ namespace KWDMpluca
 
         private void BReload_Click(object sender, RoutedEventArgs e)
         {
+            ScrollViewer scrollViewer = new ScrollViewer();
+            scrollViewer.ScrollToVerticalOffset(100);
             //LCheck.Content = Properties.Settings.Default.SelectedPatientID;
             List<string> patientList = new List<string>();
             gdcm.ERootType type = gdcm.ERootType.ePatientRootType;
@@ -465,6 +469,28 @@ namespace KWDMpluca
             }
 
         }
+        private void Canvas_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (bZoomClicked)
+            {
+                double height = canvas.ActualHeight;
+                double width = canvas.ActualWidth;
+                double scaleRate = 1.1;
+               
+                if (e.Delta > 0)
+                {
+                    st.ScaleX *= scaleRate;
+                    st.ScaleY *= scaleRate;
+                }
+                else
+                {
+                    st.ScaleX /= scaleRate;
+                    st.ScaleY /= scaleRate;
+                }
+
+                canvas.LayoutTransform = st;
+            }
+        }
 
         private void CreateSaveBitmap(Canvas canvas, string filename)
         {
@@ -685,6 +711,13 @@ namespace KWDMpluca
                 INext.Source = BitmapHelper.LoadBitmapImage(numberOfImage + 2, bitmapList);
                 numberOfImage = 0;
             }
+        }
+
+        private void BZoom_Click(object sender, RoutedEventArgs e)
+        {
+            bZoomClicked = true;            
+            sv.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
+            sv.HorizontalScrollBarVisibility = ScrollBarVisibility.Visible;
         }
 
         private void BNext_Click(object sender, RoutedEventArgs e)
