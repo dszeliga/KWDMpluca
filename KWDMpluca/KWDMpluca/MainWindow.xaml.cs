@@ -46,6 +46,7 @@ namespace KWDMpluca
         Image MyImg1 = new Image();
         Image MyImg3 = new Image();
         SolidColorBrush redBrush = new SolidColorBrush();
+        string[] AllMasks;
 
         public MainWindow()
         {
@@ -165,6 +166,7 @@ namespace KWDMpluca
                     i = numer;
             }
             Poukladanesciezki = new string[i + 1];
+            AllMasks = new string[i + 1]; // ------------------------------------------------ TUTAJ
 
             foreach (String fileDcm in files)
             {
@@ -847,10 +849,14 @@ namespace KWDMpluca
                 MyImg1.Height = 280;
 
                 MyImg1.Source = BitmapHelper.LoadBitmapImage(name);
+//<<<<<<< origin/segmentacja
 
                 if (canvasSegm.Children.Contains(MyImg1))
                     canvasSegm.Children.Remove(MyImg1);
 
+//=======
+                AllMasks[numberOfImage] = name;
+//>>>>>>> local
                 canvasSegm.Children.Add(MyImg1);
             }
         }
@@ -893,6 +899,35 @@ namespace KWDMpluca
        private void BCorrectArea_Click(object sender, RoutedEventArgs e)
         {
             bCorrectAreaClicked = true;
+        }
+
+        private void SBrightness_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            double changeValue = Math.Round(SBrightness.Value);
+            
+            BitmapImage img = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
+            
+            double rows = img.PixelHeight;
+            double columns = img.PixelWidth;
+            WriteableBitmap wbitmap = new WriteableBitmap((int)columns, (int)rows, 96, 96, PixelFormats.Bgra32, null);
+            int stride = img.PixelWidth * 4;
+            int size = img.PixelHeight * stride;
+            byte[] pixels = new byte[size];
+            img.CopyPixels(pixels, stride, 0);
+
+            for (int y = 0; y < img.PixelHeight; y++)
+            {
+                for (int x = 0; x < img.PixelWidth; x++)
+                {
+                    int index = y * stride + 4 * x;
+                    pixels[index] = (byte)(pixels[index] + changeValue);
+                    pixels[index + 1] = (byte)(pixels[index + 1] + changeValue);
+                    pixels[index + 2] = (byte)(pixels[index + 2] + changeValue);
+                    Int32Rect rect = new Int32Rect(0, 0, x, y);
+                    wbitmap.WritePixels(rect, pixels, stride, 0);
+                }
+            }
+            MyImg.Source = wbitmap;
         }
 
         private void BNext_Click(object sender, RoutedEventArgs e)

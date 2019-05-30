@@ -80,6 +80,7 @@ namespace KWDMpluca
             gdcm.FilenamesType filenamesType = dir.GetFilenames();
 
             bool statusStore = gdcm.CompositeNetworkFunctions.CStore(Properties.Settings.Default.IP, ushort.Parse(Properties.Settings.Default.Port), new gdcm.FilenamesType(filenamesType), Properties.Settings.Default.AET, Properties.Settings.Default.AEC);
+
             L_Path.Content = "Gotowe";
 
 

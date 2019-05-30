@@ -21,15 +21,15 @@
         <Border BorderBrush="#FF4472C4" BorderThickness="1" HorizontalAlignment="Left" Height="344" Margin="52,248,0,0" VerticalAlignment="Top" Width="247" RenderTransformOrigin="0.524,0.754">
             <Image x:Name="INote" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="35" Stretch="Fill" Source="image/note.png" RenderTransformOrigin="-6.171,0.076" Margin="-20.333,-18.333,0,0"/>
         </Border>
-        <Border BorderBrush="#FF4472C4" BorderThickness="1" HorizontalAlignment="Right" Height="236" Margin="0,0,34.667,37" VerticalAlignment="Bottom" Width="171">
-            <Image x:Name="ICalc" HorizontalAlignment="Left" Height="35" VerticalAlignment="Bottom" Width="35" Stretch="Fill" Source="image/calc.png" Margin="-19.333,-20.333,0,219.333" RenderTransformOrigin="0.4,0.486"/>
+        <Border BorderBrush="#FF4472C4" BorderThickness="1" HorizontalAlignment="Right" Height="125" Margin="0,0,33.667,30" VerticalAlignment="Bottom" Width="171">
+            <Image x:Name="ICalc" HorizontalAlignment="Left" Height="35" VerticalAlignment="Bottom" Width="35" Stretch="Fill" Source="image/calc.png" Margin="-19.333,-20.333,0,100.333" RenderTransformOrigin="0.4,0.486"/>
         </Border>
         <Border BorderBrush="#FF4472C4" BorderThickness="1" Margin="327,94,0,0" Height="300" VerticalAlignment="Top" HorizontalAlignment="Left" Width="300">
             <ScrollViewer Name="sv" HorizontalAlignment="Left" Height="291" Margin="8.2,8.2,9.4,9.4" VerticalAlignment="Top" Width="292" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
-                <Canvas Name="canvas" Margin="8.2,8.2,9.4,9.4" MouseDown="Canvas_MouseDown" MouseMove="Canvas_MouseMove" MouseUp="Canvas_MouseUp" MouseWheel="Canvas_MouseWheel" Height="280" Width="280"/> 
-       </ScrollViewer>
-            </Border>
-        <Border BorderBrush="#FF4472C4" BorderThickness="1" Height="230" Margin="0,94,34.667,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="171">
+                <Canvas Name="canvas" Margin="8.2,8.2,9.4,9.4" MouseDown="Canvas_MouseDown" MouseMove="Canvas_MouseMove" MouseUp="Canvas_MouseUp" MouseWheel="Canvas_MouseWheel" Height="280" Width="280"/>
+            </ScrollViewer>
+        </Border>
+        <Border BorderBrush="#FF4472C4" BorderThickness="1" Height="328" Margin="0,94,34.667,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="171">
             <Image x:Name="ITool" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="35" Stretch="Fill" Source="image/tool.png" RenderTransformOrigin="0.419,0.095" Margin="-18.333,-17.333,0,0"/>
         </Border>
 
@@ -58,12 +58,15 @@
         <Button Content="Button" Visibility="Hidden" HorizontalAlignment="Left" Margin="458,0,0,99" Width="59" Height="56" VerticalAlignment="Bottom"/>
         <Button Content="Button" Visibility="Hidden" HorizontalAlignment="Right" Margin="0,0,361.667,99" Width="59" Height="56" VerticalAlignment="Bottom"/>
         <Button x:Name="bDistance" Content="Zmierz odcinek" Margin="0,175,33.6,0" VerticalAlignment="Top" Click="BDistance_Click" Height="20" HorizontalAlignment="Right" Width="171"/>
-        <Label x:Name="L_Distance" Content="" Margin="0,0,34.6,208" HorizontalAlignment="Right" Width="141" Height="28" VerticalAlignment="Bottom"/>
-        <Label x:Name="L_Area" Content="" Margin="0,0,34.6,162" HorizontalAlignment="Right" Width="141" Height="28" VerticalAlignment="Bottom"/>
+        <Label x:Name="L_Distance" Content="" Margin="0,0,34.667,94" HorizontalAlignment="Right" Width="170" Height="28" VerticalAlignment="Bottom"/>
+        <Label x:Name="L_Area" Content="" Margin="0,0,34.667,39" HorizontalAlignment="Right" Width="170" Height="28" VerticalAlignment="Bottom"/>
         <Button x:Name="BNextImage" Content="Następne" Margin="0,0,358.6,115" Click="BNext_Click" Background="{x:Null}" BorderBrush="{x:Null}" Height="43" Width="80" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
         <Button x:Name="BPreviousImage" Content="Poprzednie" Margin="462,0,0,115" Click="BPrevious_Click" Background="{x:Null}" BorderBrush="{x:Null}" Height="43" Width="80" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
         <Button x:Name="bZoom" Content="Powiększ" Margin="0,208,33.6,0" VerticalAlignment="Top" Click="BZoom_Click" Height="20" HorizontalAlignment="Right" Width="171"/>
         <Button x:Name="bCorrectArea" Content="Popraw ręcznie" Margin="0,233,34.6,0" VerticalAlignment="Top" Click="BCorrectArea_Click" Height="20" HorizontalAlignment="Right" Width="171"/>
+        <Slider x:Name="SBrightness" Margin="0,300,33.667,0" VerticalAlignment="Top" Height="30" Maximum="100" Minimum="-100" SmallChange="10" TickFrequency="-1" ValueChanged="SBrightness_ValueChanged" HorizontalAlignment="Right" Width="170"/>
+        <Label x:Name="Label1" Content="Jasność" HorizontalAlignment="Left" Margin="991,274,0,0" VerticalAlignment="Top" Width="63"/>
+
 
 
 
