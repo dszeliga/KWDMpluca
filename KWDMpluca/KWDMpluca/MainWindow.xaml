@@ -68,7 +68,5 @@
         <Label x:Name="Label1" Content="Jasność" HorizontalAlignment="Left" Margin="991,274,0,0" VerticalAlignment="Top" Width="63"/>
 
 
-
-
     </Grid>
 </Window>

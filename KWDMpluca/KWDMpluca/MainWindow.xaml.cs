@@ -30,6 +30,7 @@ namespace KWDMpluca
         List<string> files;
         List<string> filesNew = new List<string>();
         double pixelSpacing;
+        bool bPrintClicked = false;
         bool bDistanceClicked = false;
         bool bZoomClicked = false;
         bool bCorrectAreaClicked = false;
@@ -88,6 +89,7 @@ namespace KWDMpluca
 
         private void BPrint_Click(object sender, RoutedEventArgs e)
         {
+            bPrintClicked = true;
             CreateSaveBitmap(canvasSegm, "image.bmp");
 
             ImageSource dcm = new BitmapImage(new Uri("image.bmp", UriKind.Relative));
@@ -455,7 +457,9 @@ namespace KWDMpluca
                             canvasSegm.Children.Remove(MyImg2);
 
                         canvasSegm.Children.Add(MyImg2);
-                        canvasSegm.Children.Add(polygon);
+                        canvasSegm.Children.Add(polygon);                        
+                       
+                        CreateSaveBitmap(canvasSegm, "markedMask.bmp");
 
                         area = (Math.Abs(points.Take(points.Count - 1).Select((p, i) => (points[i + 1].X - p.X)
                           * (points[i + 1].Y + p.Y)).Sum() / 2)) * Math.Pow(pixelSpacing, 2);
@@ -486,6 +490,7 @@ namespace KWDMpluca
 
             }
         }
+
         private void Canvas_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             if (bZoomClicked)
@@ -619,6 +624,8 @@ namespace KWDMpluca
                         canvasSegm.Children.Remove(MyImg1);
                         canvasSegm.Children.Add(polygon);
 
+                       
+
                         area = (Math.Abs(points.Take(points.Count - 1).Select((p, i) => (points[i + 1].X - p.X)
                           * (points[i + 1].Y + p.Y)).Sum() / 2)) * Math.Pow(pixelSpacing, 2);
                         var xx = points.ToString();
@@ -680,8 +687,17 @@ namespace KWDMpluca
             // needed otherwise the image output is black
             canvas.Measure(new Size(width, height));
             canvas.Arrange(new Rect(new Size(width, height)));
+            var index = canvas.Children.IndexOf(polygon);
+            var mask = canvas.Children[index];
 
-            renderBitmap.Render(canvas);
+            if (bPrintClicked)
+            {
+                renderBitmap.Render(canvas);
+            }
+            else
+            {
+                renderBitmap.Render(mask);
+            }
 
             //JpegBitmapEncoder encoder = new JpegBitmapEncoder();
             PngBitmapEncoder encoder = new PngBitmapEncoder();
