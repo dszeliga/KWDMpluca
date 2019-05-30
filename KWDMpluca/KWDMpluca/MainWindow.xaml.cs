@@ -45,7 +45,6 @@ namespace KWDMpluca
         Image MyImg2 = new Image();
         Image MyImg1 = new Image();
         Image MyImg3 = new Image();
-
         SolidColorBrush redBrush = new SolidColorBrush();
 
         public MainWindow()
@@ -88,13 +87,12 @@ namespace KWDMpluca
 
         private void BPrint_Click(object sender, RoutedEventArgs e)
         {
-            CreateSaveBitmap(canvas, "image.bmp");
+            CreateSaveBitmap(canvasSegm, "image.bmp");
 
             ImageSource dcm = new BitmapImage(new Uri("image.bmp", UriKind.Relative));
             CreatePDF winPDF = new CreatePDF(dcm, T_Description.Text, area, distance);
             winPDF.Show();
         }
-
 
         private void BAdd_Click(object sender, RoutedEventArgs e)
         {
@@ -142,17 +140,6 @@ namespace KWDMpluca
             System.IO.Directory.CreateDirectory(data);
 
             status = gdcm.CompositeNetworkFunctions.CMove(Properties.Settings.Default.IP, ushort.Parse(Properties.Settings.Default.Port), query_new, 10104, Properties.Settings.Default.AET, Properties.Settings.Default.AEC, data);
-
-            //gdcm.Reader reader = new gdcm.Reader();
-            //reader.SetFileName(received);
-            //bool ret = reader.Read();
-            //gdcm.File file = reader.GetFile();
-
-            //gdcm.StringFilter filter = new gdcm.StringFilter();
-            //filter.SetFile(file);
-            //string patientName = filter.ToString(new gdcm.Tag(0x0010, 0x0010));
-            //string patientID = filter.ToString(new gdcm.Tag(0x0010, 0x0020));
-
 
             if (!status)
             {
@@ -223,13 +210,6 @@ namespace KWDMpluca
             MyImg3.Source= BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
 
             #endregion
-
-            //FileStream file = new FileStream("lena.bmp", FileMode.Open);
-            //ImageDicom.Source = BitmapFrame.Create(file, BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
-            //ImageBrush ib = new ImageBrush();
-            //ib.ImageSource = new BitmapImage(new Uri(, UriKind.RelativeOrAbsolute));
-
-            //MyImg.Source = BitmapFrame.Create(file, BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
 
             MyImg.Width = 280;
             MyImg.Height = 280;
@@ -315,6 +295,7 @@ namespace KWDMpluca
             if (numberOfImage == 0)
             {
                 MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
+                MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
                 string path = ".\\tlo.bmp";
                 IPrevious.Source = BitmapHelper.LoadBitmapImage(path);
                 INext.Source = BitmapHelper.LoadBitmapImage(numberOfImage + 1, bitmapList);
@@ -322,6 +303,7 @@ namespace KWDMpluca
             else if (numberOfImage < bitmapList.Count && e.OldValue > e.NewValue)
             {
                 MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
+                MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
                 IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
                 if (numberOfImage >= bitmapList.Count - 1)
                 {
@@ -336,6 +318,7 @@ namespace KWDMpluca
             else if (numberOfImage > 0 && e.OldValue < e.NewValue)
             {
                 MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
+                MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
                 IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
                 if (numberOfImage >= bitmapList.Count - 1)
                 {
@@ -349,6 +332,7 @@ namespace KWDMpluca
             else if (numberOfImage >= bitmapList.Count - 1)
             {
                 MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
+                MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
                 IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 2, bitmapList);
 
                 INext.Source = BitmapHelper.LoadBitmapImage(pathEmpty); //pusty
@@ -851,6 +835,7 @@ namespace KWDMpluca
                 MyImg2.Width = 280;
                 MyImg2.Height = 280;
                 MyImg2.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
+
                 if(canvasSegm.Children.Contains(MyImg2))
                     canvasSegm.Children.Remove(MyImg2);
 
@@ -862,6 +847,7 @@ namespace KWDMpluca
                 MyImg1.Height = 280;
 
                 MyImg1.Source = BitmapHelper.LoadBitmapImage(name);
+
                 if (canvasSegm.Children.Contains(MyImg1))
                     canvasSegm.Children.Remove(MyImg1);
 
@@ -880,12 +866,14 @@ namespace KWDMpluca
             if (numberOfImage > 0)
             {
                 MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
+                MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
                 IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
                 INext.Source = BitmapHelper.LoadBitmapImage(numberOfImage + 1, bitmapList);
             }
             else
             {
                 MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage + 1, bitmapList);
+                MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage + 1, bitmapList);
                 string path = ".\\tlo.bmp";
                 IPrevious.Source = BitmapHelper.LoadBitmapImage(path);
                 INext.Source = BitmapHelper.LoadBitmapImage(numberOfImage + 2, bitmapList);
@@ -909,12 +897,12 @@ namespace KWDMpluca
 
         private void BNext_Click(object sender, RoutedEventArgs e)
         {
-
             numberOfImage += 1;
 
             if (numberOfImage < bitmapList.Count)
             {
                 MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
+                MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
                 IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
                 if (numberOfImage == bitmapList.Count - 1)
                 {
@@ -929,6 +917,7 @@ namespace KWDMpluca
             else
             {
                 MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
+                MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList); 
                 IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 2, bitmapList);
 
                 INext.Source = BitmapHelper.LoadBitmapImage(pathEmpty); //pusty
