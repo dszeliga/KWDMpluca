@@ -32,6 +32,7 @@ namespace KWDMpluca
         double pixelSpacing;
         bool bDistanceClicked = false;
         bool bZoomClicked = false;
+        bool bCorrectAreaClicked = false;
         double[] pointsDistance = new double[4];
         double area, distance;
         int ind = 0;
@@ -554,7 +555,7 @@ namespace KWDMpluca
 
         private void CanvasSegm_MouseMove(object sender, MouseEventArgs e)
         {
-            if (rbDrawing.IsChecked == true)
+            if (bCorrectAreaClicked)
             {
                 if (e.LeftButton == MouseButtonState.Pressed)
                 {
@@ -581,7 +582,7 @@ namespace KWDMpluca
 
         private void CanvasSegm_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (rbDrawing.IsChecked == true)
+            if (bCorrectAreaClicked)
             {
                 if (e.LeftButton == MouseButtonState.Released)
                 {
@@ -878,6 +879,11 @@ namespace KWDMpluca
         private void canvasSegm_MouseWheel(object sender, MouseWheelEventArgs e)
         {
 
+        }
+
+        private void BCorrectArea_Click(object sender, RoutedEventArgs e)
+        {
+            bCorrectAreaClicked = true;
         }
 
         private void BNext_Click(object sender, RoutedEventArgs e)

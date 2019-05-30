@@ -63,6 +63,7 @@
         <Button x:Name="BNextImage" Content="Następne" Margin="0,0,358.6,115" Click="BNext_Click" Background="{x:Null}" BorderBrush="{x:Null}" Height="43" Width="80" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
         <Button x:Name="BPreviousImage" Content="Poprzednie" Margin="462,0,0,115" Click="BPrevious_Click" Background="{x:Null}" BorderBrush="{x:Null}" Height="43" Width="80" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
         <Button x:Name="bZoom" Content="Powiększ" Margin="0,208,33.6,0" VerticalAlignment="Top" Click="BZoom_Click" Height="20" HorizontalAlignment="Right" Width="171"/>
+        <Button x:Name="bCorrectArea" Content="Popraw ręcznie" Margin="0,233,34.6,0" VerticalAlignment="Top" Click="BCorrectArea_Click" Height="20" HorizontalAlignment="Right" Width="171"/>
 
 
 
