@@ -51,7 +51,9 @@
         <Image Name="IPrevious" HorizontalAlignment="Left" Margin="327,0,0,94" Width="108" Height="96" VerticalAlignment="Bottom"/>
         <Image Name="INext" Margin="0,0,239.667,102" HorizontalAlignment="Right" Width="96" Height="88" VerticalAlignment="Bottom"/>
         <Border BorderBrush="#FF4472C4" BorderThickness="1" Margin="0,94,239.667,0" HorizontalAlignment="Right" Width="300" Height="300" VerticalAlignment="Top">
-            <Canvas x:Name="canvas1" Margin="9.2,9.2,8.4,0" MouseDown="Canvas_MouseDown" MouseMove="Canvas_MouseMove" MouseUp="Canvas_MouseUp" Height="280" Width="280" VerticalAlignment="Top"/>
+            <ScrollViewer Name="sv2" HorizontalAlignment="Left" Height="291" Margin="8.2,8.2,9.4,9.4" VerticalAlignment="Top" Width="292" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
+                <Canvas x:Name="canvasSegm" Margin="9.2,9.2,8.4,0" MouseDown="CanvasSegm_MouseDown" MouseWheel="CanvasSegm_MouseWheel" MouseMove="CanvasSegm_MouseMove" MouseUp="CanvasSegm_MouseUp" Height="280" Width="280" VerticalAlignment="Top"/>
+            </ScrollViewer>
         </Border>
         <Button Content="Button" Visibility="Hidden" HorizontalAlignment="Left" Margin="458,0,0,99" Width="59" Height="56" VerticalAlignment="Bottom"/>
         <Button Content="Button" Visibility="Hidden" HorizontalAlignment="Right" Margin="0,0,361.667,99" Width="59" Height="56" VerticalAlignment="Bottom"/>

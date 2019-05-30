@@ -38,6 +38,13 @@ namespace KWDMpluca
         int numberOfImage = 0;
         string pathEmpty = ".\\tlo.bmp";
         string[] Poukladanesciezki;
+        Polygon polygon = new Polygon();
+        PointCollection pc = new PointCollection();
+        SolidColorBrush yellowGreenBrush = new SolidColorBrush();
+        Image MyImg2 = new Image();
+        Image MyImg1 = new Image();
+     
+        SolidColorBrush redBrush = new SolidColorBrush();
 
         public MainWindow()
         {
@@ -296,7 +303,7 @@ namespace KWDMpluca
             var slider = sender as Slider;
             slider.TickFrequency = 1;
             slider.Minimum = 0;
-            slider.Maximum = bitmapList.Count - 1;            
+            slider.Maximum = bitmapList.Count - 1;
 
             if (numberOfImage == 0)
             {
@@ -444,9 +451,9 @@ namespace KWDMpluca
                         canvas.Children.Add(line);
                     }
 
-                    area = (Math.Abs(points.Take(points.Count - 1).Select((p, i) => (points[i + 1].X - p.X) 
-                            * (points[i + 1].Y + p.Y)).Sum() / 2))*Math.Pow(pixelSpacing, 2);
-                    L_Area.Content = "Pole: " + Math.Round(area, 2)+"mm^2";
+                    area = (Math.Abs(points.Take(points.Count - 1).Select((p, i) => (points[i + 1].X - p.X)
+                            * (points[i + 1].Y + p.Y)).Sum() / 2)) * Math.Pow(pixelSpacing, 2);
+                    L_Area.Content = "Pole: " + Math.Round(area, 2) + "mm^2";
                 }
             }
 
@@ -473,10 +480,8 @@ namespace KWDMpluca
         {
             if (bZoomClicked)
             {
-                double height = canvas.ActualHeight;
-                double width = canvas.ActualWidth;
-                double scaleRate = 1.1;
-               
+                double scaleRate = 1.2;
+
                 if (e.Delta > 0)
                 {
                     st.ScaleX *= scaleRate;
@@ -489,9 +494,177 @@ namespace KWDMpluca
                 }
 
                 canvas.LayoutTransform = st;
+                canvasSegm.LayoutTransform = st;
             }
         }
 
+        private void CanvasSegm_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ButtonState == MouseButtonState.Pressed)
+            {
+                startPoint = e.GetPosition(canvasSegm);
+                currentPoint = startPoint;
+                points.Add(currentPoint);
+            }
+
+            if (bDistanceClicked)
+            {
+                if (ind < 4)
+                {
+
+                    if (e.LeftButton == MouseButtonState.Pressed)
+                    {
+                        Ellipse ellipse = new Ellipse();
+
+                        ellipse.Stroke = SystemColors.WindowFrameBrush;
+                        ellipse.Height = 5;
+                        ellipse.Width = 5;
+                        SolidColorBrush greenBrush = new SolidColorBrush();
+                        greenBrush.Color = Colors.Red;
+                        ellipse.Fill = greenBrush;
+                        ellipse.Margin = new Thickness(currentPoint.X, currentPoint.Y, 0, 0);
+                        pointsDistance[ind] = currentPoint.X;
+                        pointsDistance[ind + 1] = currentPoint.Y;
+                        canvasSegm.Children.Add(ellipse);
+                        ind += 2;
+                    }
+
+                    if (ind == 4)
+                    {
+                        distance = (Math.Sqrt((Math.Pow(pointsDistance[0] - pointsDistance[2], 2) + Math.Pow(pointsDistance[1] - pointsDistance[3], 2)))) * pixelSpacing;
+                        L_Distance.Content = "Długość: " + Math.Round(distance, 2) + "mm";
+                    }
+
+                }
+                else
+                {
+                    var length = canvasSegm.Children.Count;
+                    for (int i = length - 1; i >= length - 2; i--)
+                    {
+                        canvasSegm.Children.RemoveAt(i);
+                    }
+
+                    ind = 0;
+
+                }
+            }
+            //currentPoint = e.GetPosition(this);
+            //currentPoint = e.GetPosition(canvas);
+        }
+
+        private void CanvasSegm_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (rbDrawing.IsChecked == true)
+            {
+                if (e.LeftButton == MouseButtonState.Pressed)
+                {
+
+                    Line line = new Line();
+                    line.Stroke = SystemColors.WindowFrameBrush;
+                    line.X1 = currentPoint.X;
+                    line.Y1 = currentPoint.Y;
+                    line.X2 = e.GetPosition(canvasSegm).X;
+                    line.Y2 = e.GetPosition(canvasSegm).Y;
+                   
+                    redBrush.Color = Colors.Red;
+
+                    line.Stroke = redBrush;
+
+                    currentPoint = e.GetPosition(canvasSegm);
+
+                    points.Add(currentPoint);                    
+                    canvasSegm.Children.Add(line);
+                }
+            }
+
+        }
+
+        private void CanvasSegm_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (rbDrawing.IsChecked == true)
+            {
+                if (e.LeftButton == MouseButtonState.Released)
+                {
+                    if (currentPoint != startPoint)
+                    {
+
+                        yellowGreenBrush.Color = Colors.YellowGreen;
+
+                        var jjj = canvasSegm.Children.Contains(polygon);
+                        if (canvasSegm.Children.Contains(polygon))
+                        {
+                            canvasSegm.Children.Remove(polygon);
+                            polygon.Points.Clear();
+                            pc.Clear();
+
+                           
+                        }
+
+                        foreach (var p in points)
+                        {
+                            pc.Add(p);
+                        }
+
+                        polygon.Points = pc;
+                        polygon.Stroke = yellowGreenBrush;
+                        polygon.Fill = yellowGreenBrush;
+
+                        canvasSegm.Children.Remove(MyImg1);
+                        canvasSegm.Children.Add(polygon);
+
+                        area = (Math.Abs(points.Take(points.Count - 1).Select((p, i) => (points[i + 1].X - p.X)
+                          * (points[i + 1].Y + p.Y)).Sum() / 2)) * Math.Pow(pixelSpacing, 2);
+                        var xx = points.ToString();
+                        L_Area.Content = "Pole: " + Math.Round(area, 2) + "mm^2";
+
+                        points.Clear();
+
+                    }
+                    
+                  
+                }
+            }
+
+            else if (rbSegmentation.IsChecked == true)
+            {
+                if (e.LeftButton == MouseButtonState.Released)
+                {
+                    Ellipse ellipse = new Ellipse();
+
+                    ellipse.Stroke = SystemColors.WindowFrameBrush;
+                    ellipse.Height = 5;
+                    ellipse.Width = 5;
+                    SolidColorBrush greenBrush = new SolidColorBrush();
+                    greenBrush.Color = Colors.Green;
+                    ellipse.Fill = greenBrush;
+                    ellipse.Margin = new Thickness(currentPoint.X, currentPoint.Y, 0, 0);
+
+                    canvasSegm.Children.Add(ellipse);
+                }
+            }
+
+        }
+        private void CanvasSegm_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (bZoomClicked)
+            {
+                double scaleRate = 1.2;
+
+                if (e.Delta > 0)
+                {
+                    st.ScaleX *= scaleRate;
+                    st.ScaleY *= scaleRate;
+                }
+                else
+                {
+                    st.ScaleX /= scaleRate;
+                    st.ScaleY /= scaleRate;
+                }
+
+                canvas.LayoutTransform = st;
+                canvasSegm.LayoutTransform = st;
+            }
+        }
         private void CreateSaveBitmap(Canvas canvas, string filename)
         {
             int height = (int)MyImg.Width;
@@ -600,26 +773,6 @@ namespace KWDMpluca
                 this.Close();
         }
 
-        //private void Button_Click(object sender, RoutedEventArgs e)
-        //{
-        //    gdcm.File file;
-
-        //    gdcm.Reader reader = new gdcm.Reader();
-        //    string a= @"C:\PACS\BazaKWDM\RIDERLungCT\RIDER-5p\1\1\000000.dcm";
-        //    reader.SetFileName(a);
-        //    file = reader.GetFile();
-
-        //    gdcm.ImageReader aaa = new gdcm.ImageReader();
-        //    aaa.SetFileName(a);
-
-        //    //gdcm.FilenamesType b = aaa;
-        //    //bool stat = gdcm.CompositeNetworkFunctions.CStore(Properties.Settings.Default.IP, ushort.Parse(Properties.Settings.Default.Port), b,Properties.Settings.Default.AET, Properties.Settings.Default.AEC);
-        //    //bool status = gdcm.CompositeNetworkFunctions.CMove(Properties.Settings.Default.IP, ushort.Parse(Properties.Settings.Default.Port), 10104, Properties.Settings.Default.AET, Properties.Settings.Default.AEC, data);
-        //    int c = 0;
-        //}
-
-        //GraphicsPath GP = null;
-        //List<Point> points = new List<Point>();
         private void RbSegmentation_Checked(object sender, RoutedEventArgs e)
         {
             rbDrawing.IsChecked = false;
@@ -673,19 +826,19 @@ namespace KWDMpluca
                     }
                 }
 
-                Image MyImg2 = new Image();
+
                 MyImg2.Width = 280;
                 MyImg2.Height = 280;
                 MyImg2.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
-                canvas1.Children.Add(MyImg2);
+                canvasSegm.Children.Add(MyImg2);
 
                 X[0].Save(name);
-                Image MyImg1 = new Image();
+
                 MyImg1.Width = 280;
                 MyImg1.Height = 280;
 
                 MyImg1.Source = BitmapHelper.LoadBitmapImage(name);
-                canvas1.Children.Add(MyImg1);
+                canvasSegm.Children.Add(MyImg1);
             }
         }
 
@@ -715,9 +868,16 @@ namespace KWDMpluca
 
         private void BZoom_Click(object sender, RoutedEventArgs e)
         {
-            bZoomClicked = true;            
+            bZoomClicked = true;
             sv.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
             sv.HorizontalScrollBarVisibility = ScrollBarVisibility.Visible;
+            sv2.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
+            sv2.HorizontalScrollBarVisibility = ScrollBarVisibility.Visible;
+        }
+
+        private void canvasSegm_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+
         }
 
         private void BNext_Click(object sender, RoutedEventArgs e)
@@ -749,25 +909,5 @@ namespace KWDMpluca
             }
         }
     }
-
-    //GraphicsPath GP = null;
-    //List<Point> points = new List<Point>();
-
-    //private void ImageDicom_MouseDown(object sender, MouseEventArgs e)
-    //{
-    //    points.Clear();
-    ////    points.Add(e.Lo);
-    ////}
-
-    //private void ImageDicom_MouseUp(object sender, MouseEventArgs e)
-    //{
-    //    GP = new GraphicsPath();
-    //    //GP.AddClosedCurve(points.ToArray());
-    //}
-
-    //private void ImageDicom_MouseMove(object sender, MouseEventArgs e)
-    //{
-    //    points.Add(e.Location);
-    //}
 }
 
