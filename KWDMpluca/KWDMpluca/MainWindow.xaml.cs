@@ -44,7 +44,8 @@ namespace KWDMpluca
         SolidColorBrush yellowGreenBrush = new SolidColorBrush();
         Image MyImg2 = new Image();
         Image MyImg1 = new Image();
-     
+        Image MyImg3 = new Image();
+
         SolidColorBrush redBrush = new SolidColorBrush();
 
         public MainWindow()
@@ -219,7 +220,7 @@ namespace KWDMpluca
 
             bitmapList.AddRange(System.IO.Directory.EnumerateFiles(data, "*.jpg"));
             MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
-
+            MyImg3.Source= BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
 
             #endregion
 
@@ -232,15 +233,20 @@ namespace KWDMpluca
 
             MyImg.Width = 280;
             MyImg.Height = 280;
+            MyImg3.Width = 280;
+            MyImg3.Height = 280;
 
             if (canvas.Children.Count >= 1)
             {
                 canvas.Children.RemoveRange(0, canvas.Children.Count);
+                canvasSegm.Children.RemoveRange(0, canvasSegm.Children.Count);
+                canvasSegm.Children.Add(MyImg3);
                 canvas.Children.Add(MyImg);
             }
             else
             {
                 canvas.Children.Add(MyImg);
+                canvasSegm.Children.Add(MyImg3);
             }
 
             INext.Source = BitmapHelper.LoadBitmapImage(pathEmpty);
@@ -441,41 +447,58 @@ namespace KWDMpluca
                 {
                     if (currentPoint != startPoint)
                     {
-                        Line line = new Line();
+                        yellowGreenBrush.Color = Colors.YellowGreen;
 
-                        line.Stroke = SystemColors.WindowFrameBrush;
-                        line.X1 = currentPoint.X;
-                        line.Y1 = currentPoint.Y;
-                        line.X2 = startPoint.X;
-                        line.Y2 = startPoint.Y;
+                        if (canvasSegm.Children.Contains(polygon))
+                        {
+                            canvasSegm.Children.Remove(polygon);
+                            polygon.Points.Clear();
+                            pc.Clear();
+                        }
 
-                        canvas.Children.Add(line);
+                        foreach (var p in points)
+                        {
+                            pc.Add(p);
+                        }
+
+                        polygon.Points = pc;
+                        polygon.Stroke = yellowGreenBrush;
+                        polygon.Fill = yellowGreenBrush;
+
+                        if (canvasSegm.Children.Contains(MyImg2))
+                            canvasSegm.Children.Remove(MyImg2);
+
+                        canvasSegm.Children.Add(MyImg2);
+                        canvasSegm.Children.Add(polygon);
+
+                        area = (Math.Abs(points.Take(points.Count - 1).Select((p, i) => (points[i + 1].X - p.X)
+                          * (points[i + 1].Y + p.Y)).Sum() / 2)) * Math.Pow(pixelSpacing, 2);
+                        var xx = points.ToString();
+                        L_Area.Content = "Pole: " + Math.Round(area, 2) + "mm^2";
+
+                        points.Clear();
                     }
-
-                    area = (Math.Abs(points.Take(points.Count - 1).Select((p, i) => (points[i + 1].X - p.X)
-                            * (points[i + 1].Y + p.Y)).Sum() / 2)) * Math.Pow(pixelSpacing, 2);
-                    L_Area.Content = "Pole: " + Math.Round(area, 2) + "mm^2";
                 }
-            }
 
-            else if (rbSegmentation.IsChecked == true)
-            {
-                if (e.LeftButton == MouseButtonState.Released)
+                else if (rbSegmentation.IsChecked == true)
                 {
-                    Ellipse ellipse = new Ellipse();
+                    if (e.LeftButton == MouseButtonState.Released)
+                    {
+                        Ellipse ellipse = new Ellipse();
 
-                    ellipse.Stroke = SystemColors.WindowFrameBrush;
-                    ellipse.Height = 5;
-                    ellipse.Width = 5;
-                    SolidColorBrush greenBrush = new SolidColorBrush();
-                    greenBrush.Color = Colors.Green;
-                    ellipse.Fill = greenBrush;
-                    ellipse.Margin = new Thickness(currentPoint.X, currentPoint.Y, 0, 0);
+                        ellipse.Stroke = SystemColors.WindowFrameBrush;
+                        ellipse.Height = 5;
+                        ellipse.Width = 5;
+                        SolidColorBrush greenBrush = new SolidColorBrush();
+                        greenBrush.Color = Colors.Green;
+                        ellipse.Fill = greenBrush;
+                        ellipse.Margin = new Thickness(currentPoint.X, currentPoint.Y, 0, 0);
 
-                    canvas.Children.Add(ellipse);
+                        canvas.Children.Add(ellipse);
+                    }
                 }
-            }
 
+            }
         }
         private void Canvas_MouseWheel(object sender, MouseWheelEventArgs e)
         {
@@ -590,15 +613,12 @@ namespace KWDMpluca
                     {
 
                         yellowGreenBrush.Color = Colors.YellowGreen;
-
-                        var jjj = canvasSegm.Children.Contains(polygon);
+                       
                         if (canvasSegm.Children.Contains(polygon))
                         {
                             canvasSegm.Children.Remove(polygon);
                             polygon.Points.Clear();
-                            pc.Clear();
-
-                           
+                            pc.Clear();                           
                         }
 
                         foreach (var p in points)
@@ -831,6 +851,9 @@ namespace KWDMpluca
                 MyImg2.Width = 280;
                 MyImg2.Height = 280;
                 MyImg2.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
+                if(canvasSegm.Children.Contains(MyImg2))
+                    canvasSegm.Children.Remove(MyImg2);
+
                 canvasSegm.Children.Add(MyImg2);
 
                 X[0].Save(name);
@@ -839,6 +862,9 @@ namespace KWDMpluca
                 MyImg1.Height = 280;
 
                 MyImg1.Source = BitmapHelper.LoadBitmapImage(name);
+                if (canvasSegm.Children.Contains(MyImg1))
+                    canvasSegm.Children.Remove(MyImg1);
+
                 canvasSegm.Children.Add(MyImg1);
             }
         }
@@ -876,12 +902,7 @@ namespace KWDMpluca
             sv2.HorizontalScrollBarVisibility = ScrollBarVisibility.Visible;
         }
 
-        private void canvasSegm_MouseWheel(object sender, MouseWheelEventArgs e)
-        {
-
-        }
-
-        private void BCorrectArea_Click(object sender, RoutedEventArgs e)
+       private void BCorrectArea_Click(object sender, RoutedEventArgs e)
         {
             bCorrectAreaClicked = true;
         }
