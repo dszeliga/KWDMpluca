@@ -858,10 +858,20 @@ namespace KWDMpluca
                         else
                         {
                             X[0].SetPixel(i, j, System.Drawing.Color.Transparent);
-                        }
+                        }                        
                     }
                 }
 
+                if (SimpleITKHelper.sizeOfMask > 2000)
+                {
+                    for (int i = 0; i < X[0].Height; i++)
+                    {
+                        for (int j = 0; j < X[0].Width; j++)
+                        {
+                            X[0].SetPixel(i, j, System.Drawing.Color.Transparent);
+                        }
+                    }
+                        }
 
                 MyImg2.Width = 280;
                 MyImg2.Height = 280;
