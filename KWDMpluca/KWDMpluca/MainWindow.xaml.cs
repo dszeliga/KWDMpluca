@@ -300,6 +300,7 @@ namespace KWDMpluca
             {
                 MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
                 MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
+                Segmentation();
                 string path = ".\\tlo.bmp";
                 IPrevious.Source = BitmapHelper.LoadBitmapImage(path);
                 INext.Source = BitmapHelper.LoadBitmapImage(numberOfImage + 1, bitmapList);
@@ -308,6 +309,7 @@ namespace KWDMpluca
             {
                 MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
                 MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
+                Segmentation();
                 IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
                 if (numberOfImage >= bitmapList.Count - 1)
                 {
@@ -323,6 +325,7 @@ namespace KWDMpluca
             {
                 MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
                 MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
+                Segmentation();
                 IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
                 if (numberOfImage >= bitmapList.Count - 1)
                 {
@@ -337,6 +340,7 @@ namespace KWDMpluca
             {
                 MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
                 MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
+                Segmentation();
                 IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 2, bitmapList);
 
                 INext.Source = BitmapHelper.LoadBitmapImage(pathEmpty); //pusty
@@ -458,8 +462,9 @@ namespace KWDMpluca
 
                         canvasSegm.Children.Add(MyImg2);
                         canvasSegm.Children.Add(polygon);                        
-                       
-                        CreateSaveBitmap(canvasSegm, "markedMask.bmp");
+                       string path = SimpleITKHelper.GetFolderName(MyImg.Source) + "markedMask" + SimpleITKHelper.GetDicomFileName(MyImg.Source) + ".bmp";
+
+                        CreateSaveBitmap(canvasSegm, path);
 
                         area = (Math.Abs(points.Take(points.Count - 1).Select((p, i) => (points[i + 1].X - p.X)
                           * (points[i + 1].Y + p.Y)).Sum() / 2)) * Math.Pow(pixelSpacing, 2);
@@ -624,7 +629,10 @@ namespace KWDMpluca
                         canvasSegm.Children.Remove(MyImg1);
                         canvasSegm.Children.Add(polygon);
 
-                       
+                        string path = SimpleITKHelper.GetFolderName(MyImg.Source) + "markedMask" + SimpleITKHelper.GetDicomFileName(MyImg.Source) + ".bmp";
+
+                        CreateSaveBitmap(canvasSegm, path);
+
 
                         area = (Math.Abs(points.Take(points.Count - 1).Select((p, i) => (points[i + 1].X - p.X)
                           * (points[i + 1].Y + p.Y)).Sum() / 2)) * Math.Pow(pixelSpacing, 2);
@@ -808,6 +816,11 @@ namespace KWDMpluca
 
         private void BSegmentation_Click(object sender, RoutedEventArgs e)
         {
+            Segmentation();
+        }
+
+        private void Segmentation()
+        {
             if (rbSegmentation.IsChecked == true)
             {
                 string imagePath = SimpleITKHelper.GetFolderName(MyImg.Source) + "segmentedMask" + SimpleITKHelper.GetDicomFileName(MyImg.Source) + ".dcm";
@@ -854,7 +867,7 @@ namespace KWDMpluca
                 MyImg2.Height = 280;
                 MyImg2.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
 
-                if(canvasSegm.Children.Contains(MyImg2))
+                if (canvasSegm.Children.Contains(MyImg2))
                     canvasSegm.Children.Remove(MyImg2);
 
                 canvasSegm.Children.Add(MyImg2);
@@ -865,18 +878,19 @@ namespace KWDMpluca
                 MyImg1.Height = 280;
 
                 MyImg1.Source = BitmapHelper.LoadBitmapImage(name);
-//<<<<<<< origin/segmentacja
+                //<<<<<<< origin/segmentacja
 
                 if (canvasSegm.Children.Contains(MyImg1))
                     canvasSegm.Children.Remove(MyImg1);
 
-//=======
+                //=======
                 AllMasks[numberOfImage] = name;
-//>>>>>>> local
+                //>>>>>>> local
                 canvasSegm.Children.Add(MyImg1);
             }
         }
 
+           
         private void BDistance_Click(object sender, RoutedEventArgs e)
         {
             bDistanceClicked = true;
@@ -888,7 +902,8 @@ namespace KWDMpluca
             if (numberOfImage > 0)
             {
                 MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
-                MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
+                MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);                
+                Segmentation();
                 IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
                 INext.Source = BitmapHelper.LoadBitmapImage(numberOfImage + 1, bitmapList);
             }
@@ -896,6 +911,10 @@ namespace KWDMpluca
             {
                 MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage + 1, bitmapList);
                 MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage + 1, bitmapList);
+
+                if(numberOfImage!=-1)
+                    Segmentation();
+
                 string path = ".\\tlo.bmp";
                 IPrevious.Source = BitmapHelper.LoadBitmapImage(path);
                 INext.Source = BitmapHelper.LoadBitmapImage(numberOfImage + 2, bitmapList);
@@ -1037,6 +1056,7 @@ namespace KWDMpluca
             {
                 MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
                 MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
+                Segmentation();
                 IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
                 if (numberOfImage == bitmapList.Count - 1)
                 {
@@ -1051,9 +1071,12 @@ namespace KWDMpluca
             else
             {
                 MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
-                MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList); 
-                IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 2, bitmapList);
+                MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
 
+                if(numberOfImage < bitmapList.Count)
+                    Segmentation();
+
+                IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 2, bitmapList);
                 INext.Source = BitmapHelper.LoadBitmapImage(pathEmpty); //pusty
                 numberOfImage = bitmapList.Count - 1;
             }
