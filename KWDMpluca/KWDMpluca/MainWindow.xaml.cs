@@ -906,7 +906,10 @@ namespace KWDMpluca
             numberOfImage -= 1;
             if (numberOfImage > 0)
             {
-                MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
+                ImageBitmap = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
+                MyImg.Source = ImageBitmap;
+                ChangeContrast();
+                ChangeBrightness();
                 MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);                
                 Segmentation();
                 IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
@@ -914,7 +917,10 @@ namespace KWDMpluca
             }
             else
             {
-                MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage + 1, bitmapList);
+                ImageBitmap = BitmapHelper.LoadBitmapImage(numberOfImage + 1, bitmapList);
+                MyImg.Source = ImageBitmap;
+                ChangeContrast();
+                ChangeBrightness();
                 MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage + 1, bitmapList);
 
                 if(numberOfImage!=-1)
@@ -1088,6 +1094,8 @@ namespace KWDMpluca
             {
                 ImageBitmap = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
                 MyImg.Source = ImageBitmap;
+                ChangeContrast();
+                ChangeBrightness();
                 MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
                 Segmentation();
                 IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
@@ -1105,6 +1113,8 @@ namespace KWDMpluca
             {
                 ImageBitmap = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
                 MyImg.Source = ImageBitmap;
+                ChangeContrast();
+                ChangeBrightness();
                 MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
 
                 if(numberOfImage < bitmapList.Count)
