@@ -66,6 +66,8 @@
         <Button x:Name="bCorrectArea" Content="Popraw ręcznie" Margin="0,233,34.6,0" VerticalAlignment="Top" Click="BCorrectArea_Click" Height="20" HorizontalAlignment="Right" Width="171"/>
         <Slider x:Name="SBrightness" Margin="0,300,33.667,0" VerticalAlignment="Top" Height="30" Maximum="100" Minimum="-100" SmallChange="10" TickFrequency="-1" ValueChanged="SBrightness_ValueChanged" HorizontalAlignment="Right" Width="170"/>
         <Label x:Name="Label1" Content="Jasność" Margin="0,274,140.667,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="63"/>
+        <Label Content="Kontrast" Margin="0,335,140.667,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="63"/>
+        <Slider x:Name="SContrast" Margin="0,366,33.667,0" VerticalAlignment="Top" Height="28" HorizontalAlignment="Right" Width="170" Maximum="100" Minimum="-100" SmallChange="10" ValueChanged="SContrast_ValueChanged"/>
 
 
     </Grid>
