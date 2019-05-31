@@ -37,10 +37,10 @@
         <Label x:Name="LCheck" Content="" HorizontalAlignment="Left" Height="28" Margin="169,61,0,0" VerticalAlignment="Top" Width="123"/>
         <Button x:Name="BAdd" Content="Dodawanie" HorizontalAlignment="Left" Margin="52,13,0,0" VerticalAlignment="Top" Width="112" Height="43" Click="BAdd_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
         <Button x:Name="BSearch" Content="Szukanie" Margin="198,13,0,0" Click="BSearch_Click" Background="{x:Null}" BorderBrush="{x:Null}" Height="43" Width="102" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-        <Button x:Name="BPrint" Content="Drukowanie" Margin="612,0,501.6,115" Click="BPrint_Click" Background="{x:Null}" BorderBrush="{x:Null}" Height="43" VerticalAlignment="Bottom"/>
+        <Button x:Name="BPrint" Content="Drukowanie" Margin="605,0,508.667,116" Click="BPrint_Click" Background="{x:Null}" BorderBrush="{x:Null}" Height="43" VerticalAlignment="Bottom"/>
         <Image x:Name="AppName" Height="46" Margin="419,10,430.6,0" VerticalAlignment="Top" Stretch="Fill" Source="image/AppName.png" />
         <Button x:Name="BReload" Content="R" Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Left" Height="30" Margin="269,193,0,0" VerticalAlignment="Top" Width="30" Click="BReload_Click"/>
-        <Slider Margin="391,0,281.667,30" ValueChanged="Slider_ValueChanged" Height="17" VerticalAlignment="Bottom"/>
+        <Slider Margin="391,0,281.667,30" ValueChanged="Slider_ValueChanged" Height="37" VerticalAlignment="Bottom"/>
         <TextBox x:Name="T_Description" IsReadOnly="True" TextWrapping="Wrap" Text="" Margin="65,260,0,0" RenderTransformOrigin="0.46,0.485" AcceptsReturn="True" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" Width="227" Height="290" VerticalAlignment="Top"/>
         <Button x:Name="BEditDescription" Content="Dodaj/edytuj opis" HorizontalAlignment="Left" Margin="108,555,0,0" VerticalAlignment="Top" Width="121" Height="30" Click="BEditDescription_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
         <Button x:Name="BDescriptionAnuluj" Visibility="Hidden" Content="Anuluj" HorizontalAlignment="Left" Margin="200,493,0,0" VerticalAlignment="Top" Width="69" Height="30" Click="BDescriptionAnuluj_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
@@ -48,8 +48,8 @@
         <Button x:Name="bSegmentation" Content="Segmentuj" Margin="0,132,34.6,0" VerticalAlignment="Top" Click="BSegmentation_Click" Height="20" HorizontalAlignment="Right" Width="171"/>
         <RadioButton x:Name="rbSegmentation" Content="Segmentacja" Margin="0,110,116.6,0" VerticalAlignment="Top" Checked="RbSegmentation_Checked" Height="17" HorizontalAlignment="Right" Width="89"/>
         <RadioButton x:Name="rbDrawing" Content="Zaznaczanie" Margin="0,112,34.6,0" Checked="RbDrawing_Checked" HorizontalAlignment="Right" Width="83" Height="15" VerticalAlignment="Top"/>
-        <Image Name="IPrevious" HorizontalAlignment="Left" Margin="327,0,0,94" Width="108" Height="96" VerticalAlignment="Bottom"/>
-        <Image Name="INext" Margin="0,0,239.667,102" HorizontalAlignment="Right" Width="96" Height="88" VerticalAlignment="Bottom"/>
+        <Image Name="IPrevious" HorizontalAlignment="Left" Margin="327,0,0,99" Width="108" Height="96" VerticalAlignment="Bottom"/>
+        <Image Name="INext" Margin="0,0,247.667,94" HorizontalAlignment="Right" Width="96" Height="88" VerticalAlignment="Bottom"/>
         <Border BorderBrush="#FF4472C4" BorderThickness="1" Margin="0,94,239.667,0" HorizontalAlignment="Right" Width="300" Height="300" VerticalAlignment="Top">
             <ScrollViewer Name="sv2" HorizontalAlignment="Left" Height="291" Margin="8.2,8.2,9.4,9.4" VerticalAlignment="Top" Width="292" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
                 <Canvas x:Name="canvasSegm" Margin="9.2,9.2,8.4,0" MouseDown="CanvasSegm_MouseDown" MouseWheel="CanvasSegm_MouseWheel" MouseMove="CanvasSegm_MouseMove" MouseUp="CanvasSegm_MouseUp" Height="280" Width="280" VerticalAlignment="Top"/>
@@ -60,8 +60,8 @@
         <Button x:Name="bDistance" Content="Zmierz odcinek" Margin="0,175,33.6,0" VerticalAlignment="Top" Click="BDistance_Click" Height="20" HorizontalAlignment="Right" Width="171"/>
         <Label x:Name="L_Distance" Content="" Margin="0,0,34.667,94" HorizontalAlignment="Right" Width="170" Height="28" VerticalAlignment="Bottom"/>
         <Label x:Name="L_Area" Content="" Margin="0,0,34.667,39" HorizontalAlignment="Right" Width="170" Height="28" VerticalAlignment="Bottom"/>
-        <Button x:Name="BNextImage" Content="Następne" Margin="0,0,358.6,115" Click="BNext_Click" Background="{x:Null}" BorderBrush="{x:Null}" Height="43" Width="80" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
-        <Button x:Name="BPreviousImage" Content="Poprzednie" Margin="462,0,0,115" Click="BPrevious_Click" Background="{x:Null}" BorderBrush="{x:Null}" Height="43" Width="80" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
+        <Button x:Name="BNextImage" Content="Następne" Margin="0,0,343.667,113" Click="BNext_Click" Background="{x:Null}" BorderBrush="{x:Null}" Height="50" Width="140" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
+        <Button x:Name="BPreviousImage" Content="Poprzednie" Margin="440,0,0,113" Click="BPrevious_Click" Background="{x:Null}" BorderBrush="{x:Null}" Height="50" Width="140" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
         <Button x:Name="bZoom" Content="Powiększ" Margin="0,208,33.6,0" VerticalAlignment="Top" Click="BZoom_Click" Height="20" HorizontalAlignment="Right" Width="171"/>
         <Button x:Name="bCorrectArea" Content="Popraw ręcznie" Margin="0,233,34.6,0" VerticalAlignment="Top" Click="BCorrectArea_Click" Height="20" HorizontalAlignment="Right" Width="171"/>
         <Slider x:Name="SBrightness" Margin="0,300,33.667,0" VerticalAlignment="Top" Height="30" Maximum="100" Minimum="-100" SmallChange="10" TickFrequency="-1" ValueChanged="SBrightness_ValueChanged" HorizontalAlignment="Right" Width="170"/>

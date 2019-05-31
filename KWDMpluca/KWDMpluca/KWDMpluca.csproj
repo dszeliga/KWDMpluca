@@ -194,5 +194,9 @@
     <Resource Include="image\SelectFolder.png" />
     <Resource Include="image\SendToPACS.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\NextImage.png" />
+    <Resource Include="image\PreviousImage.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

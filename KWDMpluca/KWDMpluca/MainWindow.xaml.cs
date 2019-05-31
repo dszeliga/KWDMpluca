@@ -60,6 +60,8 @@ namespace KWDMpluca
             InsertImage("image/Settings.png", BSettings);
             InsertImage("image/print.png", BPrint);
             InsertImage("image/RefreshIcon.png", BReload);
+            InsertImage("image/NextImage.png", BNextImage);
+            InsertImage("image/PreviousImage.png", BPreviousImage);
             //patientsListBox.ItemsSource = PatientHelper.GetPatients(Properties.Settings.Default.IP, ushort.Parse(Properties.Settings.Default.Port), Properties.Settings.Default.AET, Properties.Settings.Default.AEC);
         }
         public void InsertImage(string path, Button buttonName)
