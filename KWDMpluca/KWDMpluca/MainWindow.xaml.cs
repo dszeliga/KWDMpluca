@@ -48,7 +48,7 @@ namespace KWDMpluca
         Image MyImg3 = new Image();
         SolidColorBrush redBrush = new SolidColorBrush();
         string[] AllMasks;
-
+        BitmapImage ImageBitmap;
         public MainWindow()
         {
             InitializeComponent();
@@ -210,7 +210,8 @@ namespace KWDMpluca
                 bitmapList.RemoveRange(0, bitmapList.Count);
 
             bitmapList.AddRange(System.IO.Directory.EnumerateFiles(data, "*.jpg"));
-            MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
+            ImageBitmap = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
+            MyImg.Source = ImageBitmap;
             MyImg3.Source= BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
 
             #endregion
@@ -298,7 +299,8 @@ namespace KWDMpluca
 
             if (numberOfImage == 0)
             {
-                MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
+                ImageBitmap = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
+                MyImg.Source = ImageBitmap;
                 MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
                 Segmentation();
                 string path = ".\\tlo.bmp";
@@ -307,7 +309,8 @@ namespace KWDMpluca
             }
             else if (numberOfImage < bitmapList.Count && e.OldValue > e.NewValue)
             {
-                MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
+                ImageBitmap = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
+                MyImg.Source = ImageBitmap;
                 MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
                 Segmentation();
                 IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
@@ -323,7 +326,8 @@ namespace KWDMpluca
             }
             else if (numberOfImage > 0 && e.OldValue < e.NewValue)
             {
-                MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
+                ImageBitmap = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
+                MyImg.Source = ImageBitmap;
                 MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
                 Segmentation();
                 IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
@@ -338,7 +342,8 @@ namespace KWDMpluca
             }
             else if (numberOfImage >= bitmapList.Count - 1)
             {
-                MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
+                ImageBitmap = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
+                MyImg.Source = ImageBitmap;
                 MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
                 Segmentation();
                 IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 2, bitmapList);
@@ -941,11 +946,28 @@ namespace KWDMpluca
             ChangeBrightness();
         }
 
+        public BitmapImage ConvertWriteableBitmapToBitmapImage(WriteableBitmap wbm)
+        {
+            BitmapImage bmImage = new BitmapImage();
+            using (MemoryStream stream = new MemoryStream())
+            {
+                PngBitmapEncoder encoder = new PngBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create(wbm));
+                encoder.Save(stream);
+                bmImage.BeginInit();
+                bmImage.CacheOption = BitmapCacheOption.OnLoad;
+                bmImage.StreamSource = stream;
+                bmImage.EndInit();
+                bmImage.Freeze();
+            }
+            return bmImage;
+        }
+
         private void ChangeBrightness()
         {
             changeValue = Math.Round(SBrightness.Value);
 
-            BitmapImage img = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
+            BitmapImage img = ImageBitmap;
 
             double rows = img.PixelHeight;
             double columns = img.PixelWidth;
@@ -984,7 +1006,8 @@ namespace KWDMpluca
                     wbitmap.WritePixels(rect, pixels, stride, 0);
                 }
             }
-            MyImg.Source = wbitmap;
+            ImageBitmap = ConvertWriteableBitmapToBitmapImage(wbitmap);
+            MyImg.Source = ImageBitmap;
         }
 
         double changeContastValue = 0;
@@ -997,7 +1020,7 @@ namespace KWDMpluca
         {
             changeContastValue = Math.Round(SContrast.Value);
 
-            BitmapImage img = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
+            BitmapImage img = ImageBitmap;
 
             double rows = img.PixelHeight;
             double columns = img.PixelWidth;
@@ -1045,7 +1068,16 @@ namespace KWDMpluca
                     wbitmap.WritePixels(rect, pixels, stride, 0);
                 }
             }
-            MyImg.Source = wbitmap;
+            ImageBitmap = ConvertWriteableBitmapToBitmapImage(wbitmap);
+            MyImg.Source = ImageBitmap;
+        }
+
+        private void BResetImage_Click(object sender, RoutedEventArgs e)
+        {
+            ImageBitmap = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
+            MyImg.Source = ImageBitmap;
+            SContrast.Value = 0;
+            SBrightness.Value = 0;
         }
 
         private void BNext_Click(object sender, RoutedEventArgs e)
@@ -1054,7 +1086,8 @@ namespace KWDMpluca
 
             if (numberOfImage < bitmapList.Count)
             {
-                MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
+                ImageBitmap = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
+                MyImg.Source = ImageBitmap;
                 MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
                 Segmentation();
                 IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
@@ -1070,7 +1103,8 @@ namespace KWDMpluca
             }
             else
             {
-                MyImg.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
+                ImageBitmap = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
+                MyImg.Source = ImageBitmap;
                 MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
 
                 if(numberOfImage < bitmapList.Count)

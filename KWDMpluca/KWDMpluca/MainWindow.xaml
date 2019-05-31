@@ -29,7 +29,7 @@
                 <Canvas Name="canvas" Margin="8.2,8.2,9.4,9.4" MouseDown="Canvas_MouseDown" MouseMove="Canvas_MouseMove" MouseUp="Canvas_MouseUp" MouseWheel="Canvas_MouseWheel" Height="280" Width="280"/>
             </ScrollViewer>
         </Border>
-        <Border BorderBrush="#FF4472C4" BorderThickness="1" Height="328" Margin="0,94,34.667,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="171">
+        <Border BorderBrush="#FF4472C4" BorderThickness="1" Height="345" Margin="0,94,34.667,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="171">
             <Image x:Name="ITool" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="35" Stretch="Fill" Source="image/tool.png" RenderTransformOrigin="0.419,0.095" Margin="-18.333,-17.333,0,0"/>
         </Border>
 
@@ -68,6 +68,7 @@
         <Label x:Name="Label1" Content="Jasność" Margin="0,274,140.667,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="63"/>
         <Label Content="Kontrast" Margin="0,335,140.667,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="63"/>
         <Slider x:Name="SContrast" Margin="0,366,33.667,0" VerticalAlignment="Top" Height="28" HorizontalAlignment="Right" Width="170" Maximum="100" Minimum="-100" SmallChange="10" ValueChanged="SContrast_ValueChanged"/>
+        <Button x:Name="BResetImage" Content="Resetuj Obraz" Margin="0,399,69.667,0" VerticalAlignment="Top" Height="21" HorizontalAlignment="Right" Width="98" Click="BResetImage_Click"/>
 
 
     </Grid>
