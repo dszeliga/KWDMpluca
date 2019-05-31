@@ -916,34 +916,52 @@ namespace KWDMpluca
         {
             bCorrectAreaClicked = true;
         }
-
+        double changeValue = 0;
         private void SBrightness_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            double changeValue = Math.Round(SBrightness.Value);
-            
-            BitmapImage img = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
-            
-            double rows = img.PixelHeight;
-            double columns = img.PixelWidth;
-            WriteableBitmap wbitmap = new WriteableBitmap((int)columns, (int)rows, 96, 96, PixelFormats.Bgra32, null);
-            int stride = img.PixelWidth * 4;
-            int size = img.PixelHeight * stride;
-            byte[] pixels = new byte[size];
-            img.CopyPixels(pixels, stride, 0);
+            changeValue = Math.Round(SBrightness.Value);
 
-            for (int y = 0; y < img.PixelHeight; y++)
-            {
-                for (int x = 0; x < img.PixelWidth; x++)
+                BitmapImage img = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
+
+                double rows = img.PixelHeight;
+                double columns = img.PixelWidth;
+                WriteableBitmap wbitmap = new WriteableBitmap((int)columns, (int)rows, 96, 96, PixelFormats.Bgra32, null);
+                int stride = img.PixelWidth * 4;
+                int size = img.PixelHeight * stride;
+                byte[] pixels = new byte[size];
+                img.CopyPixels(pixels, stride, 0);
+                for (int y = 0; y < img.PixelHeight; y++)
                 {
-                    int index = y * stride + 4 * x;
-                    pixels[index] = (byte)(pixels[index] + changeValue);
-                    pixels[index + 1] = (byte)(pixels[index + 1] + changeValue);
-                    pixels[index + 2] = (byte)(pixels[index + 2] + changeValue);
-                    Int32Rect rect = new Int32Rect(0, 0, x, y);
-                    wbitmap.WritePixels(rect, pixels, stride, 0);
+                    for (int x = 0; x < img.PixelWidth; x++)
+                    {
+                        int index = y * stride + 4 * x;
+                    if (pixels[index] + changeValue > 255)
+                    {
+                        pixels[index] = (byte)255;
+                        pixels[index + 1] = (byte)255;
+                        pixels[index + 2] = (byte)255;
+                    }
+                    else
+                    {
+                        if (pixels[index] + changeValue < 0)
+                        {
+                            pixels[index] = (byte)0;
+                            pixels[index + 1] = (byte)0;
+                            pixels[index + 2] = (byte)0;
+                        }
+                        else
+                        {
+                            pixels[index] = (byte)(pixels[index] + changeValue);
+                            pixels[index + 1] = (byte)(pixels[index + 1] + changeValue);
+                            pixels[index + 2] = (byte)(pixels[index + 2] + changeValue);
+                        }
+                    }
+                        Int32Rect rect = new Int32Rect(0, 0, x, y);
+                        wbitmap.WritePixels(rect, pixels, stride, 0);
+                    }
                 }
-            }
-            MyImg.Source = wbitmap;
+                MyImg.Source = wbitmap;
+            
         }
 
         private void BNext_Click(object sender, RoutedEventArgs e)

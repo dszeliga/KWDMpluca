@@ -65,7 +65,7 @@
         <Button x:Name="bZoom" Content="Powiększ" Margin="0,208,33.6,0" VerticalAlignment="Top" Click="BZoom_Click" Height="20" HorizontalAlignment="Right" Width="171"/>
         <Button x:Name="bCorrectArea" Content="Popraw ręcznie" Margin="0,233,34.6,0" VerticalAlignment="Top" Click="BCorrectArea_Click" Height="20" HorizontalAlignment="Right" Width="171"/>
         <Slider x:Name="SBrightness" Margin="0,300,33.667,0" VerticalAlignment="Top" Height="30" Maximum="100" Minimum="-100" SmallChange="10" TickFrequency="-1" ValueChanged="SBrightness_ValueChanged" HorizontalAlignment="Right" Width="170"/>
-        <Label x:Name="Label1" Content="Jasność" HorizontalAlignment="Left" Margin="991,274,0,0" VerticalAlignment="Top" Width="63"/>
+        <Label x:Name="Label1" Content="Jasność" Margin="0,274,140.667,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="63"/>
 
 
     </Grid>
