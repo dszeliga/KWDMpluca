@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media;
 using sitk = itk.simple;
@@ -6,6 +7,7 @@ namespace KWDMpluca.Helpers
 {
     public class SimpleITKHelper
     {
+        public static int sizeOfMask;
         public static double SegmentArea(Point point, ImageSource image)
         {
             //wczytanie pliku
@@ -68,6 +70,16 @@ namespace KWDMpluca.Helpers
             confidenceConnectedImageFilter.SetNumberOfIterations(20);
             confidenceConnectedImageFilter.SetMultiplier(2);
             sitk.Image imageDicomSegmented = confidenceConnectedImageFilter.Execute(imageDicomOpen);
+
+            sitk.ConnectedComponentImageFilter connectedComponentImageFilter = new sitk.ConnectedComponentImageFilter();
+            connectedComponentImageFilter.SetFullyConnected(false);
+            sitk.Image imageLabel = connectedComponentImageFilter.Execute(imageDicomSegmented);
+
+            sitk.RelabelComponentImageFilter relabelComponentImage = new sitk.RelabelComponentImageFilter();
+            relabelComponentImage.SetSortByObjectSize(true);
+            sitk.Image imageRelabel = relabelComponentImage.Execute(imageLabel);
+            var size = relabelComponentImage.GetSizeOfObjectsInPixels();
+            sizeOfMask = Convert.ToInt32(size[0]);
 
             //zmiana piksela na int16
             castImageFilter.SetOutputPixelType(sitk.PixelIDValueEnum.sitkInt16);
