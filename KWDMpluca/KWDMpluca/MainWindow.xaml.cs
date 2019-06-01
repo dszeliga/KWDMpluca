@@ -383,7 +383,7 @@ namespace KWDMpluca
                 else
                 {
                     var length = canvas.Children.Count;
-                    for (int i = length - 1; i >= length - 2; i--)
+                    for (int i = length - 1; i >= length - 2 && i > 0; i--)
                     {
                         canvas.Children.RemoveAt(i);
                     }
@@ -820,7 +820,7 @@ namespace KWDMpluca
                     MessageBox.Show("Opuszczam plik {0}", imagePath);
                 }
 
-                String name = String.Format("{0}_segmented.bmp", imagePath);
+                String name = String.Format("{0}_segmented.jpg", imagePath);
 
                 gdcm.Bitmap bmjpeg2000 = BitmapHelper.pxmap2jpeg2000(reader.GetPixmap());
                 System.Drawing.Bitmap[] X = BitmapHelper.gdcmBitmap2Bitmap(bmjpeg2000);
@@ -909,6 +909,14 @@ namespace KWDMpluca
        private void BCorrectArea_Click(object sender, RoutedEventArgs e)
         {
             bCorrectAreaClicked = true;
+        }
+
+        private void BClearArea_Click(object sender, RoutedEventArgs e)
+        {
+            canvas.Children.RemoveRange(0, canvas.Children.Count);
+            canvasSegm.Children.RemoveRange(0, canvasSegm.Children.Count);
+            canvasSegm.Children.Add(MyImg3);
+            canvas.Children.Add(MyImg);
         }
 
         private void BNext_Click(object sender, RoutedEventArgs e)
