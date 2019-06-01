@@ -920,8 +920,10 @@ namespace KWDMpluca
             {
                 ImageBitmap = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
                 MyImg.Source = ImageBitmap;
-                ChangeContrast();
-                ChangeBrightness();
+                if (SContrast.Value != 0)
+                    ChangeContrast();
+                if (SBrightness.Value != 0)
+                    ChangeBrightness();
                 MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);                
                 Segmentation(MyImg3.Source);
                 IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
@@ -931,8 +933,10 @@ namespace KWDMpluca
             {
                 ImageBitmap = BitmapHelper.LoadBitmapImage(numberOfImage + 1, bitmapList);
                 MyImg.Source = ImageBitmap;
-                ChangeContrast();
-                ChangeBrightness();
+                if (SContrast.Value != 0)
+                    ChangeContrast();
+                if (SBrightness.Value != 0)
+                    ChangeBrightness();
                 MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage + 1, bitmapList);
 
                 if(numberOfImage!=-1)
@@ -1031,7 +1035,8 @@ namespace KWDMpluca
         double changeContastValue = 0;
         private void SContrast_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            ChangeContrast();
+            if(SContrast.Value!=0)
+                ChangeContrast();
         }
 
         private void ChangeContrast()
@@ -1106,8 +1111,10 @@ namespace KWDMpluca
             {
                 ImageBitmap = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
                 MyImg.Source = ImageBitmap;
-                ChangeContrast();
-                ChangeBrightness();
+                if (SContrast.Value != 0)
+                    ChangeContrast();
+                if (SBrightness.Value != 0)
+                    ChangeBrightness();
                 MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
                 Segmentation(MyImg3.Source);
                 IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
@@ -1125,8 +1132,10 @@ namespace KWDMpluca
             {
                 ImageBitmap = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
                 MyImg.Source = ImageBitmap;
-                ChangeContrast();
-                ChangeBrightness();
+                if (SContrast.Value != 0)
+                    ChangeContrast();
+                if (SBrightness.Value != 0)
+                    ChangeBrightness();
                 MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
 
                 if(numberOfImage < bitmapList.Count)
