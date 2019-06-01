@@ -64,6 +64,7 @@
         <Button x:Name="BPreviousImage" Content="Poprzednie" Margin="462,0,0,115" Click="BPrevious_Click" Background="{x:Null}" BorderBrush="{x:Null}" Height="43" Width="80" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
         <Button x:Name="bZoom" Content="Powiększ" Margin="0,208,33.6,0" VerticalAlignment="Top" Click="BZoom_Click" Height="20" HorizontalAlignment="Right" Width="171"/>
         <Button x:Name="bCorrectArea" Content="Popraw ręcznie" Margin="0,233,34.6,0" VerticalAlignment="Top" Click="BCorrectArea_Click" Height="20" HorizontalAlignment="Right" Width="171"/>
+        <Button x:Name="bClearArea" Content="Wyczyść" Margin="0,260,34.6,0" VerticalAlignment="Top" Height="20" HorizontalAlignment="Right" Width="171" Click="BClearArea_Click"/>
 
     </Grid>
 </Window>
