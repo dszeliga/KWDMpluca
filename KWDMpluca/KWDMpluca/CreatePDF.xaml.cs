@@ -24,7 +24,7 @@ namespace KWDMpluca
         public CreatePDF()
         {
             InitializeComponent();
-
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
             List<string> patientList = new List<string>();
             gdcm.ERootType type = gdcm.ERootType.ePatientRootType;
 
@@ -49,6 +49,7 @@ namespace KWDMpluca
                 T_SelectedName.Text = x.GetDataElement(new gdcm.Tag(0x0010, 0x0010)).GetValue().toString();
                // T_SelectedDateB.Text = x.GetDataElement(new gdcm.Tag(0x0010, 0x0030)).GetValue().toString();                
             }
+
         }
 
         public CreatePDF(ImageSource image, string descriptionMain, double areaMain, double distanceMain) : this()

@@ -842,7 +842,7 @@ namespace KWDMpluca
                     MessageBox.Show("Opuszczam plik {0}", imagePath);
                 }
 
-                String name = String.Format("{0}_segmented.jpg", imagePath);
+                String name = String.Format("{0}_segmented.bmp", imagePath);
 
                 gdcm.Bitmap bmjpeg2000 = BitmapHelper.pxmap2jpeg2000(reader.GetPixmap());
                 System.Drawing.Bitmap[] X = BitmapHelper.gdcmBitmap2Bitmap(bmjpeg2000);

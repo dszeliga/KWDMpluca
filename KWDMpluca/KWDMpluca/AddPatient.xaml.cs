@@ -65,7 +65,10 @@ namespace KWDMpluca
             gdcm.FilenamesType filenamesType = dir.GetFilenames();
 
             bool statusStore = gdcm.CompositeNetworkFunctions.CStore(Properties.Settings.Default.IP, ushort.Parse(Properties.Settings.Default.Port), new gdcm.FilenamesType(filenamesType), Properties.Settings.Default.AET, Properties.Settings.Default.AEC);
-            L_Path.Content = "Gotowe";
+            if (statusStore)
+                L_Info.Content = "Zdjęcia zostały wysłane do bazy PACS.";
+            else
+                L_Info.Content = "Wystąpił problem podczas wysyłania zdjęć. Sprawdź połączenie z serwerem PACS.";
         }
 
         private void B_AddAndSave_Click(object sender, RoutedEventArgs e)
@@ -99,6 +102,7 @@ namespace KWDMpluca
             string path = path_all.Remove(indexOfLastSlash);
             L_Path.Content = path;
             ReadPatientInfo(path_all);
+            L_Info.Content = "Folder wybrany został prawidłowo.";
         }
 
         public void ReadPatientInfo(string path)
