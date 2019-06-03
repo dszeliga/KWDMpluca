@@ -21,23 +21,26 @@ namespace KWDMpluca.Helpers
                 fileNames.Add(splittedPath[3]);
                 restoredPath = splittedPath[0] + "\\" + splittedPath[1] + "\\" + splittedPath[2];
             }
-           
-
-            string pathSegmented = fileNames.Where(x => x.StartsWith("segmentedMask") && x.EndsWith("dcm")).FirstOrDefault();
-            string pathMarked = fileNames.Where(x => x.StartsWith("markedMask") && x.EndsWith("dcm")).FirstOrDefault();
 
 
-            if (!string.IsNullOrEmpty(pathMarked))
+            List<string> pathSegmented = fileNames.Where(x => x.StartsWith("segmentedMask") && x.EndsWith("dcm")).ToList<string>();
+            List<string> pathMarked = fileNames.Where(x => x.StartsWith("markedMask") && x.EndsWith("dcm")).ToList<string>();
+            foreach (var path in pathSegmented)
             {
-                bool result = MoveImage(restoredPath + "\\" + pathMarked, files);
-                return result;
+                if (!string.IsNullOrEmpty(path))
+                {
+                    bool result = MoveImage(restoredPath + "\\" + path, files);
+                    
+                }
             }
-            else if (!string.IsNullOrEmpty(pathSegmented))
+            foreach (var path in pathMarked)
             {
-                bool result = MoveImage(restoredPath + "\\" + pathSegmented, files);
-                return result;
+                if (!string.IsNullOrEmpty(path))
+                {
+                    bool result = MoveImage(restoredPath + "\\" + path, files);
+                   
+                }
             }
-
             return true;
         }
 

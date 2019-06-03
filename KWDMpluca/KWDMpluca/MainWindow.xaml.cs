@@ -836,7 +836,7 @@ namespace KWDMpluca
 				this.Close();
 		}
 
-                String name = String.Format("{0}_segmented.bmp", imagePath);
+               // String name = String.Format("{0}_segmented.bmp", imagePath);
 		private void RbSegmentation_Checked(object sender, RoutedEventArgs e)
 		{
 			rbDrawing.IsChecked = false;
