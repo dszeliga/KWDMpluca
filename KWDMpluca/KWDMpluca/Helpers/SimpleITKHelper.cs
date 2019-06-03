@@ -8,7 +8,7 @@ namespace KWDMpluca.Helpers
     public class SimpleITKHelper
     {
         public static int sizeOfMask;
-        public static double SegmentArea(Point point, ImageSource image)
+        public static double SegmentArea(Point point, ImageSource image, string instanceNumber, string patientId, string patientName)
         {
             //wczytanie pliku
             sitk.ImageFileReader imageFileReader = new sitk.ImageFileReader();
@@ -85,8 +85,12 @@ namespace KWDMpluca.Helpers
             castImageFilter.SetOutputPixelType(sitk.PixelIDValueEnum.sitkInt16);
             imageDicomSegmented = castImageFilter.Execute(imageDicomSegmented);
 
-            SaveImage(imageDicomSegmented, GetFolderName(image) + "segmentedMask" + GetDicomFileName(image) + ".dcm");
-
+            string pathSegmentedImage = GetFolderName(image) + "segmentedMask" + GetDicomFileName(image) + ".dcm";
+            imageDicomSegmented.SetMetaData("0010|0020", patientId);
+            imageDicomSegmented.SetMetaData("0010|0010", patientName);
+            imageDicomSegmented.SetMetaData("0008|103E", "mask");
+            imageDicomSegmented.SetMetaData("0020|0013", instanceNumber);
+            SaveImage(imageDicomSegmented, pathSegmentedImage);
 
             //obliczenie pola guza w pikselach
             int area = 0;
@@ -106,6 +110,20 @@ namespace KWDMpluca.Helpers
                 }
             }
             return area;
+        }
+
+        public static void ConvertToDicom(string path, ImageSource image, string patientId, string patientName)
+        {
+            sitk.ImageFileReader imageFileReader = new sitk.ImageFileReader();
+            imageFileReader.SetFileName(GetFolderName(image) + GetDicomFileName(image));
+            imageFileReader.SetOutputPixelType(sitk.PixelIDValueEnum.sitkInt16);
+            sitk.Image imageDicomOrg = imageFileReader.Execute();
+
+            imageDicomOrg.SetMetaData("0010|0020", patientId);
+            imageDicomOrg.SetMetaData("0010|0010", patientName);
+            imageDicomOrg.SetMetaData("0008|103E", "mask");
+
+            SaveImage(imageDicomOrg, path);
         }
 
         private static void SaveImage(sitk.Image image, string pathToFile)
@@ -156,6 +174,15 @@ namespace KWDMpluca.Helpers
                 string folderName = pathSegments[0] + "\\" + pathSegments[1] + "\\" + pathSegments[2] + "\\";
                 return folderName;
             }
+        }
+
+        public static string GetInstanceNumber(string dicom)
+        {
+            sitk.ImageFileReader imageFileReader = new sitk.ImageFileReader();
+            imageFileReader.SetFileName(dicom);
+            imageFileReader.SetOutputPixelType(sitk.PixelIDValueEnum.sitkInt16);
+            sitk.Image imageDicomOrg = imageFileReader.Execute();
+            return imageDicomOrg.GetMetaData("0020|0013");
         }
 
         //private static uint FindInstance()

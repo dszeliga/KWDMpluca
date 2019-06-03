@@ -69,7 +69,9 @@
         <Label x:Name="Label1" Content="Jasność" Margin="0,274,140.667,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="63"/>
         <Label Content="Kontrast" Margin="0,335,140.667,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="63"/>
         <Slider x:Name="SContrast" Margin="0,366,33.667,0" VerticalAlignment="Top" Height="28" HorizontalAlignment="Right" Width="170" Maximum="100" Minimum="-100" SmallChange="10" ValueChanged="SContrast_ValueChanged"/>
-        <Button x:Name="BResetImage" Content="Resetuj jasność i kontrast" Margin="0,399,45.667,0" VerticalAlignment="Top" Height="25" HorizontalAlignment="Right" Width="150" Click="BResetImage_Click" Background="White" BorderBrush="#FF4472C4"/>
+        <Button x:Name="BResetImage" Content="Resetuj Obraz" Margin="0,399,69.667,0" VerticalAlignment="Top" Height="21" HorizontalAlignment="Right" Width="98" Click="BResetImage_Click"/>
+        <Button x:Name="BSaveMask" Content="Zapisz maskę" Margin="0,425,33.6,0" VerticalAlignment="Top" Height="21" HorizontalAlignment="Right" Width="171" Click="BSaveMask_Click"/>
+        <CheckBox x:Name="cbMask" Content="Pokaż maskę" HorizontalAlignment="Left" Margin="761,413,0,0" VerticalAlignment="Top" Checked="CbMask_Checked"/>
 
 
     </Grid>

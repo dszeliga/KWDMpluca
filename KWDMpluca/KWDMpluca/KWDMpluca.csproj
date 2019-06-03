@@ -78,6 +78,7 @@
       <DependentUpon>FindPatient.xaml</DependentUpon>
     </Compile>
     <Compile Include="Helpers\BitmapHelper.cs" />
+    <Compile Include="Helpers\GDCMHelper.cs" />
     <Compile Include="Helpers\PatientHelper.cs" />
     <Compile Include="Helpers\SimpleITKHelper.cs" />
     <Compile Include="Settings.xaml.cs">
