@@ -202,7 +202,7 @@ namespace KWDMpluca
 					int numer = int.Parse(numberInSeries);
                     globalNumbersOfInstance.Add(numer);
                     Poukladanesciezki[numer] = fileDcm;
-					dicomList.Add(fileDcm);
+					//dicomList.Add(fileDcm);
 
 				}
 			}
@@ -211,7 +211,8 @@ namespace KWDMpluca
 			{
 				if (!string.IsNullOrEmpty(fileDcm))
 				{
-					gdcm.PixmapReader reader = new gdcm.PixmapReader();
+                    dicomList.Add(fileDcm);
+                    gdcm.PixmapReader reader = new gdcm.PixmapReader();
 					reader.SetFileName(fileDcm);
 					if (!reader.Read())
 					{
@@ -685,7 +686,13 @@ namespace KWDMpluca
 			{
 				if (e.LeftButton == MouseButtonState.Released)
 				{
-					Ellipse ellipse = new Ellipse();
+                    if (canvasSegm.Children.Count > 1)
+                    {
+                        canvasSegm.Children.RemoveRange(0, canvasSegm.Children.Count);
+                        canvasSegm.Children.Add(MyImg3);
+                    }
+                    
+                    Ellipse ellipse = new Ellipse();
 
 					ellipse.Stroke = SystemColors.WindowFrameBrush;
 					ellipse.Height = 5;
