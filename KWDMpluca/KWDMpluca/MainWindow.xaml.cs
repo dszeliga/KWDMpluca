@@ -52,6 +52,7 @@ namespace KWDMpluca
 		BitmapImage ImageBitmap;
 		string globalpath;
 		List<string> dicomList = new List<string>();
+        List<int> globalNumbersOfInstance = new List<int>();
 
 		public MainWindow()
 		{
@@ -199,10 +200,11 @@ namespace KWDMpluca
 				if (!string.IsNullOrEmpty(numberInSeries) && description != "mask")
 				{
 					int numer = int.Parse(numberInSeries);
-					Poukladanesciezki[numer] = fileDcm;
-                    dicomList.Add(fileDcm);
+                    globalNumbersOfInstance.Add(numer);
+                    Poukladanesciezki[numer] = fileDcm;
+					dicomList.Add(fileDcm);
 
-                }
+				}
 			}
 			int j = 1000;
 			foreach (String fileDcm in Poukladanesciezki)
@@ -857,10 +859,10 @@ namespace KWDMpluca
 			if (rbSegmentation.IsChecked == true)
 			{
 				string imagePath = SimpleITKHelper.GetFolderName(image) + "segmentedMask" + SimpleITKHelper.GetDicomFileName(image) + ".dcm";
-                var dicom = dicomList.ElementAt(numberOfImage);
-                string numberOfInstance = SimpleITKHelper.GetInstanceNumber(dicom);
+				var dicom = dicomList.ElementAt(numberOfImage);
+				string numberOfInstance = SimpleITKHelper.GetInstanceNumber(dicom);
 
-                area = SimpleITKHelper.SegmentArea(currentPoint, image, numberOfInstance, L_SelectedID.Content.ToString(), L_SelectedName.Content.ToString());
+				area = SimpleITKHelper.SegmentArea(currentPoint, image, numberOfInstance, L_SelectedID.Content.ToString(), L_SelectedName.Content.ToString());
 				BSaveMask.IsEnabled = true;
 				area = area * Math.Pow(pixelSpacing, 2);
 				L_Area.Content = "Pole: " + Math.Round(area) + "mm^2";
@@ -955,6 +957,7 @@ namespace KWDMpluca
 				if (SBrightness.Value != 0)
 					ChangeBrightness();
 				MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);                
+				MyImg1.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);                
 				Segmentation(MyImg3.Source);
 				IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
 				INext.Source = BitmapHelper.LoadBitmapImage(numberOfImage + 1, bitmapList);
@@ -968,6 +971,7 @@ namespace KWDMpluca
 				if (SBrightness.Value != 0)
 					ChangeBrightness();
 				MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage + 1, bitmapList);
+				MyImg1.Source = BitmapHelper.LoadBitmapImage(numberOfImage + 1, bitmapList);
 
 				if(numberOfImage!=-1)
 					Segmentation(MyImg3.Source);
@@ -1148,97 +1152,124 @@ namespace KWDMpluca
 
 		private void CbMask_Checked(object sender, RoutedEventArgs e)
 		{
-			if (cbMask.IsChecked == true)
+			List<string> files = new List<string>(System.IO.Directory.EnumerateFiles(globalpath));
+            //List<int> maskNumbersOfInstance = new List<int>(globalNumbersOfInstance.Count);
+            //List<string> masksNames = new List<string>();
+
+			int i = 0;
+			foreach (String fileDcm in files)
 			{
-			   // string data = System.IO.Path.Combine(globalpath, System.IO.Path.GetRandomFileName());
-				List<string> files = new List<string>(System.IO.Directory.EnumerateFiles(globalpath));
+				gdcm.Reader reader = new gdcm.Reader();
+				reader.SetFileName(fileDcm);
+				bool ret = reader.Read();
+				gdcm.File file = reader.GetFile();
 
-				int i = 0;
-				foreach (String fileDcm in files)
-				{
-					gdcm.Reader reader = new gdcm.Reader();
-					reader.SetFileName(fileDcm);
-					bool ret = reader.Read();
-					gdcm.File file = reader.GetFile();
+				gdcm.StringFilter filter = new gdcm.StringFilter();
+				filter.SetFile(file);
+				string numberInSeries = filter.ToString(new gdcm.Tag(0x0020, 0x0013));
+				string description = filter.ToString(new gdcm.Tag(0x0008, 0x103E));
 
-					gdcm.StringFilter filter = new gdcm.StringFilter();
-					filter.SetFile(file);
-					string numberInSeries = filter.ToString(new gdcm.Tag(0x0020, 0x0013));
-					string description = filter.ToString(new gdcm.Tag(0x0008, 0x103E));
-
-					if (!string.IsNullOrEmpty(numberInSeries) && description == "mask")
-					{
-						int numer = int.Parse(numberInSeries);
-						if (numer > i)
-							i = numer;
-					}
+				if (!string.IsNullOrEmpty(numberInSeries) && description == "mask")
+                {
+					int numer = int.Parse(numberInSeries);
+					if (numer > i)
+						i = numer;
 				}
-
-				Poukladanesciezki = new string[i + 1];
-			}
-			else
-			{
-				string data = System.IO.Path.Combine(globalpath, System.IO.Path.GetRandomFileName());
-				List<string> files = new List<string>(System.IO.Directory.EnumerateFiles(data));
-
-				int i = 0;
-				foreach (String fileDcm in files)
-				{
-					gdcm.Reader reader = new gdcm.Reader();
-					reader.SetFileName(fileDcm);
-					bool ret = reader.Read();
-					gdcm.File file = reader.GetFile();
-
-					gdcm.StringFilter filter = new gdcm.StringFilter();
-					filter.SetFile(file);
-					string numberInSeries = filter.ToString(new gdcm.Tag(0x0020, 0x0013));
-					string description = filter.ToString(new gdcm.Tag(0x0008, 0x103E));
-
-					if (!string.IsNullOrEmpty(numberInSeries) && description != "mask")
-					{
-						int numer = int.Parse(numberInSeries);
-						if (numer > i)
-							i = numer;
-					}
-				}
-
-				Poukladanesciezki = new string[i + 1];
 			}
 
+			string[] tempPaths = new string[i+1];
+
+			foreach (String fileDcm in files)
+			{
+				// fileDcm to ścieżka do pliku zapisanego i ściągnętego z bazy
+				gdcm.Reader reader = new gdcm.Reader();
+				reader.SetFileName(fileDcm);
+				bool ret = reader.Read();
+				gdcm.File file = reader.GetFile();
+
+				gdcm.StringFilter filter = new gdcm.StringFilter();
+				filter.SetFile(file);
+				string numberInSeries = filter.ToString(new gdcm.Tag(0x0020, 0x0013));
+				string description = filter.ToString(new gdcm.Tag(0x0008, 0x103E));
+
+                if (!string.IsNullOrEmpty(numberInSeries) && description == "mask")
+                {
+                    //if (description == "mask")
+                    //{
+                        int numer = int.Parse(numberInSeries);
+                        //maskNumbersOfInstance.Add(numer);
+                        tempPaths[numer] = fileDcm;
+                        dicomList.Add(fileDcm);
+                    //}
+                    //else
+                    //{
+                    //    maskNumbersOfInstance.Add(0);
+                    //}
+                }
+                
+			}
+			
 			int j = 1000;
-			foreach (String fileDcm in Poukladanesciezki)
+            i = 0;
+
+			foreach (String fileDcm in tempPaths)
 			{
 				if (!string.IsNullOrEmpty(fileDcm))
 				{
-					gdcm.PixmapReader reader = new gdcm.PixmapReader();
-					reader.SetFileName(fileDcm);
-					if (!reader.Read())
-					{
-						MessageBox.Show("Opuszczam plik {0}", fileDcm);
-						continue;
-					}
+                    gdcm.PixmapReader reader = new gdcm.PixmapReader();
+                    reader.SetFileName(fileDcm);
+                    if (!reader.Read())
+                    {
+                        MessageBox.Show("Opuszczam plik {0}", fileDcm);
+                        continue;
+                    }
 
-					gdcm.Bitmap bmjpeg2000 = BitmapHelper.pxmap2jpeg2000(reader.GetPixmap());
-					System.Drawing.Bitmap[] X = BitmapHelper.gdcmBitmap2Bitmap(bmjpeg2000);
+                    gdcm.Bitmap bmjpeg2000 = BitmapHelper.pxmap2jpeg2000(reader.GetPixmap());
+                    System.Drawing.Bitmap[] X = BitmapHelper.gdcmBitmap2Bitmap(bmjpeg2000);
 
-					String name = String.Format("{0}\\{1}.jpg", data, j);
-					X[0].Save(name);
-					j++;
-				}
-			}
+                    String name = String.Format("{0}\\{1}.jpg", data, j -1);
+                    //masksNames.Add(string.Format("mask{0}.jpg", j));
+                    X[0].Save(name);
+                }
+                j++;
+            }
 
 			if (bitmapList.Count != 0)
 				bitmapList.RemoveRange(0, bitmapList.Count);
 
 			bitmapList.AddRange(System.IO.Directory.EnumerateFiles(data, "*.jpg"));
-			MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
+            bitmapList.Reverse(); // odwrócenie, by brać maski
+            MyImg1.Width = 280;
+			MyImg1.Height = 280;
+
+            //if (globalNumbersOfInstance.ElementAt(numberOfImage) == maskNumbersOfInstance.ElementAt(numberOfImage))
+            //{
+            //    MyImg1.Source = BitmapHelper.LoadBitmapImage(numberOfImage + bitmapList.Count -1, bitmapList);
+            //    canvasSegm.Children.Clear();
+            //    canvasSegm.Children.Add(MyImg1);
+            //}
+            //else
+            //{
+                MyImg1.Source = BitmapHelper.LoadBitmapImage(numberOfImage + bitmapList.Count - 1, bitmapList);
+                canvasSegm.Children.Clear();
+                canvasSegm.Children.Add(MyImg1);
+            //}
+		}
+
+		private void CbMask_Unchecked(object sender, RoutedEventArgs e)
+		{
+			MyImg1.Width = 280;
+			MyImg1.Height = 280;
+			MyImg1.Source = MyImg3.Source;
+			canvasSegm.Children.Clear();
+			canvasSegm.Children.Add(MyImg1);
 		}
 
 		private void BNext_Click(object sender, RoutedEventArgs e)
 		{
 			numberOfImage += 1;
 
-			if (numberOfImage < bitmapList.Count)
+            if (numberOfImage < bitmapList.Count)
 			{
 				ImageBitmap = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
 				MyImg.Source = ImageBitmap;
@@ -1247,6 +1278,7 @@ namespace KWDMpluca
 				if (SBrightness.Value != 0)
 					ChangeBrightness();
 				MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
+				//MyImg1.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
 				Segmentation(MyImg3.Source);
 				IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
 				if (numberOfImage == bitmapList.Count - 1)
@@ -1268,6 +1300,7 @@ namespace KWDMpluca
 				if (SBrightness.Value != 0)
 					ChangeBrightness();
 				MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
+				//MyImg1.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
 
 				if(numberOfImage < bitmapList.Count)
 					Segmentation(MyImg3.Source);
