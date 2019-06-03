@@ -84,7 +84,10 @@ namespace KWDMpluca
 
             bool statusStore = gdcm.CompositeNetworkFunctions.CStore(Properties.Settings.Default.IP, ushort.Parse(Properties.Settings.Default.Port), new gdcm.FilenamesType(filenamesType), Properties.Settings.Default.AET, Properties.Settings.Default.AEC);
 
-            L_Path.Content = "Gotowe";
+            if (statusStore)
+                L_Info.Content = "Zdjęcia zostały wysłane do bazy PACS.";
+            else
+                L_Info.Content = "Wystąpił problem podczas wysyłania zdjęć. Sprawdź połączenie z serwerem PACS.";
 
 
             Properties.Settings.Default.SelectedPatientID = L_SelectedID.Content.ToString();
