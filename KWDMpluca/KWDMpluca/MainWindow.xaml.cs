@@ -1148,6 +1148,15 @@ namespace KWDMpluca
 		private void BSaveMask_Click(object sender, RoutedEventArgs e)
 		{
 			bool moveResult = GDCMHelper.MoveImageByPath(globalpath);
+
+            if (moveResult)
+            {
+                MessageBox.Show("Udało się zapisać maskę", "Informacja", MessageBoxButton.OK);
+            }
+            else
+            {
+                MessageBox.Show("Nie udało się zapisać maski", "Błąd", MessageBoxButton.OK);
+            }
 		}
 
 		private void CbMask_Checked(object sender, RoutedEventArgs e)
@@ -1250,7 +1259,7 @@ namespace KWDMpluca
             //}
             //else
             //{
-                MyImg1.Source = BitmapHelper.LoadBitmapImage(numberOfImage + bitmapList.Count - 1, bitmapList);
+                MyImg1.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
                 canvasSegm.Children.Clear();
                 canvasSegm.Children.Add(MyImg1);
             //}
