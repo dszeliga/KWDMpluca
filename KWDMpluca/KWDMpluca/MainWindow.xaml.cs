@@ -35,6 +35,7 @@ namespace KWDMpluca
         bool bDistanceClicked = false;
         bool bZoomClicked = false;
         bool bCorrectAreaClicked = false;
+        bool maskReverted = false;
         double[] pointsDistance = new double[4];
         double area, distance;
         int ind = 0;
@@ -331,17 +332,7 @@ namespace KWDMpluca
                 ImageBitmap = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
                 MyImg.Source = ImageBitmap;
                 MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
-                if (cbMask.IsChecked == true)
-                {
-                    if (globalNumbersOfInstance.ElementAt(numberOfImage) == maskNumbersOfInstance.ElementAt(numberOfImage))
-                    {
-                        if (canvasSegm.Children.Contains(MyImg1))
-                            canvasSegm.Children.Remove(MyImg1);
-
-                        MyImg1.Source = BitmapHelper.LoadBitmapImage(numberOfImage, masksNames);
-                        canvasSegm.Children.Add(MyImg1);
-                    }
-                }
+                ShowMask();
                 Segmentation(MyImg3.Source);
                 string path = ".\\tlo.bmp";
                 IPrevious.Source = BitmapHelper.LoadBitmapImage(path);
@@ -352,17 +343,7 @@ namespace KWDMpluca
                 ImageBitmap = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
                 MyImg.Source = ImageBitmap;
                 MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
-                if (cbMask.IsChecked == true)
-                {
-                    if (globalNumbersOfInstance.ElementAt(numberOfImage) == maskNumbersOfInstance.ElementAt(numberOfImage))
-                    {
-                        if (canvasSegm.Children.Contains(MyImg1))
-                            canvasSegm.Children.Remove(MyImg1);
-
-                        MyImg1.Source = BitmapHelper.LoadBitmapImage(numberOfImage, masksNames);
-                        canvasSegm.Children.Add(MyImg1);
-                    }
-                }
+                ShowMask();
                 Segmentation(MyImg3.Source);
                 IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
                 if (numberOfImage >= bitmapList.Count - 1)
@@ -380,17 +361,7 @@ namespace KWDMpluca
                 ImageBitmap = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
                 MyImg.Source = ImageBitmap;
                 MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
-                if (cbMask.IsChecked == true)
-                {
-                    if (globalNumbersOfInstance.ElementAt(numberOfImage) == maskNumbersOfInstance.ElementAt(numberOfImage))
-                    {
-                        if (canvasSegm.Children.Contains(MyImg1))
-                            canvasSegm.Children.Remove(MyImg1);
-
-                        MyImg1.Source = BitmapHelper.LoadBitmapImage(numberOfImage, masksNames);
-                        canvasSegm.Children.Add(MyImg1);
-                    }
-                }
+                ShowMask();
                 Segmentation(MyImg3.Source);
                 IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
                 if (numberOfImage >= bitmapList.Count - 1)
@@ -407,22 +378,42 @@ namespace KWDMpluca
                 ImageBitmap = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
                 MyImg.Source = ImageBitmap;
                 MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
-                if (cbMask.IsChecked == true)
-                {
-                    if (globalNumbersOfInstance.ElementAt(numberOfImage) == maskNumbersOfInstance.ElementAt(numberOfImage))
-                    {
-                        if (canvasSegm.Children.Contains(MyImg1))
-                            canvasSegm.Children.Remove(MyImg1);
-
-                        MyImg1.Source = BitmapHelper.LoadBitmapImage(numberOfImage, masksNames);
-                        canvasSegm.Children.Add(MyImg1);
-                    }
-                }
+                ShowMask();
                 Segmentation(MyImg3.Source);
                 IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 2, bitmapList);
 
                 INext.Source = BitmapHelper.LoadBitmapImage(pathEmpty); //pusty
 
+            }
+        }
+
+        private void ShowMask()
+        {
+            if (cbMask.IsChecked == true)
+            {
+                if (globalNumbersOfInstance.ElementAt(numberOfImage) == maskNumbersOfInstance.ElementAt(numberOfImage))
+                {
+                    if (canvasSegm.Children.Contains(MyImg1))
+                        canvasSegm.Children.Remove(MyImg1);
+
+                    if (masksNames[numberOfImage] != "")
+                        MyImg1.Source = BitmapHelper.LoadBitmapImage(numberOfImage, masksNames);
+                    else
+                    {
+                        if (canvasSegm.Children.Contains(MyImg2))
+                            canvasSegm.Children.Remove(MyImg2);
+                    }
+                    canvasSegm.Children.Add(MyImg1);
+                }
+
+                if (maskNumbersOfInstance.ElementAt(numberOfImage) == -1)
+                {
+                    canvasSegm.Children.Remove(MyImg1);
+                    if (canvasSegm.Children.Contains(MyImg2))
+                        canvasSegm.Children.Remove(MyImg2);
+
+                    canvasSegm.Children.Add(MyImg2);
+                }
             }
         }
 
@@ -776,7 +767,7 @@ namespace KWDMpluca
             int height = (int)MyImg.Width;
             int width = (int)MyImg.Height;
             RenderTargetBitmap renderBitmap = new RenderTargetBitmap(width, height, 96d, 96d, PixelFormats.Pbgra32);
-           
+
             canvas.Measure(new Size(width, height));
             canvas.Arrange(new Rect(new Size(width, height)));
             var index = canvas.Children.IndexOf(polygon);
@@ -974,12 +965,12 @@ namespace KWDMpluca
                 MyImg1.Height = 280;
 
                 MyImg1.Source = BitmapHelper.LoadBitmapImage(name);
-               
+
                 if (canvasSegm.Children.Contains(MyImg1))
                     canvasSegm.Children.Remove(MyImg1);
 
                 AllMasks[numberOfImage] = name;
-               
+
                 canvasSegm.Children.Add(MyImg1);
             }
         }
@@ -1003,17 +994,7 @@ namespace KWDMpluca
                     ChangeBrightness();
                 MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
                 MyImg1.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
-                if (cbMask.IsChecked == true)
-                {
-                    if (globalNumbersOfInstance.ElementAt(numberOfImage) == maskNumbersOfInstance.ElementAt(numberOfImage))
-                    {
-                        if (canvasSegm.Children.Contains(MyImg1))
-                            canvasSegm.Children.Remove(MyImg1);
-
-                        MyImg1.Source = BitmapHelper.LoadBitmapImage(numberOfImage, masksNames);
-                        canvasSegm.Children.Add(MyImg1);
-                    }
-                }
+                ShowMask();
                 Segmentation(MyImg3.Source);
                 IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
                 INext.Source = BitmapHelper.LoadBitmapImage(numberOfImage + 1, bitmapList);
@@ -1031,17 +1012,7 @@ namespace KWDMpluca
 
                 if (numberOfImage != -1)
                 {
-                    if (cbMask.IsChecked == true)
-                    {
-                        if (globalNumbersOfInstance.ElementAt(numberOfImage) == maskNumbersOfInstance.ElementAt(numberOfImage))
-                        {
-                            if (canvasSegm.Children.Contains(MyImg1))
-                                canvasSegm.Children.Remove(MyImg1);
-
-                            MyImg1.Source = BitmapHelper.LoadBitmapImage(numberOfImage, masksNames);
-                            canvasSegm.Children.Add(MyImg1);
-                        }
-                    }
+                    ShowMask();
 
                     Segmentation(MyImg3.Source);
                 }
@@ -1232,7 +1203,7 @@ namespace KWDMpluca
         private void CbMask_Checked(object sender, RoutedEventArgs e)
         {
             List<string> files = new List<string>(System.IO.Directory.EnumerateFiles(globalpath));
-            
+
             int i = 0;
             foreach (String fileDcm in files)
             {
@@ -1255,6 +1226,9 @@ namespace KWDMpluca
             }
 
             string[] tempPaths = new string[i + 1];
+
+            if (maskNumbersOfInstance.Count != 0)
+                maskNumbersOfInstance.Clear();
 
             foreach (String fileDcm in files)
             {
@@ -1280,6 +1254,7 @@ namespace KWDMpluca
                     }
                     else
                     {
+
                         maskNumbersOfInstance.Add(0);
                     }
                 }
@@ -1288,6 +1263,8 @@ namespace KWDMpluca
 
             int j = 1000;
             i = 0;
+            if (masksNames.Count != 0)
+                masksNames.Clear();
 
             foreach (String fileDcm in tempPaths)
             {
@@ -1326,6 +1303,7 @@ namespace KWDMpluca
                     }
 
                     String name = String.Format("{0}\\mask{1}.jpg", data, j - 1);
+                    
                     masksNames.Add(name);
 
                     X[0].Save(name);
@@ -1344,32 +1322,31 @@ namespace KWDMpluca
             if (!globalNumbersOfInstance.SequenceEqual(isAscending))
                 globalNumbersOfInstance.Sort();
 
+            if (maskNumbersOfInstance.Count != globalNumbersOfInstance.Count)
+            {
+                for (int k = 0; k < globalNumbersOfInstance.Count; k++)
+                {
+                    if (maskNumbersOfInstance.Count <= k || maskNumbersOfInstance[k] != globalNumbersOfInstance[k])
+                    {
+                        maskNumbersOfInstance.Insert(k, -1);
+                        masksNames.Insert(k, "");
+                    }
+                }
+            }
+
             if (canvasSegm.Children.Contains(MyImg2))
                 canvasSegm.Children.Remove(MyImg2);
 
             canvasSegm.Children.Add(MyImg2);
 
-            
+            ShowMask();
 
-            if (globalNumbersOfInstance.ElementAt(numberOfImage) == maskNumbersOfInstance.ElementAt(numberOfImage))
-            {
-                if (canvasSegm.Children.Contains(MyImg1))
-                    canvasSegm.Children.Remove(MyImg1);
-
-                MyImg1.Source = BitmapHelper.LoadBitmapImage(numberOfImage, masksNames);
-                canvasSegm.Children.Add(MyImg1);
-            }
-            
-            if (!globalNumbersOfInstance.SequenceEqual(isAscending))
-            {
-                masksNames.Reverse();
-            }
-
-            //MyImg1.Source = BitmapHelper.LoadBitmapImage(numberOfImage, masksNames);
-            //canvasSegm.Children.Add(MyImg1);
-
-
+            //if (!globalNumbersOfInstance.SequenceEqual(isAscending))
+            //{
+            //    masksNames.Reverse();
+            //    maskReverted = true;
             //}
+
         }
 
         private void CbMask_Unchecked(object sender, RoutedEventArgs e)
@@ -1392,17 +1369,7 @@ namespace KWDMpluca
                 if (SBrightness.Value != 0)
                     ChangeBrightness();
                 MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
-                if (cbMask.IsChecked == true)
-                {
-                    if (globalNumbersOfInstance.ElementAt(numberOfImage) == maskNumbersOfInstance.ElementAt(numberOfImage))
-                    {
-                        if (canvasSegm.Children.Contains(MyImg1))
-                            canvasSegm.Children.Remove(MyImg1);
-
-                        MyImg1.Source = BitmapHelper.LoadBitmapImage(numberOfImage, masksNames);
-                        canvasSegm.Children.Add(MyImg1);
-                    }
-                }
+                ShowMask();
                 //MyImg1.Source = BitmapHelper.LoadBitmapImage(numberOfImage, bitmapList);
                 Segmentation(MyImg3.Source);
                 IPrevious.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
@@ -1425,23 +1392,10 @@ namespace KWDMpluca
                 if (SBrightness.Value != 0)
                     ChangeBrightness();
                 MyImg3.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
-                //MyImg1.Source = BitmapHelper.LoadBitmapImage(numberOfImage - 1, bitmapList);
-
-
 
                 if (numberOfImage < bitmapList.Count)
                 {
-                    if (cbMask.IsChecked == true)
-                    {
-                        if (globalNumbersOfInstance.ElementAt(numberOfImage) == maskNumbersOfInstance.ElementAt(numberOfImage))
-                        {
-                            if (canvasSegm.Children.Contains(MyImg1))
-                                canvasSegm.Children.Remove(MyImg1);
-
-                            MyImg1.Source = BitmapHelper.LoadBitmapImage(numberOfImage, masksNames);
-                            canvasSegm.Children.Add(MyImg1);
-                        }
-                    }
+                    ShowMask();
 
                     Segmentation(MyImg3.Source);
                 }
