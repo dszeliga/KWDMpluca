@@ -428,43 +428,26 @@ namespace KWDMpluca
 
             if (bDistanceClicked)
             {
+                rbSegmentation.IsChecked = false;
                 if (ind < 4)
                 {
 
                     if (e.LeftButton == MouseButtonState.Pressed)
                     {
-                        //Ellipse ellipse = new Ellipse();
+                        Ellipse ellipse = new Ellipse();
 
-                        //ellipse.Stroke = SystemColors.WindowFrameBrush;
-                        //ellipse.Height = 5;
-                        //ellipse.Width = 5;
-                        //SolidColorBrush greenBrush = new SolidColorBrush();
-                        //greenBrush.Color = Colors.Red;
-                        //ellipse.Fill = greenBrush;
-                        //ellipse.Margin = new Thickness(currentPoint.X, currentPoint.Y, 0, 0);
-                        //pointsDistance[ind] = currentPoint.X;
-                        //pointsDistance[ind + 1] = currentPoint.Y;
-                        //canvas.Children.Add(ellipse);
-                        //ind += 2;
-
-                        Line line = new Line();
-
-                        line.Stroke = SystemColors.WindowFrameBrush;
-                        line.X1 = currentPoint.X;
-                        line.Y1 = currentPoint.Y;
-                        line.X2 = e.GetPosition(canvas).X;
-                        line.Y2 = e.GetPosition(canvas).Y;
-
-                        SolidColorBrush redBrush = new SolidColorBrush();
-                        redBrush.Color = Colors.Red;
-
-                        line.Stroke = redBrush;
-
-                        currentPoint = e.GetPosition(canvas);
-
-                        points.Add(currentPoint);
-
-                        canvas.Children.Add(line);
+                        ellipse.Stroke = SystemColors.WindowFrameBrush;
+                        ellipse.Height = 5;
+                        ellipse.Width = 5;
+                        SolidColorBrush greenBrush = new SolidColorBrush();
+                        greenBrush.Color = Colors.Red;
+                        ellipse.Fill = greenBrush;
+                        ellipse.Margin = new Thickness(currentPoint.X, currentPoint.Y, 0, 0);
+                        pointsDistance[ind] = currentPoint.X;
+                        pointsDistance[ind + 1] = currentPoint.Y;
+                        canvas.Children.Add(ellipse);
+                        ind += 2;
+                        
                     }
 
                     if (ind == 4)
