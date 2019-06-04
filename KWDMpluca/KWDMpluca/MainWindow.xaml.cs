@@ -35,12 +35,10 @@ namespace KWDMpluca
         bool bDistanceClicked = false;
         bool bZoomClicked = false;
         bool bCorrectAreaClicked = false;
-        bool maskReverted = false;
         double[] pointsDistance = new double[4];
         double area, distance;
         int ind = 0;
         int numberOfImage = 0;
-        int numberOfDicomInstance = 0;
         string pathEmpty = ".\\tlo.bmp";
         string[] Poukladanesciezki;
         Polygon polygon = new Polygon();
@@ -49,6 +47,7 @@ namespace KWDMpluca
         Image MyImg2 = new Image();
         Image MyImg1 = new Image();
         Image MyImg3 = new Image();
+        Image MyImg4 = new Image();
         Image MaskImg = new Image();
         SolidColorBrush redBrush = new SolidColorBrush();
         string[] AllMasks;
@@ -397,7 +396,9 @@ namespace KWDMpluca
                         canvasSegm.Children.Remove(MyImg1);
 
                     if (masksNames[numberOfImage] != "")
+                    {
                         MyImg1.Source = BitmapHelper.LoadBitmapImage(numberOfImage, masksNames);
+                    }
                     else
                     {
                         if (canvasSegm.Children.Contains(MyImg2))
@@ -967,7 +968,7 @@ namespace KWDMpluca
                     }
                 }
 
-                //if (SimpleITKHelper.sizeOfMask > 2000)
+                //if (SimpleITKHelper.sizeOfMask > 800)
                 //{
                 //    for (int i = 0; i < X[0].Height; i++)
                 //    {
@@ -977,6 +978,17 @@ namespace KWDMpluca
                 //        }
                 //    }
                 //}
+                if (File.Exists(name))
+                {
+                    X[0].Save(name+"nowy.jpg");
+                    MyImg4.Height = 280;
+                    MyImg4.Width = 280;
+                    MyImg4.Source = BitmapHelper.LoadBitmapImage(name+"nowy.jpg");                    
+                }
+                else
+                {
+                    X[0].Save(name);
+                }
 
                 MyImg2.Width = 280;
                 MyImg2.Height = 280;
@@ -987,8 +999,6 @@ namespace KWDMpluca
 
                 canvasSegm.Children.Add(MyImg2);
 
-                X[0].Save(name);
-
                 MyImg1.Width = 280;
                 MyImg1.Height = 280;
 
@@ -997,9 +1007,22 @@ namespace KWDMpluca
                 if (canvasSegm.Children.Contains(MyImg1))
                     canvasSegm.Children.Remove(MyImg1);
 
+
                 AllMasks[numberOfImage] = name;
 
-                canvasSegm.Children.Add(MyImg1);
+
+               if(MyImg4.Source==null)
+                {
+                    canvasSegm.Children.Add(MyImg1);
+                }
+               else
+                {
+                    if (canvasSegm.Children.Contains(MyImg4))
+                        canvasSegm.Children.Remove(MyImg4);
+
+                    canvasSegm.Children.Add(MyImg4);
+                }
+                
             }
         }
 
@@ -1331,7 +1354,7 @@ namespace KWDMpluca
                     }
 
                     String name = String.Format("{0}\\mask{1}.jpg", data, j - 1);
-                    
+
                     masksNames.Add(name);
 
                     X[0].Save(name);
