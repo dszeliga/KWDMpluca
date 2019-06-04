@@ -433,19 +433,38 @@ namespace KWDMpluca
 
                     if (e.LeftButton == MouseButtonState.Pressed)
                     {
-                        Ellipse ellipse = new Ellipse();
+                        //Ellipse ellipse = new Ellipse();
 
-                        ellipse.Stroke = SystemColors.WindowFrameBrush;
-                        ellipse.Height = 5;
-                        ellipse.Width = 5;
-                        SolidColorBrush greenBrush = new SolidColorBrush();
-                        greenBrush.Color = Colors.Red;
-                        ellipse.Fill = greenBrush;
-                        ellipse.Margin = new Thickness(currentPoint.X, currentPoint.Y, 0, 0);
-                        pointsDistance[ind] = currentPoint.X;
-                        pointsDistance[ind + 1] = currentPoint.Y;
-                        canvas.Children.Add(ellipse);
-                        ind += 2;
+                        //ellipse.Stroke = SystemColors.WindowFrameBrush;
+                        //ellipse.Height = 5;
+                        //ellipse.Width = 5;
+                        //SolidColorBrush greenBrush = new SolidColorBrush();
+                        //greenBrush.Color = Colors.Red;
+                        //ellipse.Fill = greenBrush;
+                        //ellipse.Margin = new Thickness(currentPoint.X, currentPoint.Y, 0, 0);
+                        //pointsDistance[ind] = currentPoint.X;
+                        //pointsDistance[ind + 1] = currentPoint.Y;
+                        //canvas.Children.Add(ellipse);
+                        //ind += 2;
+
+                        Line line = new Line();
+
+                        line.Stroke = SystemColors.WindowFrameBrush;
+                        line.X1 = currentPoint.X;
+                        line.Y1 = currentPoint.Y;
+                        line.X2 = e.GetPosition(canvas).X;
+                        line.Y2 = e.GetPosition(canvas).Y;
+
+                        SolidColorBrush redBrush = new SolidColorBrush();
+                        redBrush.Color = Colors.Red;
+
+                        line.Stroke = redBrush;
+
+                        currentPoint = e.GetPosition(canvas);
+
+                        points.Add(currentPoint);
+
+                        canvas.Children.Add(line);
                     }
 
                     if (ind == 4)
@@ -467,7 +486,33 @@ namespace KWDMpluca
 
                 }
             }
-        }
+
+            if (rbSegmentation.IsChecked == true)
+            {
+                if (e.LeftButton == MouseButtonState.Pressed)
+                {
+                    if (canvas.Children.Count > 1)
+                    {
+                        canvas.Children.RemoveRange(0, canvas.Children.Count);
+                        canvas.Children.Add(MyImg);
+                    }
+
+                    Ellipse ellipse = new Ellipse();
+
+                    ellipse.Stroke = SystemColors.WindowFrameBrush;
+                    ellipse.Height = 5;
+                    ellipse.Width = 5;
+                    SolidColorBrush greenBrush = new SolidColorBrush();
+                    greenBrush.Color = Colors.Red;
+                    ellipse.Fill = greenBrush;
+                    ellipse.Margin = new Thickness(currentPoint.X, currentPoint.Y, 0, 0);
+                    //pointsDistance[ind] = currentPoint.X;
+                    //pointsDistance[ind + 1] = currentPoint.Y;
+                    canvas.Children.Add(ellipse);
+                    //ind += 2;
+                }
+                }
+            }
 
         private void Canvas_MouseMove(object sender, MouseEventArgs e)
         {
@@ -587,59 +632,59 @@ namespace KWDMpluca
 
         private void CanvasSegm_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.ButtonState == MouseButtonState.Pressed)
-            {
-                startPoint = e.GetPosition(canvasSegm);
-                currentPoint = startPoint;
-                points.Add(currentPoint);
-            }
+            //if (e.ButtonState == MouseButtonState.Pressed)
+            //{
+            //    startPoint = e.GetPosition(canvasSegm);
+            //    currentPoint = startPoint;
+            //    points.Add(currentPoint);
+            //}
 
-            if (bDistanceClicked)
-            {
-                if (ind < 4)
-                {
+            //if (bDistanceClicked)
+            //{
+            //    if (ind < 4)
+            //    {
 
-                    if (e.LeftButton == MouseButtonState.Pressed)
-                    {
-                        Ellipse ellipse = new Ellipse();
+            //        if (e.LeftButton == MouseButtonState.Pressed)
+            //        {
+            //            Ellipse ellipse = new Ellipse();
 
-                        ellipse.Stroke = SystemColors.WindowFrameBrush;
-                        ellipse.Height = 5;
-                        ellipse.Width = 5;
-                        SolidColorBrush greenBrush = new SolidColorBrush();
-                        greenBrush.Color = Colors.Red;
-                        ellipse.Fill = greenBrush;
-                        ellipse.Margin = new Thickness(currentPoint.X, currentPoint.Y, 0, 0);
-                        pointsDistance[ind] = currentPoint.X;
-                        pointsDistance[ind + 1] = currentPoint.Y;
-                        canvasSegm.Children.Add(ellipse);
-                        ind += 2;
-                    }
+            //            ellipse.Stroke = SystemColors.WindowFrameBrush;
+            //            ellipse.Height = 5;
+            //            ellipse.Width = 5;
+            //            SolidColorBrush greenBrush = new SolidColorBrush();
+            //            greenBrush.Color = Colors.Red;
+            //            ellipse.Fill = greenBrush;
+            //            ellipse.Margin = new Thickness(currentPoint.X, currentPoint.Y, 0, 0);
+            //            pointsDistance[ind] = currentPoint.X;
+            //            pointsDistance[ind + 1] = currentPoint.Y;
+            //            canvasSegm.Children.Add(ellipse);
+            //            ind += 2;
+            //        }
 
-                    if (ind == 4)
-                    {
-                        distance = (Math.Sqrt((Math.Pow(pointsDistance[0] - pointsDistance[2], 2) + Math.Pow(pointsDistance[1] - pointsDistance[3], 2)))) * pixelSpacing;
-                        L_Distance.Content = "Długość: " + Math.Round(distance, 2) + "mm";
-                    }
+            //        if (ind == 4)
+            //        {
+            //            distance = (Math.Sqrt((Math.Pow(pointsDistance[0] - pointsDistance[2], 2) + Math.Pow(pointsDistance[1] - pointsDistance[3], 2)))) * pixelSpacing;
+            //            L_Distance.Content = "Długość: " + Math.Round(distance, 2) + "mm";
+            //        }
 
-                }
-                else
-                {
-                    var length = canvasSegm.Children.Count;
-                    for (int i = length - 1; i >= length - 2; i--)
-                    {
-                        canvasSegm.Children.RemoveAt(i);
-                    }
+            //    }
+            //    else
+            //    {
+            //        var length = canvasSegm.Children.Count;
+            //        for (int i = length - 1; i >= length - 2; i--)
+            //        {
+            //            canvasSegm.Children.RemoveAt(i);
+            //        }
 
-                    ind = 0;
+            //        ind = 0;
 
-                }
-            }
+            //    }
+            //}
         }
 
         private void CanvasSegm_MouseMove(object sender, MouseEventArgs e)
         {
-            if (bCorrectAreaClicked)
+            if (bCorrectAreaClicked && canvasSegm.Children.Contains(polygon))
             {
                 if (e.LeftButton == MouseButtonState.Pressed)
                 {
@@ -666,7 +711,7 @@ namespace KWDMpluca
 
         private void CanvasSegm_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (bCorrectAreaClicked)
+            if (bCorrectAreaClicked && canvasSegm.Children.Contains(polygon))
             {
                 if (e.LeftButton == MouseButtonState.Released)
                 {
